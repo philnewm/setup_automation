@@ -1,0 +1,27 @@
+---
+
+- name: Gnome Settings
+
+  hosts: ansible-c
+
+  tasks:
+    - name: Install htop
+      ansible.builtin.package:
+        name: htop
+        state: present
+
+    - name: Change to dark
+      become: true
+      become_user: mainws
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/color-scheme"
+        value: "'prefer-dark'"
+
+    - name: Lock screen notifications
+      become: true
+      become_user: mainws
+      community.general.dconf:
+        key: "/org/gnome/desktop/notifications/show-in-lock-screen"
+        value: "false"
+
+...
