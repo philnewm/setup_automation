@@ -1,0 +1,7 @@
+---
+
+share_name: library
+mnt_point: mnt
+file_server: fileserver
+
+...

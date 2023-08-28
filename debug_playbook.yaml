@@ -1,0 +1,25 @@
+---
+
+- name: DEBUG
+
+  hosts: ansible-c
+
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    - name: Set user's home directory path to a variable
+      ansible.builtin.set_fact:
+        user_home_path: "{{ ansible_env.HOME }}"
+      become: false
+
+    - name: Show user home
+      ansible.builtin.debug:
+        msg: "{{ user_home_path }}"
+
+    - name: Show root home
+      ansible.builtin.debug:
+        msg: "{{ ansible_env.HOME }}"
+      become: true
+
+...

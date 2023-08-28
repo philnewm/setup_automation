@@ -1,0 +1,50 @@
+---
+
+- name: SMB Share
+
+  hosts: ansible-c
+
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    - name: Set user's home directory path to a variable
+      ansible.builtin.set_fact:
+        user_home_path: "{{ ansible_env.HOME }}"
+      become: false
+
+    - name: Install cifs
+      ansible.builtin.package:
+        name: cifs-utils
+        state: present
+      become: true
+
+    - name: Write credentials file
+      ansible.builtin.file:
+        path: "{{ user_home_path }}/.smb"
+        owner: root
+        group: root
+        state: touch
+        mode: "0600"
+      become: true
+
+    - name: Write credentials to file
+      ansible.builtin.blockinfile:
+        path: "{{ user_home_path }}/.smb"
+        block: |
+        state: present
+      become: true
+
+    - name: Copy mount template to remote host
+      ansible.builtin.template:
+        src: templates/{{ mnt_point }}-{{ share_name }}.mount.j2
+        dest: /etc/systemd/system/{{ mnt_point }}-{{ share_name }}.mount
+        mode: preserve
+      become: true
+      # notify: Reload systemd
+
+    - name: Show name
+      ansible.builtin.debug:
+        msg: "{{ ansible_env.HOME }}"
+
+...
