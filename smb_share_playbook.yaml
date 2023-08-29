@@ -19,20 +19,11 @@
         state: present
       become: true
 
-    - name: Write credentials file
-      ansible.builtin.file:
-        path: "{{ user_home_path }}/.smb"
-        owner: root
-        group: root
-        state: touch
-        mode: "0600"
-      become: true
-
-    - name: Write credentials to file
-      ansible.builtin.blockinfile:
-        path: "{{ user_home_path }}/.smb"
-        block: |
-        state: present
+    - name: Copy credentials file
+      ansible.builtin.copy:
+        src: ".local/.smb"
+        dest: "{{ user_home_path }}/.smb"
+        mode: preserve
       become: true
 
     - name: Copy mount template to remote host
