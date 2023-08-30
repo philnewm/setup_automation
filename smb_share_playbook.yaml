@@ -19,6 +19,14 @@
         state: present
       become: true
 
+    - name: Add fileserver to hosts
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "10.32.64.200 fileserver"
+        create: true
+        mode: "0644"
+      become: true
+
     - name: Copy credentials file
       ansible.builtin.copy:
         src: ".local/.smb"
@@ -26,10 +34,12 @@
         mode: preserve
       become: true
 
-    - name: Create mount point
+    - name: Create mount target
       ansible.builtin.file:
         path: /{{ mnt_point }}/{{ share_name }}/
         state: directory
+        owner: root
+        group: root
         mode: "0755"
       become: true
 
@@ -46,20 +56,18 @@
         dest: /etc/systemd/system/{{ mnt_point }}-{{ share_name }}.automount
         mode: preserve
       become: true
-      notify: Reload systemd
-
-    - name: Enable auto-mount file
-      ansible.builtin.systemd:
-        name: "{{ mnt_point }}-{{ share_name }}.automount"
-        state: started
-        enabled: true
+      notify: Enable auto-mount file
 
     - name: Show name
       ansible.builtin.debug:
         msg: "{{ ansible_env.HOME }}"
 
   handlers:
-    - name: Reload systemd
+    - name: Enable auto-mount file
       ansible.builtin.systemd:
         daemon_reload: true
+        name: "{{ mnt_point }}-{{ share_name }}.automount"
+        state: started
+        enabled: true
+      become: true
 ...
