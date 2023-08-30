@@ -1,11 +1,20 @@
 ---
 
+# mount
 share_name: library
 mnt_point: mnt
 file_server: fileserver
+fs_type: cifs
 permission: rw
 serverino: noserverino
 charset: utf8
+user_id: 1000
+grp_id: 1000
+smb_mount_options: credentials={{ ansible_user_dir }}/.smb,{{ permission }},uid={{ user_id }},gid={{ grp_id }},iocharset={{ charset }},_netdev,{{ serverino }}
+run_lvl: multi-user.target
 dir_mode: 0700
+
+# auto-mount
+timeout_in_sec: 60
 
 ...
