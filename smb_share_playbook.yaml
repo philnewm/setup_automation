@@ -36,25 +36,28 @@
 
     - name: Create mount target
       ansible.builtin.file:
-        path: /{{ mnt_point }}/{{ share_name }}/
+        path: /{{ mnt_point }}/{{ item.mount }}/
         state: directory
         owner: root
         group: root
         mode: "0755"
+      loop: "{{ target }}"
       become: true
 
     - name: Copy mount template to remote host
       ansible.builtin.template:
-        src: templates/{{ mnt_point }}-{{ share_name }}.mount.j2
-        dest: /etc/systemd/system/{{ mnt_point }}-{{ share_name }}.mount
+        src: templates/mountfile.mount.j2
+        dest: /etc/systemd/system/{{ mnt_point }}-{{ item.mount }}.mount
         mode: preserve
+      loop: "{{ target }}"
       become: true
 
     - name: Copy automount template to remote host
       ansible.builtin.template:
-        src: templates/{{ mnt_point }}-{{ share_name }}.automount.j2
-        dest: /etc/systemd/system/{{ mnt_point }}-{{ share_name }}.automount
+        src: templates/mountfile.automount.j2
+        dest: /etc/systemd/system/{{ mnt_point }}-{{ item.mount }}.automount
         mode: preserve
+      loop: "{{ target }}"
       become: true
       notify: Enable auto-mount file
 
@@ -62,9 +65,10 @@
     - name: Enable auto-mount file
       ansible.builtin.systemd:
         daemon_reload: true
-        name: "{{ mnt_point }}-{{ share_name }}.automount"
+        name: "{{ mnt_point }}-{{ item.mount }}.automount"
         state: started
         enabled: true
+      loop: "{{ target }}"
       become: true
 
 ...

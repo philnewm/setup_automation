@@ -2,7 +2,12 @@
 
 # mount
 hosts_entry: 10.32.64.200 fileserver
-share_name: library
+target:
+  - { share: "usb_backup", mount: "archive" }
+  - { share: "documents", mount: "documents" }
+  - { share: "learning", mount: "learning" }
+  - { share: "library", mount: "library" }
+  - { share: "ressources", mount: "ressources" }
 mnt_point: mnt
 file_server: fileserver
 fs_type: cifs

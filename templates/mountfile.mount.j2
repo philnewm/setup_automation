@@ -1,9 +1,9 @@
 [Unit]
-Description=mount {{ share_name }} share
+Description=mount {{ item.mount }} share
 
 [Mount]
-What=//{{ file_server }}/{{ share_name }}
-Where=/{{ mnt_point }}/{{ share_name }}
+What=//{{ file_server }}/{{ item.share }}
+Where=/{{ mnt_point }}/{{ item.mount }}
 Type={{ fs_type }}
 Options={{ smb_mount_options }}
 DirectoryMode={{ dir_mode }}

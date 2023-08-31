@@ -1,8 +1,8 @@
 [Unit]
-Description=automount {{ share_name }} share
+Description=automount {{ item.share }} share
 
 [Automount]
-Where=/{{ mnt_point }}/{{ share_name }}
+Where=/{{ mnt_point }}/{{ item.mount }}
 TimeoutIdleSec={{ timeout_in_sec }}
 
 [Install]
