@@ -22,7 +22,7 @@
     - name: Add fileserver to hosts
       ansible.builtin.lineinfile:
         path: /etc/hosts
-        line: "10.32.64.200 fileserver"
+        line: "{{ hosts_entry }}"
         create: true
         mode: "0644"
       become: true
@@ -58,10 +58,6 @@
       become: true
       notify: Enable auto-mount file
 
-    - name: Show name
-      ansible.builtin.debug:
-        msg: "{{ ansible_env.HOME }}"
-
   handlers:
     - name: Enable auto-mount file
       ansible.builtin.systemd:
@@ -70,4 +66,5 @@
         state: started
         enabled: true
       become: true
+
 ...
