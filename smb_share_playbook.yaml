@@ -18,6 +18,8 @@
         name: cifs-utils
         state: present
       become: true
+      tags:
+        - install-dependencies
 
     - name: Add fileserver to hosts
       ansible.builtin.lineinfile:
@@ -26,6 +28,8 @@
         create: true
         mode: "0644"
       become: true
+      tags:
+        - add-hosts-entry
 
     - name: Copy credentials file
       ansible.builtin.copy:
@@ -60,6 +64,10 @@
       loop: "{{ target }}"
       become: true
       notify: Enable auto-mount file
+
+# TODO implement secure credentials handling
+# TODO add reboot after setup
+# TODO add a test including file copy
 
   handlers:
     - name: Enable auto-mount file
