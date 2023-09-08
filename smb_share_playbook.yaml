@@ -1,8 +1,7 @@
 ---
-
 - name: SMB Share
 
-  hosts: ansible-c
+  hosts: 10.32.64.83
 
   vars_files:
     - vars.yaml
@@ -65,9 +64,9 @@
       become: true
       notify: Enable auto-mount file
 
-# TODO implement secure credentials handling
-# TODO add reboot after setup
-# TODO add a test including file copy
+  # TODO implement secure credentials handling
+  # TODO add reboot after setup
+  # TODO add a test including file copy
 
   handlers:
     - name: Enable auto-mount file
@@ -78,5 +77,3 @@
         enabled: true
       loop: "{{ target }}"
       become: true
-
-...
