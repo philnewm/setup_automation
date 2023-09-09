@@ -1,7 +1,8 @@
 ---
 - name: SMB Share
 
-  hosts: 10.32.64.83
+  hosts:
+    - fedora
 
   vars_files:
     - vars.yaml
