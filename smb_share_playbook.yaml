@@ -66,11 +66,20 @@
         mode: preserve
       loop: "{{ target }}"
       become: true
-      notify: Enable auto-mount file
+
+    - name: Enable auto-mount file
+      ansible.builtin.systemd:
+        daemon_reload: true
+        name: "{{ mnt_point }}-{{ item.mount }}.automount"
+        state: started
+        enabled: true
+      loop: "{{ target }}"
+      become: true
 
     - name: Reboot the host and continue playbook
       ansible.builtin.reboot:
         msg: Reboot initiated by Ansible
+        pre_reboot_delay: 5
         reboot_timeout: 300
 
     - name: Wait for the host to come back online
@@ -81,15 +90,23 @@
       ansible.builtin.debug:
         msg: "Guess who's back ... back again"
 
-  # TODO add reboot after setup
-  # TODO add a test including file copy
+    - name: Copy file using smb shares
+      ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt ~/Documents/
+      become_user: mainws
 
-  handlers:
-    - name: Enable auto-mount file
-      ansible.builtin.systemd:
-        daemon_reload: true
-        name: "{{ mnt_point }}-{{ item.mount }}.automount"
-        state: started
-        enabled: true
-      loop: "{{ target }}"
-      become: true
+    - name: Check if the file exists
+      ansible.builtin.stat:
+        path: ~/Documents/setup_check.txt
+      register: file_stat
+      become_user: mainws
+
+    - name: File copy check
+      ansible.builtin.debug:
+        var: file_stat.stat.exists
+      become_user: mainws
+
+    - name: Clean up after test
+      ansible.builtin.file:
+        path: ~/Documents/setup_check.txt
+        state: absent
+      become_user: mainws
