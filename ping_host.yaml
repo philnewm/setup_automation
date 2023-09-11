@@ -1,0 +1,11 @@
+---
+- name: Simple Ping
+
+  hosts:
+    - fedora
+
+  tasks:
+    - name: Ping one host
+      ansible.builtin.ping:
+
+...
