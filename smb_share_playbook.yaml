@@ -31,12 +31,15 @@
       tags:
         - add-hosts-entry
 
-    - name: Copy credentials file
+    - name: Write credentials
       ansible.builtin.copy:
-        src: ".local/.smb"
+        content: |
+          username={{ smb_login }}
+          password={{ smb_password }}
         dest: "{{ user_home_path }}/.smb"
-        mode: preserve
-      become: true
+        owner: root
+        group: root
+        mode: "0600"
 
     - name: Create mount target
       ansible.builtin.file:
