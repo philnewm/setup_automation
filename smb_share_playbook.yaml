@@ -91,7 +91,7 @@
         msg: "Guess who's back ... back again"
 
     - name: Copy file using smb shares
-      ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt ~/Documents/
+      ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt {{ user_home_path }}/Documents/
       become_user: mainws
 
     - name: Check if the file exists
