@@ -9,6 +9,11 @@
     - vars.yaml
 
   tasks:
+    - name: Set user's home directory path to a variable
+      ansible.builtin.set_fact:
+        user_home_path: "{{ ansible_env.HOME }}"
+      become_user: mainws
+
     - name: Install cifs
       ansible.builtin.package:
         name: cifs-utils
