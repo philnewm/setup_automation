@@ -1,4 +1,5 @@
 ---
+
 - name: SMB Share
 
   hosts:
@@ -8,18 +9,11 @@
     - vars.yaml
 
   tasks:
-    - name: Set user's home directory path to a variable
-      ansible.builtin.set_fact:
-        user_home_path: "{{ ansible_env.HOME }}"
-      become: false
-
     - name: Install cifs
       ansible.builtin.package:
         name: cifs-utils
         state: present
       become: true
-      tags:
-        - install-dependencies
 
     - name: Add fileserver to hosts
       ansible.builtin.lineinfile:
@@ -28,8 +22,6 @@
         create: true
         mode: "0644"
       become: true
-      tags:
-        - add-hosts-entry
 
     - name: Write credentials
       ansible.builtin.copy:
@@ -40,6 +32,7 @@
         owner: root
         group: root
         mode: "0600"
+      become: true
 
     - name: Create mount target
       ansible.builtin.file:
@@ -81,32 +74,33 @@
         msg: Reboot initiated by Ansible
         pre_reboot_delay: 5
         reboot_timeout: 300
+      become: true
 
     - name: Wait for the host to come back online
       ansible.builtin.wait_for_connection:
         timeout: 300
+      become_user: mainws
 
     - name: Host is back online
       ansible.builtin.debug:
         msg: "Guess who's back ... back again"
+      become_user: mainws
+
+    - name: Check home dir for mainws
+      ansible.builtin.debug:
+        msg: "This is {{ ansible_env.USER }} currrent home dir: {{ ansible_env.HOME }}"
+      become_user: mainws
 
     - name: Copy file using smb shares
-      ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt {{ user_home_path }}/Documents/
+      ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt "{{ ansible_env.HOME }}/Documents/"
+      notify: Clean up after test
       become_user: mainws
 
-    - name: Check if the file exists
-      ansible.builtin.stat:
-        path: ~/Documents/setup_check.txt
-      register: file_stat
-      become_user: mainws
-
-    - name: File copy check
-      ansible.builtin.debug:
-        var: file_stat.stat.exists
-      become_user: mainws
-
+  handlers:
     - name: Clean up after test
       ansible.builtin.file:
         path: ~/Documents/setup_check.txt
         state: absent
       become_user: mainws
+
+...
