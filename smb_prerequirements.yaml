@@ -1,0 +1,43 @@
+---
+
+- name: Set user's home directory path to a variable
+  ansible.builtin.set_fact:
+    user_home_path: "{{ ansible_env.HOME }}"
+  become_user: mainws
+
+- name: Install cifs
+  ansible.builtin.package:
+    name: cifs-utils
+    state: present
+  become: true
+
+- name: Add fileserver to hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ hosts_entry }}"
+    create: true
+    mode: "0644"
+  become: true
+
+- name: Write credentials
+  ansible.builtin.copy:
+    content: |
+      username={{ smb_login }}
+      password={{ smb_password }}
+    dest: "{{ user_home_path }}/.smb"
+    owner: root
+    group: root
+    mode: "0600"
+  become: true
+
+- name: Create mount target
+  ansible.builtin.file:
+    path: /{{ mnt_point }}/{{ item.mount }}/
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop: "{{ target }}"
+  become: true
+
+...

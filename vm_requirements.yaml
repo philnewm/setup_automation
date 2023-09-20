@@ -1,0 +1,12 @@
+---
+- name: Install libvirt dependencies
+  ansible.builtin.package:
+    name: libvirt-devel
+    state: present
+  become: true
+
+- name: Install pip libvirt package
+  ansible.builtin.pip:
+    name: libvirt-python
+    state: present
+...

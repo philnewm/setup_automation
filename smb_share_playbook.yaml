@@ -1,53 +1,19 @@
 ---
 
+- name: Reset VM
+  ansible.builtin.import_playbook: reset_vm.yaml
+
 - name: SMB Share
 
   hosts:
-    - fedora
+    - dev_client_fedora
 
   vars_files:
     - vars.yaml
 
   tasks:
-    - name: Set user's home directory path to a variable
-      ansible.builtin.set_fact:
-        user_home_path: "{{ ansible_env.HOME }}"
-      become_user: mainws
-
-    - name: Install cifs
-      ansible.builtin.package:
-        name: cifs-utils
-        state: present
-      become: true
-
-    - name: Add fileserver to hosts
-      ansible.builtin.lineinfile:
-        path: /etc/hosts
-        line: "{{ hosts_entry }}"
-        create: true
-        mode: "0644"
-      become: true
-
-    - name: Write credentials
-      ansible.builtin.copy:
-        content: |
-          username={{ smb_login }}
-          password={{ smb_password }}
-        dest: "{{ user_home_path }}/.smb"
-        owner: root
-        group: root
-        mode: "0600"
-      become: true
-
-    - name: Create mount target
-      ansible.builtin.file:
-        path: /{{ mnt_point }}/{{ item.mount }}/
-        state: directory
-        owner: root
-        group: root
-        mode: "0755"
-      loop: "{{ target }}"
-      become: true
+    - name: Import smb requirements
+      ansible.builtin.import_tasks: smb_prerequirements.yaml
 
     - name: Copy mount template to remote host
       ansible.builtin.template:
@@ -86,11 +52,6 @@
         timeout: 300
       become_user: mainws
 
-    - name: Host is back online
-      ansible.builtin.debug:
-        msg: "Guess who's back ... back again"
-      become_user: mainws
-
     - name: Check home dir for mainws
       ansible.builtin.debug:
         msg: "This is {{ ansible_env.USER }} currrent home dir: {{ ansible_env.HOME }}"
@@ -98,6 +59,8 @@
 
     - name: Copy file using smb shares
       ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt "{{ ansible_env.HOME }}/Documents/"
+      register: copy_result
+      changed_when: copy_result.rc == 0
       notify: Clean up after test
       become_user: mainws
 
