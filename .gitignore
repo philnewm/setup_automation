@@ -1,4 +1,0 @@
-.local/
-group_vars
-ansible.cfg
-hosts
