@@ -1,5 +1,6 @@
 ---
 
+# TODO add handling for debian systems
 - name: Install libvirt dependencies
   ansible.builtin.package:
     name: libvirt-devel
@@ -10,5 +11,6 @@
   ansible.builtin.pip:
     name: libvirt-python
     state: present
+  become_user: mainws
 
 ...
