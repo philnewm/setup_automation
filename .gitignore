@@ -1,2 +1,4 @@
 .local/
-group_vars/dev_host
+group_vars
+ansible.cfg
+hosts
