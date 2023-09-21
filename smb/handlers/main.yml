@@ -1,0 +1,10 @@
+---
+
+# handlers file for smb
+- name: Clean up after test
+  ansible.builtin.file:
+    path: ~/Documents/setup_check.txt
+    state: absent
+  become_user: "{{ local_user }}"
+
+...

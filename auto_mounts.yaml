@@ -1,0 +1,17 @@
+---
+
+- name: Reset Virtual Machine with Ansible
+
+  hosts: dev_host
+
+  roles:
+    - reset_vm
+
+- name: Setup smd mount files
+
+  hosts: dev_client_fedora
+
+  roles:
+    - smb
+
+...

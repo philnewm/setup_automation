@@ -1,0 +1,56 @@
+---
+
+# tasks file for reset_vm
+- name: Import dependencies
+  ansible.builtin.import_tasks: vm_requirements.yaml
+
+- name: Check if VM is running
+  community.libvirt.virt:
+    command: "status"
+    name: "fedora38"
+    uri: "qemu:///system"
+  register: vm_status
+  become: true
+
+- name: Shutdown running VM
+  community.libvirt.virt:
+    command: "shutdown"
+    name: "fedora38"
+    uri: "qemu:///system"
+    xml: "/etc/libvirt/qemu/fedora38.xml"
+  when: vm_status.status == "running"
+  become: true
+
+# TODO check for libvirt event when shutdown completed
+- name: Wait for VM to reach "shutdown" state
+  community.libvirt.virt:
+    command: "status"
+    name: "fedora38"
+    uri: "qemu:///system"
+  register: vm_status
+  until: vm_status.status == "shutdown"
+  retries: 60
+  delay: 2
+  become: true
+
+- name: Load snapshot
+  ansible.builtin.command: "virsh --connect qemu:///system snapshot-revert 'fedora38' --snapshotname 'IP_change'"
+  register: snapshot_result
+  changed_when: snapshot_result.rc == 0
+  become: true
+
+- name: Start VM from Snapshot
+  community.libvirt.virt:
+    command: "start"
+    name: "fedora38"
+    uri: "qemu:///system"
+    xml: "/etc/libvirt/qemu/fedora38.xml"
+  become: true
+
+- name: Wait til host reachable
+  ansible.builtin.wait_for:
+    host: 10.32.64.82
+    port: 22
+    state: present
+
+...
