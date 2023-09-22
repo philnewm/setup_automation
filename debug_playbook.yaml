@@ -3,6 +3,7 @@
 - name: DEBUG
 
   hosts: dev_host
+  become: true
 
   tasks:
     - name: Install libvirt dependencies
