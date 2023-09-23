@@ -1,14 +1,16 @@
 ---
 
-- name: DEBUG
+- name: Debug
 
-  hosts: dev_host
+  hosts: all
 
   tasks:
+    - name: Just ping it
+      ansible.builtin.ping:
+
     - name: Install libvirt dependencies
       ansible.builtin.package:
         name: libvirt-devel
         state: present
       become: true
-
 ...
