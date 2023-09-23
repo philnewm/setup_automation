@@ -1,0 +1,11 @@
+---
+
+- name: Ping Hosts
+
+  hosts: all
+
+  tasks:
+    - name: Install libvirt dependencies
+      ansible.builtin.ping:
+
+...
