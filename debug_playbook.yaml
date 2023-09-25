@@ -13,4 +13,5 @@
       ansible.builtin.package:
         name: libvirt-devel
         state: present
+      become_user: root
 ...
