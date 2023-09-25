@@ -2,7 +2,6 @@
 # dev_host credentials
 
 ansible_user: remote_control
-
 remote_control_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           34366565366661313962393538653432343264666539333666316561313030616335383837393965

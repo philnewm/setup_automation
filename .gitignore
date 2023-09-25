@@ -1,3 +1,4 @@
 .vscode/
 scripts/
+group_vars/
 hosts
