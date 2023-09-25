@@ -3,6 +3,7 @@
 - name: Debug
 
   hosts: all
+  become: true
 
   tasks:
     - name: Just ping it
@@ -12,5 +13,4 @@
       ansible.builtin.package:
         name: libvirt-devel
         state: present
-      become: true
 ...
