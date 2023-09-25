@@ -34,7 +34,7 @@
   become: true
 
 - name: Load snapshot
-  ansible.builtin.command: "virsh --connect qemu:///system snapshot-revert 'fedora38' --snapshotname 'IP_change'"
+  ansible.builtin.command: "virsh --connect qemu:///system snapshot-revert 'fedora38' --snapshotname 'ansible_user'"
   register: snapshot_result
   changed_when: snapshot_result.rc == 0
   become: true
