@@ -12,5 +12,5 @@
       ansible.builtin.package:
         name: libvirt-devel
         state: present
-      become: true
+      become: yes
 ...
