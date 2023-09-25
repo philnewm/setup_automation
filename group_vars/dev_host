@@ -2,7 +2,6 @@
 # dev_host credentials
 
 ansible_user: remote_control
-ansible_connection: local
 
 remote_control_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
