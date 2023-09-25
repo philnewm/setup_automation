@@ -1,4 +1,1 @@
-ansible.cfg
-hosts
-group_vars/
 .vscode/
