@@ -17,5 +17,10 @@
     - name: Show home dir
       ansible.builtin.debug:
         msg: "{{ ansible_env.HOME }}"
-      
+
+    - name: Show username
+      ansible.builtin.debug:
+        msg: "{{ ansible_user_id }}"
+
+
 ...

@@ -34,7 +34,7 @@
   become: true
 
 - name: Load snapshot
-  ansible.builtin.command: "virsh --connect qemu:///system snapshot-revert 'fedora38' --snapshotname 'ssh_host_key_updated'"
+  ansible.builtin.command: "virsh --connect qemu:///system snapshot-revert 'fedora38' --snapshotname 'local_station_host_key_added'"
   register: snapshot_result
   changed_when: snapshot_result.rc == 0
   become: true
