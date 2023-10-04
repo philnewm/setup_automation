@@ -2,7 +2,7 @@
 
 - name: Debug
 
-  hosts: all
+  hosts: dev_client_fedora
 
   tasks:
     - name: Just ping it
@@ -22,5 +22,36 @@
       ansible.builtin.debug:
         msg: "{{ ansible_user_id }}"
 
+    - name: Enable RPM Fusion Free repository
+      ansible.builtin.yum_repository:
+        name: rpmfusion-free
+        description: RPM Fusion Free for Fedora $releasever
+        metalink: https://mirrors.rpmfusion.org/metalink?repo=free-fedora-$releasever&arch=$basearch
+        enabled: true
+        metadata_expire: 14
+        gpgcheck: true
+        repo_gpgcheck: false
+        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever
+        state: present
+      become: true
+
+    - name: Enable RPM Fusion Non-Free repository
+      ansible.builtin.yum_repository:
+        name: rpmfusion-nonfree
+        description: RPM Fusion Non-Free for Fedora $releasever
+        metalink: https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-$releasever&arch=$basearch
+        enabled: true
+        metadata_expire: 14
+        gpgcheck: true
+        repo_gpgcheck: false
+        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
+        state: present
+      become: true
+
+    - name: Set host name
+      ansible.builtin.hostname:
+        name: "{{ host_name }}"
+        use: systemd
+      become: true
 
 ...

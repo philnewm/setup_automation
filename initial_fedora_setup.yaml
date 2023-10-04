@@ -54,6 +54,8 @@
       changed_when: command_result.rc == 0
       become: true
 
+    # TODO research how neccessary this actually is
+    # TODO implement safe check to not let playbook crash
     # - name: Get firmware update devices
     #   ansible.builtin.command: fwupdmgr get-devices
     #   register: command_result
@@ -90,42 +92,31 @@
         timeout: 300
       become_user: "{{ ansible_user_id }}"
 
-    - name: Install RPMfusion free repositories
-      ansible.builtin.command: dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_version }}.noarch.rpm
-      args:
-        creates: /etc/yum.repos.d/rpmfusion-free.repo
-        removes: /etc/fedora-release
+    - name: Enable RPM Fusion Free repository
+      ansible.builtin.yum_repository:
+        name: rpmfusion-free
+        description: RPM Fusion Free for Fedora $releasever
+        metalink: https://mirrors.rpmfusion.org/metalink?repo=free-fedora-$releasever&arch=$basearch
+        enabled: true
+        metadata_expire: 14
+        gpgcheck: true
+        repo_gpgcheck: false
+        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever
+        state: present
       become: true
 
-    - name: Install RPMfusion free repositories
-      ansible.builtin.command: dnf install -y https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_version }}.noarch.rpm
-      args:
-        creates: /etc/yum.repos.d/rpmfusion-free.repo
-        removes: /etc/fedora-release
+    - name: Enable RPM Fusion Non-Free repository
+      ansible.builtin.yum_repository:
+        name: rpmfusion-nonfree
+        description: RPM Fusion Non-Free for Fedora $releasever
+        metalink: https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-$releasever&arch=$basearch
+        enabled: true
+        metadata_expire: 14
+        gpgcheck: true
+        repo_gpgcheck: false
+        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
+        state: present
       become: true
-
-    # TODO make yum_repository work
-    # - name: Enable RPM Fusion Free repository
-    #   ansible.builtin.yum_repository:
-    #     name: rpmfusion-free
-    #     description: RPM Fusion Free for Fedora $releasever
-    #     baseurl: https://mirrors.rpmfusion.org/free/fedora/releases/$releasever/Everything/$basearch/os/
-    #     enabled: true
-    #     gpgcheck: true
-    #     repo_gpgcheck: true
-    #     gpgkey: https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$releasever.noarch.rpm
-    #   become: true
-
-    # TODO make yum_repository work for non-free rpm fusion
-    # - name: Enable RPM Fusion Non-Free repository
-    #   ansible.builtin.yum_repository:
-    #     name: rpmfusion-nonfree
-    #     description: RPM Fusion Non-Free for Fedora $releasever
-    #     baseurl: https://mirrors.rpmfusion.org/nonfree/fedora/releases/$releasever/Everything/$basearch/os/
-    #     enabled: true
-    #     gpgcheck: true
-    #     gpgkey: https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$releasever.noarch.rpm
-    #   become: true
 
     - name: Install Flatpak
       ansible.builtin.dnf:
@@ -142,6 +133,7 @@
     - name: Set host name
       ansible.builtin.hostname:
         name: "{{ host_name }}"
+      become: true
 
 
   # roles:
