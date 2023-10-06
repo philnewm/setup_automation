@@ -36,6 +36,19 @@
         state: present
       become: true
 
+    - name: Modify GRUB configuration
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_TIMEOUT='
+        line: 'GRUB_TIMEOUT=0'
+      become: true
+
+    - name: Update GRUB
+      ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
+      register: grub2_result
+      changed_when: grub2_result.rc == 0
+      become: true
+
     - name: Upgrade packages
       ansible.builtin.command: dnf upgrade --refresh -y
       register: command_result
