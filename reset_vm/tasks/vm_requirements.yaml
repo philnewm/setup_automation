@@ -7,7 +7,7 @@
     state: present
   become: true
 
-- name: Install libvirt dependencies
+- name: Install python dependencies
   ansible.builtin.package:
     name: python-devel
     state: present

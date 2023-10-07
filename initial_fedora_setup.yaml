@@ -42,8 +42,7 @@
     #     name: "{{ host_name }}"
     #   become: true
 
-    # INFO hit [ESC] or [F4] after vendor logo to show grub2 menu on boot
-    - name: Change GRUB_TIMEOUT to 0
+    - name: Set GRUB_TIMEOUT to 0
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: '^GRUB_TIMEOUT='
@@ -51,6 +50,9 @@
         state: present
       become: true
 
+# INFO hit [ESC] or [F4] in case of UEFI or
+# INFO [Shift] in case of Legacy Bios
+# INFO after vendor logo to show grub2 menu on boot
     - name: Set GRUB_TIMEOUT_STYLE to 'hidden'
       ansible.builtin.lineinfile:
         path: /etc/default/grub
@@ -83,31 +85,31 @@
       changed_when: command_result.rc == 0
       become: true
 
-    # TODO research how neccessary this actually is
-    # TODO implement safe check to not let playbook crash
-    # - name: Get firmware update devices
-    #   ansible.builtin.command: fwupdmgr get-devices
-    #   register: command_result
-    #   changed_when: command_result.rc == 0
-    #   become: true
+    - name: Get firmware update devices
+      ansible.builtin.command: fwupdmgr get-devices
+      register: command_result
+      changed_when: command_result.rc == 0
+      become: true
 
-    # - name: Refresh firmware metadata (force)
-    #   ansible.builtin.command: fwupdmgr refresh --force
-    #   register: command_result
-    #   changed_when: command_result.rc == 0
-    #   become: true
+    - name: Refresh firmware metadata (force)
+      ansible.builtin.command: fwupdmgr refresh --force
+      register: command_result
+      changed_when: command_result.rc == 0
+      become: true
 
-    # - name: Get firmware updates
-    #   ansible.builtin.command: fwupdmgr get-updates
-    #   register: command_result
-    #   changed_when: command_result.rc == 0
-    #   become: true
+    - name: Get firmware updates
+      ansible.builtin.command: fwupdmgr get-updates
+      register: command_result
+      failed_when: command_result.rc not in [0, 2]
+      changed_when: command_result.rc == 0
+      become: true
 
-    # - name: Apply firmware updates
-    #   ansible.builtin.command: fwupdmgr update -y
-    #   register: command_result
-    #   changed_when: command_result.rc == 0
-    #   become: true
+    - name: Apply firmware updates
+      ansible.builtin.command: fwupdmgr update -y
+      register: command_result
+      failed_when: command_result.rc not in [0, 2]
+      changed_when: command_result.rc == 0
+      become: true
 
     - name: Reboot the host and continue playbook
       ansible.builtin.reboot:
