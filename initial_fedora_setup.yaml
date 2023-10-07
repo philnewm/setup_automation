@@ -36,10 +36,11 @@
         state: present
       become: true
 
-    - name: Set host name
-      ansible.builtin.hostname:
-        name: "{{ host_name }}"
-      become: true
+    # TODO renable after moving playbook to role
+    # - name: Set host name
+    #   ansible.builtin.hostname:
+    #     name: "{{ host_name }}"
+    #   become: true
 
     # INFO hit [ESC] or [F4] after vendor logo to show grub2 menu on boot
     - name: Change GRUB_TIMEOUT to 0
