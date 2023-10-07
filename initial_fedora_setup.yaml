@@ -36,6 +36,11 @@
         state: present
       become: true
 
+    - name: Set host name
+      ansible.builtin.hostname:
+        name: "{{ host_name }}"
+      become: true
+
     # INFO hit [ESC] or [F4] after vendor logo to show grub2 menu on boot
     - name: Change GRUB_TIMEOUT to 0
       ansible.builtin.lineinfile:
@@ -152,12 +157,6 @@
       register: command_result
       changed_when: command_result.rc == 0
       become: true
-
-    - name: Set host name
-      ansible.builtin.hostname:
-        name: "{{ host_name }}"
-      become: true
-
 
   # roles:
   #   - smb
