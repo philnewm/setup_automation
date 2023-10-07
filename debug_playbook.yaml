@@ -1,11 +1,11 @@
 ---
 
-# - name: Reset Virtual Machine with Ansible
+- name: Reset Virtual Machine with Ansible
 
-#   hosts: dev_host
+  hosts: dev_host
 
-#   roles:
-#     - reset_vm
+  roles:
+    - reset_vm
 
 - name: Debug
 
@@ -59,6 +59,28 @@
       ansible.builtin.hostname:
         name: "{{ host_name }}"
         use: systemd
+      become: true
+
+    - name: Change GRUB_TIMEOUT to 0
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_TIMEOUT='
+        line: 'GRUB_TIMEOUT=0'
+        state: present
+      become: true
+
+    - name: Set GRUB_TIMEOUT_STYLE to 'hidden'
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_TIMEOUT_STYLE='
+        line: 'GRUB_TIMEOUT_STYLE="hidden"'
+        state: present
+      become: true
+
+    - name: Update GRUB
+      ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
+      register: grub2_result
+      changed_when: grub2_result.rc == 0
       become: true
 
 ...

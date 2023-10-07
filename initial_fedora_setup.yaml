@@ -36,12 +36,21 @@
         state: present
       become: true
 
-    # TODO research hotkey to make menu appear on boot for physical machine (vm already works hammering [shift])
-    - name: Modify GRUB configuration
+    # INFO hit [ESC] or [F4] after vendor logo to show grub2 menu on boot
+    - name: Change GRUB_TIMEOUT to 0
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: '^GRUB_TIMEOUT='
         line: 'GRUB_TIMEOUT=2'
+        state: present
+      become: true
+
+    - name: Set GRUB_TIMEOUT_STYLE to 'hidden'
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_TIMEOUT_STYLE='
+        line: 'GRUB_TIMEOUT_STYLE="hidden"'
+        state: present
       become: true
 
     - name: Update GRUB
