@@ -36,11 +36,12 @@
         state: present
       become: true
 
+    # TODO research hotkey to make menu appear on boot for physical machine (vm already works hammering [shift])
     - name: Modify GRUB configuration
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: '^GRUB_TIMEOUT='
-        line: 'GRUB_TIMEOUT=0'
+        line: 'GRUB_TIMEOUT=2'
       become: true
 
     - name: Update GRUB
