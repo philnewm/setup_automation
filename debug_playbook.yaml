@@ -1,11 +1,11 @@
 ---
 
-- name: Reset Virtual Machine with Ansible
+# - name: Reset Virtual Machine with Ansible
 
-  hosts: dev_host
+#   hosts: dev_host
 
-  roles:
-    - reset_vm
+#   roles:
+#     - reset_vm
 
 - name: Debug
 
@@ -23,7 +23,8 @@
 
     - name: Show home dir
       ansible.builtin.debug:
-        msg: "{{ ansible_env.HOME }}"
+        msg: "{{ ansible_env.USER }}"
+      become_user: mainws
 
     # - name: Show username
     #   ansible.builtin.debug:
@@ -55,30 +56,11 @@
     #     state: present
     #   become: true
 
-    - name: Get firmware update devices
-      ansible.builtin.command: fwupdmgr get-devices
-      register: command_result
-      changed_when: command_result.rc == 0
+    - name: Change to dark
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/color-scheme"
+        value: "'prefer-dark'"
       become: true
-
-    - name: Refresh firmware metadata (force)
-      ansible.builtin.command: fwupdmgr refresh --force
-      register: command_result
-      changed_when: command_result.rc == 0
-      become: true
-
-    - name: Get firmware updates
-      ansible.builtin.command: fwupdmgr get-updates
-      register: command_result
-      failed_when: command_result.rc not in [0, 2]
-      changed_when: command_result.rc == 0
-      become: true
-
-    - name: Apply firmware updates
-      ansible.builtin.command: fwupdmgr update -y
-      register: command_result
-      failed_when: command_result.rc not in [0, 2]
-      changed_when: command_result.rc == 0
-      become: true
+      become_user: mainws
 
 ...

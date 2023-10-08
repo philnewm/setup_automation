@@ -2,26 +2,34 @@
 
 - name: Gnome Settings
 
-  hosts: ansible-c
+  hosts: dev_client_fedora
 
   tasks:
-    - name: Install htop
+    - name: Install pip
       ansible.builtin.package:
-        name: htop
+        name: pip
         state: present
+      become: true
 
-    - name: Change to dark
+    - name: Install pip psutil package
+      ansible.builtin.pip:
+        name: psutil
+        state: present
       become: true
       become_user: mainws
+
+    - name: Change to dark
       community.general.dconf:
         key: "/org/gnome/desktop/interface/color-scheme"
         value: "'prefer-dark'"
-
-    - name: Lock screen notifications
       become: true
       become_user: mainws
-      community.general.dconf:
-        key: "/org/gnome/desktop/notifications/show-in-lock-screen"
-        value: "false"
+
+    # - name: Lock screen notifications
+    #   become: true
+    #   become_user: mainws
+    #   community.general.dconf:
+    #     key: "/org/gnome/desktop/notifications/show-in-lock-screen"
+    #     value: "false"
 
 ...
