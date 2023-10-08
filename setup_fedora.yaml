@@ -13,5 +13,6 @@
 
   roles:
     - initial_setup_fedora
+    - smb
 
 ...
