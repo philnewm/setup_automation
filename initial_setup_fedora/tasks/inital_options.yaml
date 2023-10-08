@@ -1,0 +1,55 @@
+# INFO set dnf options
+- name: Set max_parallel_downloads for dnf
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/dnf.conf
+    regexp: '^max_parallel_downloads='
+    line: 'max_parallel_downloads=10'
+    state: present
+  become: true
+
+- name: Set fastestmirror=true in dnf.conf
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/dnf.conf
+    regexp: '^fastestmirror='
+    line: 'fastestmirror=true'
+    state: present
+  become: true
+
+- name: Set fastestmirror=true in dnf.conf
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/dnf.conf
+    regexp: '^deltarpm='
+    line: 'deltarpm=true'
+    state: present
+  become: true
+
+# INFO set GRUB options
+- name: Set GRUB_TIMEOUT to 0
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_TIMEOUT='
+    line: 'GRUB_TIMEOUT=2'
+    state: present
+  become: true
+
+# INFO hit [ESC] or [F4] in case of UEFI or
+# INFO [Shift] in case of Legacy Bios
+# INFO after vendor logo to show grub2 menu on boot
+- name: Set GRUB_TIMEOUT_STYLE to 'hidden'
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_TIMEOUT_STYLE='
+    line: 'GRUB_TIMEOUT_STYLE="hidden"'
+    state: present
+  become: true
+
+- name: Update GRUB
+  ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
+  register: grub2_result
+  changed_when: grub2_result.rc == 0
+  become: true
+
+- name: Set host name "{{ host_name }}"
+  ansible.builtin.hostname:
+    name: "{{ host_name }}"
+  become: true

@@ -1,0 +1,45 @@
+# INFO System updates
+- name: Upgrade packages
+  ansible.builtin.command: dnf upgrade --refresh -y
+  register: command_result
+  changed_when: command_result.rc == 0
+  become: true
+
+- name: Check for package issues
+  ansible.builtin.command: dnf check
+  register: command_result
+  changed_when: command_result.rc == 0
+  become: true
+
+- name: Remove unused packages
+  ansible.builtin.command: dnf autoremove -y
+  register: command_result
+  changed_when: command_result.rc == 0
+  become: true
+
+# INFO Firmware updates
+- name: Get firmware update devices
+  ansible.builtin.command: fwupdmgr get-devices
+  register: command_result
+  changed_when: command_result.rc == 0
+  become: true
+
+- name: Refresh firmware metadata (force)
+  ansible.builtin.command: fwupdmgr refresh --force
+  register: command_result
+  changed_when: command_result.rc == 0
+  become: true
+
+- name: Get firmware updates
+  ansible.builtin.command: fwupdmgr get-updates
+  register: command_result
+  failed_when: command_result.rc not in [0, 2]
+  changed_when: command_result.rc == 0
+  become: true
+
+- name: Apply firmware updates
+  ansible.builtin.command: fwupdmgr update -y
+  register: command_result
+  failed_when: command_result.rc not in [0, 2]
+  changed_when: command_result.rc == 0
+  become: true
