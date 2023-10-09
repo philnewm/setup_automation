@@ -25,11 +25,61 @@
       become: true
       become_user: mainws
 
-    # - name: Lock screen notifications
-    #   become: true
-    #   become_user: mainws
-    #   community.general.dconf:
-    #     key: "/org/gnome/desktop/notifications/show-in-lock-screen"
-    #     value: "false"
+    - name: Disable hot corner
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/org/gnome/desktop/interface"
+        value: "false"
+      become: true
+      become_user: mainws
+
+    - name: Set middle click action to minimize
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar"
+        value: "'minimize'"
+      become: true
+      become_user: mainws
+
+    # TODO fix this one doesn't work yet
+    - name: Set top bar button layout
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/preferences/interface/button-layout"
+        value: "'close,minimize,maximize:appmenu'"
+      become: true
+      become_user: mainws
+
+    - name: Disable attach modal dialogs
+      community.general.dconf:
+        key: "/org/gnome/mutter/attach-modal-dialogs"
+        value: "false"
+      become: true
+      become_user: mainws
+
+    - name: Don't center new windows
+      community.general.dconf:
+        key: "/org/gnome/mutter/center-new-windows"
+        value: "false"
+      become: true
+      become_user: mainws
+
+    - name: Set keyboard layout
+      community.general.dconf:
+        key: "/org/gnome/desktop/input-sources/sources"
+        value: "[('xkb', 'de+nodeadkeys')]"
+      become: true
+      become_user: mainws
+
+    - name: Disable caps lock
+      community.general.dconf:
+        key: "/org/gnome/desktop/input-sources/xkb-options"
+        value: "['caps:none']"
+      become: true
+      become_user: mainws
+
+    - name: Show weekday in clock
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/clock-show-weekday"
+        value: "true"
+      become: true
+      become_user: mainws
 
 ...
