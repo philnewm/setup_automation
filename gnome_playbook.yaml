@@ -40,10 +40,21 @@
       become_user: mainws
 
     # TODO fix this one doesn't work yet
+    # - name: Set top bar button layout
+    #   community.general.dconf:
+    #     key: "/org/gnome/desktop/wm/preferences/interface/{{ item.key }}"
+    #     value: "{{ item.value }}"
+    #     state: present
+    #   loop:
+    #     - { key: "button-layout", value: "'appmenu:minimize,maximize,close'" }
+    #   become: true
+    #   become_user: mainws
+
+    # TODO make it work
     - name: Set top bar button layout
-      community.general.dconf:
-        key: "/org/gnome/desktop/wm/preferences/interface/button-layout"
-        value: "'close,minimize,maximize:appmenu'"
+      ansible.builtin.command: "gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'"
+      register: command_result
+      changed_when: command_result.rc == 0
       become: true
       become_user: mainws
 
@@ -81,5 +92,53 @@
         value: "true"
       become: true
       become_user: mainws
+
+    - name: Set interface text
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/font-name"
+        value: "'Cantarell Bold 11'"
+      become: true
+      become_user: mainws
+
+    - name: Set titlebar font
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/preferences/titlebar-font"
+        value: "'Carlito Bold Italic 11'"
+      become: true
+      become_user: mainws
+
+    - name: Disable show extensions pop-up
+      community.general.dconf:
+        key: "/org/gnome/tweaks/show-extensions-notice"
+        value: "false"
+      become: true
+      become_user: mainws
+
+    - name: Install gnome tweaks
+      ansible.builtin.package:
+        name: gnome-tweaks
+        state: present
+      become: true
+
+    - name: Install gnome extensions
+      ansible.builtin.package:
+        name: gnome-extensions-app
+        state: present
+      become: true
+
+    - name: Disable background logo
+      community.general.dconf:
+        key: "/org/gnome/shell/disabled-extensions"
+        value: "['background-logo@fedorahosted.org']"
+      become: true
+      become_user: mainws
+
+    # TODO install gnome-shell-extension-user-theme that gets hooked automatically into the extensions app
+
+    - name: Install gtk engine for lavanda theme
+      ansible.builtin.package:
+        name: gtk-murrine-engine
+        state: present
+      become: true
 
 ...

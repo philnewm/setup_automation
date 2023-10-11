@@ -56,11 +56,4 @@
     #     state: present
     #   become: true
 
-    - name: Change to dark
-      community.general.dconf:
-        key: "/org/gnome/desktop/interface/color-scheme"
-        value: "'prefer-dark'"
-      become: true
-      become_user: mainws
-
 ...
