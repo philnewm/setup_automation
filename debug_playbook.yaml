@@ -21,10 +21,16 @@
     #     state: present
     #   become: true
 
-    - name: Show home dir
-      ansible.builtin.debug:
-        msg: "{{ ansible_env.USER }}"
-      become_user: mainws
+    - name: Debug specified user's home dir through ansible.env
+      ansible.builtin.debug: var=ansible_env.HOME
+      become: true
+      become_user: "mainws"
+
+    - name: Debug specified user's home dir through lookup on env
+      ansible.builtin.debug: var=lookup('env','HOME')
+      become: true
+      become_user: "mainws"
+
 
     # - name: Show username
     #   ansible.builtin.debug:

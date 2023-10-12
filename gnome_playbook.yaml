@@ -1,5 +1,12 @@
 ---
 
+- name: Reset Virtual Machine with Ansible
+
+  hosts: dev_host
+
+  roles:
+    - reset_vm
+
 - name: Gnome Settings
 
   hosts: dev_client_fedora
@@ -133,12 +140,92 @@
       become: true
       become_user: mainws
 
-    # TODO install gnome-shell-extension-user-theme that gets hooked automatically into the extensions app
-
     - name: Install gtk engine for lavanda theme
       ansible.builtin.package:
         name: gtk-murrine-engine
         state: present
       become: true
+
+    # TODO make extension usable without restart or relogging
+    - name: Install user-themes extension
+      ansible.builtin.package:
+        name: gnome-shell-extension-user-theme
+        state: present
+      become: true
+
+    - name: Reboot the host and continue playbook
+      ansible.builtin.reboot:
+        msg: Reboot initiated by Ansible
+        pre_reboot_delay: 5
+        reboot_timeout: 300
+      become: true
+
+    - name: Wait for the host to come back online
+      ansible.builtin.wait_for_connection:
+        timeout: 300
+      become_user: mainws
+
+    # TODO implement list for all enabled extensions
+    - name: Enable user-themes shell extension
+      community.general.dconf:
+        key: "/org/gnome/shell/enabled-extensions"
+        value: "['user-theme@gnome-shell-extensions.gcampax.github.com']"
+      become: true
+      become_user: mainws
+
+    - name: Install sassc for lavanda theme
+      ansible.builtin.package:
+        name: sassc
+        state: present
+      become: true
+
+    # TODO save custom users home dir to varibale
+    - name: Debug specified user's home dir through ansible.env
+      ansible.builtin.debug: var=ansible_env.HOME
+      become: true
+      become_user: "mainws"
+
+    - name: Debug specified user's home dir through lookup on env
+      ansible.builtin.debug: var=lookup('env','HOME')
+      become: true
+      become_user: "mainws"
+
+    # TODO save default download/execution path to variable
+    - name: Clone lavanda theme from github
+      ansible.builtin.git:
+        repo: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
+        dest: "{{ var }}/Downloads/Lavanda-gtk-theme"
+        single_branch: true
+        version: main
+      become: true
+      become_user: mainws
+
+    # TODO save default download/execution path to variable
+    - name: Install lavanda theme
+      ansible.builtin.command: "sh {{ var }}/Downloads/Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become_user: mainws
+
+    - name: Enable lavanda-dark-theme
+      community.general.dconf:
+        key: "/org/gnome/shell/extensions/user-theme/name"
+        value: "'Lavanda-Dark'"
+      become: true
+      become_user: mainws
+
+    - name: Enable lavanda-dark-theme for legacy applications
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/gtk-theme="
+        value: "'Lavanda-Dark'"
+      become: true
+      become_user: mainws
+
+    # - name: Remove downloaded repository
+    #   ansible.builtin.file:
+    #     path: "{{ ansible_env.HOME }}/Downloads/Lavanda-gtk-theme/"
+    #     state: absent
+    #   become: true
+    #   become_user: mainws
 
 ...
