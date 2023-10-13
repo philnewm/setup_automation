@@ -179,22 +179,12 @@
         state: present
       become: true
 
-    # TODO save custom users home dir to varibale
-    - name: Debug specified user's home dir through ansible.env
-      ansible.builtin.debug: var=ansible_env.HOME
-      become: true
-      become_user: "mainws"
-
-    - name: Debug specified user's home dir through lookup on env
-      ansible.builtin.debug: var=lookup('env','HOME')
-      become: true
-      become_user: "mainws"
-
+    # TODO access user home dir of arbitrary user
     # TODO save default download/execution path to variable
     - name: Clone lavanda theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
-        dest: "{{ var }}/Downloads/Lavanda-gtk-theme"
+        dest: "/home/mainws/Downloads/Lavanda-gtk-theme"
         single_branch: true
         version: main
       become: true
@@ -202,9 +192,10 @@
 
     # TODO save default download/execution path to variable
     - name: Install lavanda theme
-      ansible.builtin.command: "sh {{ var }}/Downloads/Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
+      ansible.builtin.command: "sh /home/mainws/Downloads/Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
       register: install_result
       changed_when: install_result.rc == 0
+      become: true
       become_user: mainws
 
     - name: Enable lavanda-dark-theme
@@ -216,16 +207,16 @@
 
     - name: Enable lavanda-dark-theme for legacy applications
       community.general.dconf:
-        key: "/org/gnome/desktop/interface/gtk-theme="
+        key: "/org/gnome/desktop/interface/gtk-theme"
         value: "'Lavanda-Dark'"
       become: true
       become_user: mainws
 
-    # - name: Remove downloaded repository
-    #   ansible.builtin.file:
-    #     path: "{{ ansible_env.HOME }}/Downloads/Lavanda-gtk-theme/"
-    #     state: absent
-    #   become: true
-    #   become_user: mainws
+    - name: Remove downloaded repository
+      ansible.builtin.file:
+        path: "/home/mainws/Downloads/Lavanda-gtk-theme/"
+        state: absent
+      become: true
+      become_user: mainws
 
 ...
