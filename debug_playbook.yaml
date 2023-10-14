@@ -15,46 +15,37 @@
     - name: Just ping it
       ansible.builtin.ping:
 
-    # - name: Install libvirt dependencies
-    #   ansible.builtin.package:
-    #     name: libvirt-devel
-    #     state: present
-    #   become: true
+    - name: Get UI users home dir
+      ansible.builtin.user:
+        name: mainws
+        state: present
+      register: ui_user
 
-    - name: Debug specified user's home dir through lookup on env
+    - name: Show Ui user var
       ansible.builtin.debug:
-        msg: var=lookup('env','HOME')
+        msg: "{{ ui_user.home }}"
+
+    - name: Set top bar button layout
+      ansible.builtin.command: gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
+      register: command_result
+      changed_when: command_result.rc == 0
       become: true
-      become_user: "mainws"
+      become_user: mainws
 
-    # - name: Show username
-    #   ansible.builtin.debug:
-    #     msg: "{{ ansible_user_id }}"
+    - name: Show gsettings result
+      ansible.builtin.debug:
+        msg: "{{ command_result }}"
 
-    # - name: Enable RPM Fusion Free repository
-    #   ansible.builtin.yum_repository:
-    #     name: rpmfusion-free
-    #     description: RPM Fusion Free for Fedora $releasever
-    #     metalink: https://mirrors.rpmfusion.org/metalink?repo=free-fedora-$releasever&arch=$basearch
-    #     enabled: true
-    #     metadata_expire: 14
-    #     gpgcheck: true
-    #     repo_gpgcheck: false
-    #     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever
-    #     state: present
-    #   become: true
+    - name: Set top bar button layout with dconf
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/preferences/interface/button-layout"
+        value: "'appmenu:minimize,maximize,close'"
+      register: dconf_output
+      become: true
+      become_user: mainws
 
-    # - name: Enable RPM Fusion Non-Free repository
-    #   ansible.builtin.yum_repository:
-    #     name: rpmfusion-nonfree
-    #     description: RPM Fusion Non-Free for Fedora $releasever
-    #     metalink: https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-$releasever&arch=$basearch
-    #     enabled: true
-    #     metadata_expire: 14
-    #     gpgcheck: true
-    #     repo_gpgcheck: false
-    #     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
-    #     state: present
-    #   become: true
+    - name: Show gsettings result
+      ansible.builtin.debug:
+        msg: "{{ dconf_output }}"
 
 ...

@@ -12,6 +12,12 @@
   hosts: dev_client_fedora
 
   tasks:
+    - name: Get UI users home dir
+      ansible.builtin.user:
+        name: mainws
+        state: present
+      register: ui_user
+
     - name: Install pip
       ansible.builtin.package:
         name: pip
@@ -179,12 +185,10 @@
         state: present
       become: true
 
-    # TODO access user home dir of arbitrary user
-    # TODO save default download/execution path to variable
     - name: Clone lavanda theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
-        dest: "/home/mainws/Downloads/Lavanda-gtk-theme"
+        dest: "{{ ui_user.home }}/Downloads/Lavanda-gtk-theme"
         single_branch: true
         version: main
       become: true
@@ -192,7 +196,7 @@
 
     # TODO save default download/execution path to variable
     - name: Install lavanda theme
-      ansible.builtin.command: "sh /home/mainws/Downloads/Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
+      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
@@ -214,7 +218,7 @@
 
     - name: Remove downloaded repository
       ansible.builtin.file:
-        path: "/home/mainws/Downloads/Lavanda-gtk-theme/"
+        path: "{{ ui_user.home }}/Downloads/Lavanda-gtk-theme/"
         state: absent
       become: true
       become_user: mainws
