@@ -26,7 +26,8 @@
         msg: "{{ ui_user.home }}"
 
     - name: Set top bar button layout
-      ansible.builtin.command: gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
+      ansible.builtin.command: dconf write /org/gnome/desktop/wm/preferences/button-layout "'appmenu:minimize,maximize,close'"
+      # gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
       register: command_result
       changed_when: command_result.rc == 0
       become: true
@@ -35,17 +36,5 @@
     - name: Show gsettings result
       ansible.builtin.debug:
         msg: "{{ command_result }}"
-
-    - name: Set top bar button layout with dconf
-      community.general.dconf:
-        key: "/org/gnome/desktop/wm/preferences/interface/button-layout"
-        value: "'appmenu:minimize,maximize,close'"
-      register: dconf_output
-      become: true
-      become_user: mainws
-
-    - name: Show gsettings result
-      ansible.builtin.debug:
-        msg: "{{ dconf_output }}"
 
 ...

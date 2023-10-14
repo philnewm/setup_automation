@@ -52,24 +52,14 @@
       become: true
       become_user: mainws
 
-    # TODO fix this one doesn't work yet
+    # INFO can't be set without graphical session as it seems
+    # INFO error: Cannot autolaunch D-Bus without X11 $DISPLAY
     # - name: Set top bar button layout
     #   community.general.dconf:
-    #     key: "/org/gnome/desktop/wm/preferences/interface/{{ item.key }}"
-    #     value: "{{ item.value }}"
-    #     state: present
-    #   loop:
-    #     - { key: "button-layout", value: "'appmenu:minimize,maximize,close'" }
+    #     key: "/org/gnome/desktop/wm/preferences/interface/button-layout"
+    #     value: "'appmenu:minimize,maximize,close'"
     #   become: true
     #   become_user: mainws
-
-    # TODO make it work
-    - name: Set top bar button layout
-      ansible.builtin.command: "gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'"
-      register: command_result
-      changed_when: command_result.rc == 0
-      become: true
-      become_user: mainws
 
     - name: Disable attach modal dialogs
       community.general.dconf:
@@ -222,5 +212,11 @@
         state: absent
       become: true
       become_user: mainws
+
+    - name: Install dash to panel
+      ansible.builtin.package:
+        name: gnome-shell-extension-dash-to-panel
+        state: present
+      become: true
 
 ...
