@@ -13,10 +13,6 @@
 
   tasks:
 
-    - name: Include gnome settings
-      ansible.builtin.include_vars:
-        file: gnome_settings.yaml
-
     - name: Just ping it
       ansible.builtin.ping:
 
@@ -42,12 +38,15 @@
     #   ansible.builtin.debug:
     #     msg: "{{ command_result }}"
 
-    - name: Configure panel
+    - name: Get terminal profile UUID
       community.general.dconf:
-        key: "{{ item.key }}"
-        value: "{{ item.value }}"
-      with_dict: "{{ dash_to_panel_settings }}"
+        key: "/org/gnome/terminal/legacy/profiles:"
+        state: "read"
+      register: profile_uuid
       become: true
       become_user: mainws
 
+    - name: Show UUID
+      ansible.builtin.debug:
+        msg: "{{ profile_uuid }}"
 ...

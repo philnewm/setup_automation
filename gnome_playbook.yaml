@@ -43,6 +43,14 @@
       become: true
       become_user: mainws
 
+    - name: Configure nautilus
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ nautilus_settings }}"
+      become: true
+      become_user: mainws
+
     - name: Install gnome tweaks
       ansible.builtin.package:
         name: gnome-tweaks
