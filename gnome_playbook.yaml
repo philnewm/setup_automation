@@ -12,6 +12,10 @@
   hosts: dev_client_fedora
 
   tasks:
+    - name: Include gnome settings
+      ansible.builtin.include_vars:
+        file: gnome_settings.yaml
+
     - name: Get UI users home dir
       ansible.builtin.user:
         name: mainws
@@ -31,89 +35,11 @@
       become: true
       become_user: mainws
 
-    - name: Change to dark
+    - name: Configure gnome-settings
       community.general.dconf:
-        key: "/org/gnome/desktop/interface/color-scheme"
-        value: "'prefer-dark'"
-      become: true
-      become_user: mainws
-
-    - name: Disable hot corner
-      community.general.dconf:
-        key: "/org/gnome/desktop/interface/org/gnome/desktop/interface"
-        value: "false"
-      become: true
-      become_user: mainws
-
-    - name: Set middle click action to minimize
-      community.general.dconf:
-        key: "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar"
-        value: "'minimize'"
-      become: true
-      become_user: mainws
-
-    # INFO can't be set without graphical session as it seems
-    # INFO error: Cannot autolaunch D-Bus without X11 $DISPLAY
-    # - name: Set top bar button layout
-    #   community.general.dconf:
-    #     key: "/org/gnome/desktop/wm/preferences/interface/button-layout"
-    #     value: "'appmenu:minimize,maximize,close'"
-    #   become: true
-    #   become_user: mainws
-
-    - name: Disable attach modal dialogs
-      community.general.dconf:
-        key: "/org/gnome/mutter/attach-modal-dialogs"
-        value: "false"
-      become: true
-      become_user: mainws
-
-    - name: Don't center new windows
-      community.general.dconf:
-        key: "/org/gnome/mutter/center-new-windows"
-        value: "false"
-      become: true
-      become_user: mainws
-
-    - name: Set keyboard layout
-      community.general.dconf:
-        key: "/org/gnome/desktop/input-sources/sources"
-        value: "[('xkb', 'de+nodeadkeys')]"
-      become: true
-      become_user: mainws
-
-    - name: Disable caps lock
-      community.general.dconf:
-        key: "/org/gnome/desktop/input-sources/xkb-options"
-        value: "['caps:none']"
-      become: true
-      become_user: mainws
-
-    - name: Show weekday in clock
-      community.general.dconf:
-        key: "/org/gnome/desktop/interface/clock-show-weekday"
-        value: "true"
-      become: true
-      become_user: mainws
-
-    - name: Set interface text
-      community.general.dconf:
-        key: "/org/gnome/desktop/interface/font-name"
-        value: "'Cantarell Bold 11'"
-      become: true
-      become_user: mainws
-
-    - name: Set titlebar font
-      community.general.dconf:
-        key: "/org/gnome/desktop/wm/preferences/titlebar-font"
-        value: "'Carlito Bold Italic 11'"
-      become: true
-      become_user: mainws
-
-    - name: Disable show extensions pop-up
-      community.general.dconf:
-        key: "/org/gnome/tweaks/show-extensions-notice"
-        value: "false"
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ gnome_initial_settings }}"
       become: true
       become_user: mainws
 
@@ -123,18 +49,19 @@
         state: present
       become: true
 
+    - name: Configure gnome-tweaks
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ gnome_tweaks_settings }}"
+      become: true
+      become_user: mainws
+
     - name: Install gnome extensions
       ansible.builtin.package:
         name: gnome-extensions-app
         state: present
       become: true
-
-    - name: Disable background logo
-      community.general.dconf:
-        key: "/org/gnome/shell/disabled-extensions"
-        value: "['background-logo@fedorahosted.org']"
-      become: true
-      become_user: mainws
 
     - name: Install gtk engine for lavanda theme
       ansible.builtin.package:
@@ -149,6 +76,13 @@
         state: present
       become: true
 
+    - name: Install dash to panel
+      ansible.builtin.package:
+        name: gnome-shell-extension-dash-to-panel
+        state: present
+      become: true
+
+    # TODO find a way to reload session without rebooting
     - name: Reboot the host and continue playbook
       ansible.builtin.reboot:
         msg: Reboot initiated by Ansible
@@ -161,11 +95,19 @@
         timeout: 300
       become_user: mainws
 
-    # TODO implement list for all enabled extensions
-    - name: Enable user-themes shell extension
+    - name: Configure gnome-extensions
       community.general.dconf:
-        key: "/org/gnome/shell/enabled-extensions"
-        value: "['user-theme@gnome-shell-extensions.gcampax.github.com']"
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ gnome_extensions_settings }}"
+      become: true
+      become_user: mainws
+
+    - name: Configure panel
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ dash_to_panel_settings }}"
       become: true
       become_user: mainws
 
@@ -192,17 +134,11 @@
       become: true
       become_user: mainws
 
-    - name: Enable lavanda-dark-theme
+    - name: Configure gnome themes
       community.general.dconf:
-        key: "/org/gnome/shell/extensions/user-theme/name"
-        value: "'Lavanda-Dark'"
-      become: true
-      become_user: mainws
-
-    - name: Enable lavanda-dark-theme for legacy applications
-      community.general.dconf:
-        key: "/org/gnome/desktop/interface/gtk-theme"
-        value: "'Lavanda-Dark'"
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ gnome_theme_settings }}"
       become: true
       become_user: mainws
 
@@ -212,11 +148,5 @@
         state: absent
       become: true
       become_user: mainws
-
-    - name: Install dash to panel
-      ansible.builtin.package:
-        name: gnome-shell-extension-dash-to-panel
-        state: present
-      become: true
 
 ...

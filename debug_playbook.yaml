@@ -12,6 +12,11 @@
   hosts: dev_client_fedora
 
   tasks:
+
+    - name: Include gnome settings
+      ansible.builtin.include_vars:
+        file: gnome_settings.yaml
+
     - name: Just ping it
       ansible.builtin.ping:
 
@@ -25,16 +30,24 @@
       ansible.builtin.debug:
         msg: "{{ ui_user.home }}"
 
-    - name: Set top bar button layout
-      ansible.builtin.command: dconf write /org/gnome/desktop/wm/preferences/button-layout "'appmenu:minimize,maximize,close'"
-      # gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
-      register: command_result
-      changed_when: command_result.rc == 0
+    # - name: Set top bar button layout
+    #   ansible.builtin.command: dconf write /org/gnome/desktop/wm/preferences/button-layout "'appmenu:minimize,maximize,close'"
+    #   # gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
+    #   register: command_result
+    #   changed_when: command_result.rc == 0
+    #   become: true
+    #   become_user: mainws
+
+    # - name: Show gsettings result
+    #   ansible.builtin.debug:
+    #     msg: "{{ command_result }}"
+
+    - name: Configure panel
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ dash_to_panel_settings }}"
       become: true
       become_user: mainws
-
-    - name: Show gsettings result
-      ansible.builtin.debug:
-        msg: "{{ command_result }}"
 
 ...
