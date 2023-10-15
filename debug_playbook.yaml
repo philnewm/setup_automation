@@ -10,6 +10,8 @@
 - name: Debug
 
   hosts: dev_client_fedora
+  vars_files:
+    - gnome_settings.yaml
 
   tasks:
 
@@ -38,15 +40,50 @@
     #   ansible.builtin.debug:
     #     msg: "{{ command_result }}"
 
-    - name: Get terminal profile UUID
-      community.general.dconf:
-        key: "/org/gnome/terminal/legacy/profiles:"
-        state: "read"
-      register: profile_uuid
-      become: true
-      become_user: mainws
+    - name: Check if a profile with the name 'default' already exists
+      ansible.builtin.command: |
+        existing_profile_id=$(dconf list /org/gnome/terminal/legacy/profiles:/ | tr -d '/')
+        for profile_id in $existing_profile_id; do
+          profile_name=$(dconf read /org/gnome/terminal/legacy/profiles:/:$profile_id/visible-name)
+          if [ "$profile_name" == "'default'" ]; then
+            echo "Profile 'default' already exists with ID $profile_id"
+            exit 0
+          fi
+        done
+        exit 1
+      ignore_errors: true
+      register: profile_check
+      changed_when: false
 
-    - name: Show UUID
-      ansible.builtin.debug:
-        msg: "{{ profile_uuid }}"
-...
+    - name: Create a new profile if 'default' does not exist
+      when: profile_check.rc != 0
+      block:
+        - name: Generate a new profile ID
+          ansible.builtin.command: uuidgen
+          register: new_profile_id
+          changed_when: false
+
+        - name: Include the variable file to resolve the keys
+          ansible.builtin.include_vars:
+            file: gnome_settings.yaml
+
+        - name: Set the new profile UUID as a fact
+          ansible.builtin.set_fact:
+            new_profile_uuid: "{{ new_profile_id.stdout }}"
+
+        - name: Configure terminal
+          community.general.dconf:
+            key: "{{ item.key | regex_replace('new_profile_id', new_profile_id.stdout) }}"
+            value: "{{ item.value }}"
+          with_dict: "{{ terminal_settings }}"
+          become: true
+          become_user: mainws
+
+        - name: Set the new profile as the default
+          community.general.dconf:
+            key: "/org/gnome/terminal/legacy/default-profile"
+            value: "'{{ new_profile_id.stdout }}'"
+
+        - name: Print the ID of the newly created profile
+          ansible.builtin.debug:
+            var: new_profile_id.stdout
