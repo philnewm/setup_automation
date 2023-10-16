@@ -1,15 +1,17 @@
 ---
 
-- name: Reset Virtual Machine with Ansible
+# - name: Reset Virtual Machine with Ansible
 
-  hosts: dev_host
+#   hosts: dev_host
 
-  roles:
-    - reset_vm
+#   roles:
+#     - reset_vm
 
 - name: Debug
 
   hosts: dev_client_fedora
+  vars_files:
+    - gnome_settings.yaml
 
   tasks:
 
@@ -51,32 +53,42 @@
     #   ansible.builtin.debug:
     #     msg: "{{ command_result }}"
 
-    - name: Check if a profile with the name 'default' already exists
-      ansible.builtin.command: |
-        existing_profile_id=$(dconf list /org/gnome/terminal/legacy/profiles:/ | tr -d '/')
-        for profile_id in $existing_profile_id; do
-          profile_name=$(dconf read /org/gnome/terminal/legacy/profiles:/:$profile_id/visible-name)
-          if [ "$profile_name" == "'default'" ]; then
-            echo "Profile 'default' already exists with ID $profile_id"
-            exit 0
-          fi
-        done
-        exit 1
-      ignore_errors: true
-      register: profile_check
+    # - name: Check if a profile with the name 'default' already exists
+    #   ansible.builtin.command: |
+    #     existing_profile_id=$(dconf list /org/gnome/terminal/legacy/profiles:/ | tr -d '/')
+    #     for profile_id in $existing_profile_id; do
+    #       profile_name=$(dconf read /org/gnome/terminal/legacy/profiles:/:$profile_id/visible-name)
+    #       if [ "$profile_name" == "'default'" ]; then
+    #         echo "Profile 'default' already exists with ID $profile_id"
+    #         exit 0
+    #       fi
+    #     done
+    #     exit 1
+    #   ignore_errors: true
+    #   register: profile_check
+    #   changed_when: false
+
+    - name: Set a new profile UUID
+      ansible.builtin.set_fact:
+        new_profile_uuid: "{{ terminal_profile_uuid }}"
+      register: profile_id
       changed_when: false
 
+    - name: Get the list of profile names
+      ansible.builtin.command: dconf list /org/gnome/terminal/legacy/profiles:/
+      register: profile_names
+      changed_when: false
+      become: true
+      become_user: mainws
+
+    - name: Check if a profile with the name 'default' already exists
+      ansible.builtin.set_fact:
+        profile_exists: true
+      when: terminal_profile_uuid in profile_names.stdout_lines
+
     - name: Create a new profile if 'default' does not exist
-      when: profile_check.rc != 0
+      when: not profile_exists | default(false)
       block:
-        - name: Include the variable file to resolve the keys
-          ansible.builtin.include_vars:
-            file: gnome_settings.yaml
-
-        - name: Set the new profile UUID as a fact
-          ansible.builtin.set_fact:
-            new_profile_uuid: "{{ terminal_profile_uuid }}"
-
         - name: Configure terminal legacy settings
           community.general.dconf:
             key: "{{ item.key }}"
@@ -90,13 +102,6 @@
             key: "{{ terminal_profile_path }}/{{ item.key }}"
             value: "{{ item.value }}"
           with_dict: "{{ terminal_profile_settings }}"
-          become: true
-          become_user: mainws
-
-        - name: Set the new profile as the default
-          community.general.dconf:
-            key: "/org/gnome/terminal/legacy/default-profile"
-            value: "'{{ terminal_profile_uuid }}'"
           become: true
           become_user: mainws
 

@@ -80,8 +80,9 @@ nautilus_settings:
   "/org/gnome/nautilus/preferences/show-image-thumbnails": "'always'"
 terminal_legacy_settings:
   "/org/gnome/terminal/legacy/new-terminal-mode": "'tab'"
-terminal_profile_uuid: "8372cee2-50b0-41b7-86e5-0d125a015b23"
-terminal_profile_path: "/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile_uuid }}"
+terminal_profile_uuid: ":8372cee2-50b0-41b7-86e5-0d125a015b23/"
+terminal_profile_path: "/org/gnome/terminal/legacy/profiles:/{{ terminal_profile_uuid }}"
+terminal_profile_name: "{{ terminal_profile_path }}visible-name"
 terminal_profile_settings:
   "background-color": "'rgb(28,28,28)'"
   "background-transparency-percent": "22"
@@ -102,3 +103,4 @@ terminal_profile_settings:
   "use-theme-colors": "false"
   "use-transparent-background": "true"
   "visible-name": "'default'"
+
