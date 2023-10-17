@@ -21,6 +21,8 @@ gnome_extensions_settings:
 gnome_theme_settings:
   "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
   "/org/gnome/desktop/interface/gtk-theme": "'Lavanda-Dark'"
+  "/org/gnome/desktop/interface/icon-theme": "'Tela-circle-purple-dark'"
+  "/org/gnome/desktop/interface/cursor-theme": "'Qogir-ubuntu-cursors'"
 dash_to_panel_settings: 
   "/org/gnome/shell/extensions/dash-to-panel/animate-appicon-hover": "false"
   "/org/gnome/shell/extensions/dash-to-panel/animate-appicon-hover-animation-convexity": "{'RIPPLE': 2.0, 'PLANK': 1.0, 'SIMPLE': 0.0}"
@@ -80,9 +82,9 @@ nautilus_settings:
   "/org/gnome/nautilus/preferences/show-image-thumbnails": "'always'"
 terminal_legacy_settings:
   "/org/gnome/terminal/legacy/new-terminal-mode": "'tab'"
-terminal_profile_uuid: ":5261d7f3-37ae-43cc-90e5-2139da18c41d/"
-terminal_profile_path: "/org/gnome/terminal/legacy/profiles:/{{ terminal_profile_uuid }}"
-terminal_profile_name: "{{ terminal_profile_path }}visible-name"
+terminal_profile_uuid: "5261d7f3-37ae-43cc-90e5-2139da18c41d"
+terminal_profile_path: "/org/gnome/terminal/legacy/profiles:/:{{ terminal_profile_uuid }}/"
+terminal_profile_list: "/org/gnome/terminal/legacy/profiles:/list"
 terminal_profile_settings:
   "visible-name": "'default'"
   "background-color": "'rgb(28,28,28)'"
@@ -95,6 +97,8 @@ terminal_profile_settings:
   "cursor-foreground-color": "'rgb(163,101,181)'"
   "default-size-columns": "105"
   "default-size-rows": "32"
+  "font": "'Liberation Mono 14'"
+  "use-system-font": "false"
   "foreground-color": "'rgb(198,141,232)'"
   "highlight-background-color": "'rgb(128,105,128)'"
   "highlight-colors-set": "true"

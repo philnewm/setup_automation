@@ -49,64 +49,9 @@
     #   become: true
     #   become_user: mainws
 
-    # - name: Show gsettings result
-    #   ansible.builtin.debug:
-    #     msg: "{{ command_result }}"
-
-    # - name: Check if a profile with the name 'default' already exists
-    #   ansible.builtin.command: |
-    #     existing_profile_id=$(dconf list /org/gnome/terminal/legacy/profiles:/ | tr -d '/')
-    #     for profile_id in $existing_profile_id; do
-    #       profile_name=$(dconf read /org/gnome/terminal/legacy/profiles:/:$profile_id/visible-name)
-    #       if [ "$profile_name" == "'default'" ]; then
-    #         echo "Profile 'default' already exists with ID $profile_id"
-    #         exit 0
-    #       fi
-    #     done
-    #     exit 1
-    #   ignore_errors: true
-    #   register: profile_check
-    #   changed_when: false
-
-    - name: Set a new profile UUID
-      ansible.builtin.set_fact:
-        new_profile_uuid: "{{ terminal_profile_uuid }}"
-      register: profile_id
-      changed_when: false
-
-    - name: Get the list of profile names
-      ansible.builtin.command: dconf list /org/gnome/terminal/legacy/profiles:/
-      register: profile_names
-      changed_when: false
+    - name: Install Qogir-cursor-theme
+      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Qogir-icon-theme/src/cursors/install.sh --theme ubuntu --color dark"
+      register: install_result
+      changed_when: install_result.rc == 0
       become: true
       become_user: mainws
-
-    - name: Check if a profile with the name 'default' already exists
-      ansible.builtin.set_fact:
-        profile_exists: true
-      when: terminal_profile_uuid in profile_names.stdout_lines
-      become: true
-      become_user: mainws
-
-    - name: Create a new profile if 'default' does not exist
-      when: not profile_exists | default(false)
-      block:
-        - name: Configure terminal profile
-          community.general.dconf:
-            key: "{{ terminal_profile_path }}{{ item.key }}"
-            value: "{{ item.value }}"
-          with_dict: "{{ terminal_profile_settings }}"
-          become: true
-          become_user: mainws
-
-        - name: Configure terminal legacy settings
-          community.general.dconf:
-            key: "{{ item.key }}"
-            value: "{{ item.value }}"
-          with_dict: "{{ terminal_legacy_settings }}"
-          become: true
-          become_user: mainws
-
-        - name: Print the ID of the newly created profile
-          ansible.builtin.debug:
-            var: terminal_profile_uuid

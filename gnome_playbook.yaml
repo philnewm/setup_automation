@@ -51,6 +51,29 @@
       become: true
       become_user: mainws
 
+    - name: Add terminal profile
+      community.general.dconf:
+        key: "{{ terminal_profile_list }}"
+        value: "['{{ terminal_profile_uuid }}']"
+      become: true
+      become_user: mainws
+
+    - name: Configure terminal profile
+      community.general.dconf:
+        key: "{{ terminal_profile_path }}{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ terminal_profile_settings }}"
+      become: true
+      become_user: mainws
+
+    - name: Configure terminal legacy settings
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ terminal_legacy_settings }}"
+      become: true
+      become_user: mainws
+
     - name: Install gnome tweaks
       ansible.builtin.package:
         name: gnome-tweaks
@@ -128,7 +151,7 @@
     - name: Clone lavanda theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
-        dest: "{{ ui_user.home }}/Downloads/Lavanda-gtk-theme"
+        dest: "{{ ui_user.home }}/Downloads/Lavanda-gtk-theme/"
         single_branch: true
         version: main
       become: true
@@ -142,6 +165,40 @@
       become: true
       become_user: mainws
 
+    - name: Clone tela circle icon theme from github
+      ansible.builtin.git:
+        repo: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
+        dest: "{{ ui_user.home }}/Downloads/Tela-circle-icon-theme/"
+        single_branch: true
+        version: master
+      become: true
+      become_user: mainws
+
+    # TODO save default download/execution path to variable
+    - name: Install tela circle icon theme
+      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Tela-circle-icon-theme/install.sh -c purple"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become: true
+      become_user: mainws
+
+    - name: Clone Qogir-cursor-theme from github
+      ansible.builtin.git:
+        repo: "https://github.com/vinceliuice/Qogir-icon-theme.git"
+        dest: "{{ ui_user.home }}/Downloads/Qogir-icon-theme/"
+        single_branch: true
+        version: master
+      become: true
+      become_user: mainws
+
+    # TODO save default download/execution path to variable
+    - name: Install Qogir-cursor-theme
+      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Qogir-icon-theme/src/cursors/install.sh --theme ubuntu --color dark"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become: true
+      become_user: mainws
+
     - name: Configure gnome themes
       community.general.dconf:
         key: "{{ item.key }}"
@@ -150,9 +207,10 @@
       become: true
       become_user: mainws
 
-    - name: Remove downloaded repository
+    # TODO delete content of directory
+    - name: Remove downloaded repositories
       ansible.builtin.file:
-        path: "{{ ui_user.home }}/Downloads/Lavanda-gtk-theme/"
+        path: "{{ ui_user.home }}/Downloads/*"
         state: absent
       become: true
       become_user: mainws
