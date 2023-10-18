@@ -151,7 +151,7 @@
     - name: Clone lavanda theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
-        dest: "{{ ui_user.home }}/Downloads/Lavanda-gtk-theme/"
+        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/"
         single_branch: true
         version: main
       become: true
@@ -159,7 +159,7 @@
 
     # TODO save default download/execution path to variable
     - name: Install lavanda theme
-      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
+      ansible.builtin.command: "sh {{ ui_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
@@ -168,7 +168,7 @@
     - name: Clone tela circle icon theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
-        dest: "{{ ui_user.home }}/Downloads/Tela-circle-icon-theme/"
+        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/"
         single_branch: true
         version: master
       become: true
@@ -176,7 +176,7 @@
 
     # TODO save default download/execution path to variable
     - name: Install tela circle icon theme
-      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Tela-circle-icon-theme/install.sh -c purple"
+      ansible.builtin.command: "sh {{ ui_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/install.sh -c purple"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
@@ -185,7 +185,7 @@
     - name: Clone Qogir-cursor-theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Qogir-icon-theme.git"
-        dest: "{{ ui_user.home }}/Downloads/Qogir-icon-theme/"
+        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/"
         single_branch: true
         version: master
       become: true
@@ -193,7 +193,9 @@
 
     # TODO save default download/execution path to variable
     - name: Install Qogir-cursor-theme
-      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Qogir-icon-theme/src/cursors/install.sh --theme ubuntu --color dark"
+      ansible.builtin.command: ./install.sh
+      args:
+        chdir: "{{ ui_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/src/cursors/"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
@@ -210,7 +212,7 @@
     # TODO delete content of directory
     - name: Remove downloaded repositories
       ansible.builtin.file:
-        path: "{{ ui_user.home }}/Downloads/*"
+        path: "{{ ui_user.home }}{{ download_tmp_dir }}"
         state: absent
       become: true
       become_user: mainws

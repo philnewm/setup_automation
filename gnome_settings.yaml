@@ -18,6 +18,7 @@ gnome_extensions_settings:
   "/org/gnome/shell/disabled-extensions": "['background-logo@fedorahosted.org']"
   # TODO implement list for all enabled extensions
   "/org/gnome/shell/enabled-extensions": "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-panel@jderose9.github.com']"
+download_tmp_dir: "/Downloads/tmp/"
 gnome_theme_settings:
   "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
   "/org/gnome/desktop/interface/gtk-theme": "'Lavanda-Dark'"
