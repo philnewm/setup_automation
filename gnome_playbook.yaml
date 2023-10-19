@@ -43,6 +43,7 @@
       become: true
       become_user: mainws
 
+    # INFO party broken visible columns show no effect
     - name: Configure nautilus
       community.general.dconf:
         key: "{{ item.key }}"
@@ -100,6 +101,12 @@
         state: present
       become: true
 
+    - name: Install gettext for Tiling-Assistant
+      ansible.builtin.package:
+        name: gettext
+        state: present
+      become: true
+
     # TODO make extension usable without restart or relogging
     - name: Install user-themes extension
       ansible.builtin.package:
@@ -112,6 +119,26 @@
         name: gnome-shell-extension-dash-to-panel
         state: present
       become: true
+
+    # INFO needs upodate right after install and disables extension afte relog
+    - name: Clone Tiling-Assistant from github
+      ansible.builtin.git:
+        repo: "https://github.com/Leleat/Tiling-Assistant.git"
+        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/"
+        single_branch: true
+        version: main
+      become: true
+      become_user: mainws
+
+    # TODO save default download/execution path to variable
+    - name: Install Tiling-Assistant
+      ansible.builtin.command: "./build.sh -i"
+      args:
+        chdir: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/scripts/"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become: true
+      become_user: mainws
 
     # TODO find a way to reload session without rebooting
     - name: Reboot the host and continue playbook
@@ -139,6 +166,14 @@
         key: "{{ item.key }}"
         value: "{{ item.value }}"
       with_dict: "{{ dash_to_panel_settings }}"
+      become: true
+      become_user: mainws
+
+    - name: Configure Tiling-Assistant
+      community.general.dconf:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ tiling_assistent_settings }}"
       become: true
       become_user: mainws
 
