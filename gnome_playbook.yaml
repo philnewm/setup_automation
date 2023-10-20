@@ -120,6 +120,54 @@
         state: present
       become: true
 
+    - name: Install lm_sensors
+      ansible.builtin.package:
+        name: lm_sensors
+        state: present
+      become: true
+
+    - name: Detect lm_sensors
+      ansible.builtin.command: "sensors-detect --auto"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become: true
+
+    - name: Install app-indicator
+      ansible.builtin.package:
+        name: gnome-shell-extension-appindicator
+        state: present
+      become: true
+
+    - name: Install drive-menu
+      ansible.builtin.package:
+        name: gnome-shell-extension-drive-menu
+        state: present
+      become: true
+
+    - name: Install no-overview
+      ansible.builtin.package:
+        name: gnome-shell-extension-no-overview
+        state: present
+      become: true
+
+    - name: Install just-perfection
+      ansible.builtin.package:
+        name: gnome-shell-extension-just-perfection
+        state: present
+      become: true
+
+    - name: Install freon
+      ansible.builtin.package:
+        name: gnome-shell-extension-freon
+        state: present
+      become: true
+
+    - name: Install gpaste
+      ansible.builtin.package:
+        name: gnome-shell-extension-gpaste
+        state: present
+      become: true
+
     # INFO needs upodate right after install and disables extension afte relog
     - name: Clone Tiling-Assistant from github
       ansible.builtin.git:

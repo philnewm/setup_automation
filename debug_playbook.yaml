@@ -48,10 +48,3 @@
     #   changed_when: command_result.rc == 0
     #   become: true
     #   become_user: mainws
-
-    - name: Install Qogir-cursor-theme
-      ansible.builtin.command: "sh {{ ui_user.home }}/Downloads/Qogir-icon-theme/src/cursors/install.sh --theme ubuntu --color dark"
-      register: install_result
-      changed_when: install_result.rc == 0
-      become: true
-      become_user: mainws

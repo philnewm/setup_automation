@@ -17,7 +17,7 @@ gnome_tweaks_settings:
 gnome_extensions_settings:
   "/org/gnome/shell/disabled-extensions": "['background-logo@fedorahosted.org']"
   # TODO implement list for all enabled extensions
-  "/org/gnome/shell/enabled-extensions": "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-panel@jderose9.github.com', 'tiling-assistant@leleat-on-github']"
+  "/org/gnome/shell/enabled-extensions": "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-panel@jderose9.github.com', 'tiling-assistant@leleat-on-github', 'appindicatorsupport@rgcjonas.gmail.com']"
 download_tmp_dir: "/Downloads/tmp/"
 gnome_theme_settings:
   "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
@@ -62,6 +62,8 @@ dash_to_panel_settings:
   "/org/gnome/shell/extensions/dash-to-panel/window-preview-title-position": "'TOP'"
 nautilus_settings:
   "/org/gnome/nautilus/icon-view/captions": "['detailed_type', 'size', 'date_modified_with_time']"
+  "/org/gnome/nautilus/list-view/default-visible-columns": "['name', 'size', 'mime_type', 'date_modified']"
+  "/org/gnome/nautilus/list-view/default-column-order": "['name', 'size', 'mime_type', 'date_modified_with_time', 'type', 'owner', 'group', 'permissions', 'where', 'date_modified', 'date_accessed', 'date_created', 'recency', 'starred']"
   "/org/gnome/nautilus/list-view/default-zoom-level": "'small'"
   "/org/gtk/gtk4/settings/file-chooser/sort-directories-first": "true"
   "/org/gtk/gtk4/settings/file-chooser/date-format": "'regular'"
