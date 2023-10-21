@@ -4,3 +4,4 @@ group_vars/
 hosts
 *.code-workspace
 remote_control.png
+local_files/

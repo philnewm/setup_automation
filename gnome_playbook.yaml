@@ -126,12 +126,6 @@
         state: present
       become: true
 
-    - name: Detect lm_sensors
-      ansible.builtin.command: "sensors-detect --auto"
-      register: install_result
-      changed_when: install_result.rc == 0
-      become: true
-
     - name: Install app-indicator
       ansible.builtin.package:
         name: gnome-shell-extension-appindicator
@@ -168,13 +162,20 @@
         state: present
       become: true
 
+    - name: Install system-monitor-extension
+      ansible.builtin.package:
+        name: gnome-shell-extension-system-monitor-applet
+        state: present
+      become: true
+
     # INFO needs upodate right after install and disables extension afte relog
     - name: Clone Tiling-Assistant from github
       ansible.builtin.git:
         repo: "https://github.com/Leleat/Tiling-Assistant.git"
         dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/"
         single_branch: true
-        version: main
+        version: v43
+        depth: 1
       become: true
       become_user: mainws
 
@@ -209,21 +210,35 @@
       become: true
       become_user: mainws
 
-    - name: Configure panel
+    - name: Configure panel-extension
       community.general.dconf:
-        key: "{{ item.key }}"
+        key: "{{ dash_to_panel_extension_path }}{{ item.key }}"
         value: "{{ item.value }}"
-      with_dict: "{{ dash_to_panel_settings }}"
+      with_dict: "{{ dash_to_panel_extension_settings }}"
+      become: true
+      become_user: mainws
+
+    - name: Configure monitor-extension
+      community.general.dconf:
+        key: "{{ monitor_extension_path }}{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ system_monitor_extension_settings }}"
       become: true
       become_user: mainws
 
     - name: Configure Tiling-Assistant
       community.general.dconf:
-        key: "{{ item.key }}"
+        key: "{{ tiling_assistent_path }}{{ item.key }}"
         value: "{{ item.value }}"
       with_dict: "{{ tiling_assistent_settings }}"
       become: true
       become_user: mainws
+
+    - name: Detect lm_sensors
+      ansible.builtin.command: "sensors-detect --auto"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become: true
 
     - name: Install sassc for lavanda theme
       ansible.builtin.package:
@@ -237,6 +252,7 @@
         dest: "{{ ui_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/"
         single_branch: true
         version: main
+        depth: 1
       become: true
       become_user: mainws
 
@@ -254,6 +270,7 @@
         dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/"
         single_branch: true
         version: master
+        depth: 1
       become: true
       become_user: mainws
 
@@ -271,6 +288,7 @@
         dest: "{{ ui_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/"
         single_branch: true
         version: master
+        depth: 1
       become: true
       become_user: mainws
 
@@ -284,6 +302,35 @@
       become: true
       become_user: mainws
 
+    # TODO move usernames to vars
+    - name: Copy profile pictures
+      ansible.builtin.copy:
+        src: "local_files/{{ item }}"
+        dest: "/var/lib/AccountsService/icons/{{ item }}"
+        owner: root
+        group: root
+        mode: '0344'
+      loop:
+        - mainws
+        - remote_control
+      become: true
+
+    - name: Create the user configuration file
+      ansible.builtin.copy:
+        content: |
+          [User]
+          Session=
+          Icon=/var/lib/AccountsService/icons/{{ item }}
+          SystemAccount=false
+        dest: /var/lib/AccountsService/users/{{ item }}
+        owner: root
+        group: root
+        mode: '0344'
+      loop:
+        - mainws
+        - remote_control
+      become: true
+
     - name: Configure gnome themes
       community.general.dconf:
         key: "{{ item.key }}"
@@ -292,7 +339,32 @@
       become: true
       become_user: mainws
 
-    # TODO delete content of directory
+    - name: Clone Linux_dynamic_Wallpapers from github
+      ansible.builtin.git:
+        repo: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
+        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Linux_dynamic_Wallpapers/"
+        single_branch: true
+        version: main
+        depth: 1
+      become: true
+      become_user: mainws
+
+    - name: Install Linux_dynamic_Wallpapers
+      ansible.builtin.command: ./install.sh
+      args:
+        chdir: "{{ ui_user.home }}{{ download_tmp_dir }}Linux_dynamic_Wallpapers/"
+      register: install_result
+      changed_when: install_result.rc == 0
+      become: true
+
+    - name: Configure Wallpaper
+      community.general.dconf:
+        key: "{{ gnome_background_path }}{{ item.key }}"
+        value: "{{ item.value }}"
+      with_dict: "{{ gnome_background_settings }}"
+      become: true
+      become_user: mainws
+
     - name: Remove downloaded repositories
       ansible.builtin.file:
         path: "{{ ui_user.home }}{{ download_tmp_dir }}"

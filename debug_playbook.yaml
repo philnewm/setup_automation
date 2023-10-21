@@ -48,3 +48,13 @@
     #   changed_when: command_result.rc == 0
     #   become: true
     #   become_user: mainws
+
+    - name: Clone Tiling-Assistant from github
+      ansible.builtin.git:
+        repo: "https://github.com/Leleat/Tiling-Assistant.git"
+        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/"
+        single_branch: true
+        version: v43
+        depth: 1
+      become: true
+      become_user: mainws
