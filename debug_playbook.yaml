@@ -24,37 +24,68 @@
         state: present
       register: ui_user
 
-    - name: Show Ui user var
+    - name: Show environment
       ansible.builtin.debug:
-        msg: "{{ ui_user.home }}"
+        msg: "{{ ansible_env }}"
 
-    - name: Install pip
-      ansible.builtin.package:
-        name: pip
-        state: present
-      become: true
+    - name: Show remote home
+      ansible.builtin.debug:
+        msg: "{{ ansible_env.HOME }}"
 
-    - name: Install pip psutil package
-      ansible.builtin.pip:
-        name: psutil
-        state: present
-      become: true
-      become_user: mainws
+    # - name: Show username
+    #   ansible.builtin.debug:
+    #     msg: "{{ ansible_user_id }}"
 
-    # - name: Set top bar button layout
-    #   ansible.builtin.command: dconf write /org/gnome/desktop/wm/preferences/button-layout "'appmenu:minimize,maximize,close'"
-    #   # gsettings set org.gnome.desktop.wm.preferences button-layout 'close,minimize,maximize:appmenu'
-    #   register: command_result
-    #   changed_when: command_result.rc == 0
+    # - name: Enable RPM Fusion Free repository
+    #   ansible.builtin.yum_repository:
+    #     name: rpmfusion-free
+    #     description: RPM Fusion Free for Fedora $releasever
+    #     metalink: https://mirrors.rpmfusion.org/metalink?repo=free-fedora-$releasever&arch=$basearch
+    #     enabled: true
+    #     metadata_expire: 14
+    #     gpgcheck: true
+    #     repo_gpgcheck: false
+    #     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever
+    #     state: present
     #   become: true
-    #   become_user: mainws
 
-    - name: Clone Tiling-Assistant from github
-      ansible.builtin.git:
-        repo: "https://github.com/Leleat/Tiling-Assistant.git"
-        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/"
-        single_branch: true
-        version: v43
-        depth: 1
+    # - name: Enable RPM Fusion Non-Free repository
+    #   ansible.builtin.yum_repository:
+    #     name: rpmfusion-nonfree
+    #     description: RPM Fusion Non-Free for Fedora $releasever
+    #     metalink: https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-$releasever&arch=$basearch
+    #     enabled: true
+    #     metadata_expire: 14
+    #     gpgcheck: true
+    #     repo_gpgcheck: false
+    #     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
+    #     state: present
+    #   become: true
+
+    - name: Get firmware update devices
+      ansible.builtin.command: fwupdmgr get-devices
+      register: command_result
+      changed_when: command_result.rc == 0
       become: true
-      become_user: mainws
+
+    - name: Refresh firmware metadata (force)
+      ansible.builtin.command: fwupdmgr refresh --force
+      register: command_result
+      changed_when: command_result.rc == 0
+      become: true
+
+    - name: Get firmware updates
+      ansible.builtin.command: fwupdmgr get-updates
+      register: command_result
+      failed_when: command_result.rc not in [0, 2]
+      changed_when: command_result.rc == 0
+      become: true
+
+    - name: Apply firmware updates
+      ansible.builtin.command: fwupdmgr update -y
+      register: command_result
+      failed_when: command_result.rc not in [0, 2]
+      changed_when: command_result.rc == 0
+      become: true
+
+...
