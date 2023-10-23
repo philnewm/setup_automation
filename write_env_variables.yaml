@@ -1,0 +1,36 @@
+---
+
+- name: Reset Virtual Machine with Ansible
+
+  hosts: dev_host
+
+  roles:
+    - reset_vm
+
+- name: Write environment variables
+
+  hosts: dev_client_fedora
+  vars_files:
+    environment_variables.yaml
+
+  tasks:
+    - name: Set system-wide environment variable
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        line: "{{ item.key }}={{ item.value }}"
+        create: true
+        state: present
+        mode: "0644"
+      with_dict: "{{ global_env_variables }}"
+      become: true
+
+    - name: Set user environment variable
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_env.HOME }}/.bashrc"
+        line: "{{ item.key }}={{ item.value }}"
+        create: true
+        state: present
+        mode: "0644"
+      with_dict: "{{ user_env_variables }}"
+
+...

@@ -1,0 +1,9 @@
+---
+
+global_env_variables:
+  "TMP_DIR": "/tmp/"
+
+user_env_variables:
+  "USER_TMP_DIR": "/tmp/"
+
+...
