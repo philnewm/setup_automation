@@ -7,6 +7,17 @@
   roles:
     - reset_vm
 
+- name: Run initial system Setup
+
+  hosts: dev_client_fedora
+
+  roles:
+    # - initial_setup_fedora
+    - environment_variables
+    - reboot
+    - smb
+    - grub_theme
+
 - name: Gnome Settings
 
   hosts: dev_client_fedora
