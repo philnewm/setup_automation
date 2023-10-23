@@ -1,0 +1,24 @@
+---
+
+# tasks file for environment_variables
+
+- name: Set system-wide environment variable
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    line: "{{ item.key }}={{ item.value }}"
+    create: true
+    state: present
+    mode: "0644"
+  with_dict: "{{ global_env_variables }}"
+  become: true
+
+- name: Set user environment variable
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: "{{ item.key }}={{ item.value }}"
+    create: true
+    state: present
+    mode: "0644"
+  with_dict: "{{ user_env_variables }}"
+
+...

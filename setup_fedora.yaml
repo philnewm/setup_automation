@@ -13,6 +13,7 @@
 
   roles:
     - initial_setup_fedora
+    - environment_variables
     - smb
 
 ...

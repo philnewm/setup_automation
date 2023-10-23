@@ -1,5 +1,7 @@
 ---
 
+# vars file for environment_variables
+
 global_env_variables:
   "TMP_DIR": "/tmp/"
 
