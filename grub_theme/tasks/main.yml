@@ -1,6 +1,9 @@
 ---
 # tasks file for grub_theme
 
+- name: Regather facts
+  ansible.builtin.setup:
+
 - name: Clone Grub2-Themes from github
   ansible.builtin.git:
     repo: "https://github.com/vinceliuice/grub2-themes.git"

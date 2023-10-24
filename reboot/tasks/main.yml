@@ -12,7 +12,4 @@
   ansible.builtin.wait_for_connection:
     timeout: 300
 
-- name: Regather facts
-  ansible.builtin.setup:
-
 ...
