@@ -1,0 +1,75 @@
+---
+# tasks file for gnome_config
+
+- name: Import gnome config requirements
+  ansible.builtin.import_tasks: gnome_config_requirements.yaml
+
+- name: Get local users home dir
+  ansible.builtin.user:
+    name: "{{ local_user }}"
+    state: present
+  register: gnome_user
+
+- name: Show gnome_user data
+  ansible.builtin.debug:
+    msg: "{{ gnome_user.name }}"
+
+- name: Configure gnome-settings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_initial_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+# INFO partly broken visible columns show no effect
+- name: Configure nautilus
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ nautilus_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Add terminal profile
+  community.general.dconf:
+    key: "{{ terminal_profile_list }}"
+    value: "['{{ terminal_profile_uuid }}']"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure terminal profile
+  community.general.dconf:
+    key: "{{ terminal_profile_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ terminal_profile_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure terminal legacy settings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ terminal_legacy_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Install gnome tweaks
+  ansible.builtin.package:
+    name: gnome-tweaks
+    state: present
+  become: true
+
+- name: Configure gnome-tweaks
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_tweaks_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Install gnome extensions
+  ansible.builtin.package:
+    name: gnome-extensions-app
+    state: present
+  become: true

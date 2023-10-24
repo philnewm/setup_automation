@@ -1,110 +1,17 @@
 ---
 
-- name: Reset Virtual Machine with Ansible
-
-  hosts: dev_host
-
-  roles:
-    - reset_vm
-
-- name: Run initial system Setup
-
-  hosts: dev_client_fedora
-
-  roles:
-    # - initial_setup_fedora
-    - environment_variables
-    - reboot
-    - smb
-    - grub_theme
-
 - name: Gnome Settings
 
   hosts: dev_client_fedora
+  vars_files:
+    - gnome_settings.yaml
 
   tasks:
-    - name: Include gnome settings
-      ansible.builtin.include_vars:
-        file: gnome_settings.yaml
-
-    - name: Get UI users home dir
+    - name: Get local users home dir
       ansible.builtin.user:
-        name: mainws
+        name: "{{ local_user }}"
         state: present
-      register: ui_user
-
-    - name: Install pip
-      ansible.builtin.package:
-        name: pip
-        state: present
-      become: true
-
-    - name: Install pip psutil package
-      ansible.builtin.pip:
-        name: psutil
-        state: present
-      become: true
-      become_user: mainws
-
-    - name: Configure gnome-settings
-      community.general.dconf:
-        key: "{{ item.key }}"
-        value: "{{ item.value }}"
-      with_dict: "{{ gnome_initial_settings }}"
-      become: true
-      become_user: mainws
-
-    # INFO party broken visible columns show no effect
-    - name: Configure nautilus
-      community.general.dconf:
-        key: "{{ item.key }}"
-        value: "{{ item.value }}"
-      with_dict: "{{ nautilus_settings }}"
-      become: true
-      become_user: mainws
-
-    - name: Add terminal profile
-      community.general.dconf:
-        key: "{{ terminal_profile_list }}"
-        value: "['{{ terminal_profile_uuid }}']"
-      become: true
-      become_user: mainws
-
-    - name: Configure terminal profile
-      community.general.dconf:
-        key: "{{ terminal_profile_path }}{{ item.key }}"
-        value: "{{ item.value }}"
-      with_dict: "{{ terminal_profile_settings }}"
-      become: true
-      become_user: mainws
-
-    - name: Configure terminal legacy settings
-      community.general.dconf:
-        key: "{{ item.key }}"
-        value: "{{ item.value }}"
-      with_dict: "{{ terminal_legacy_settings }}"
-      become: true
-      become_user: mainws
-
-    - name: Install gnome tweaks
-      ansible.builtin.package:
-        name: gnome-tweaks
-        state: present
-      become: true
-
-    - name: Configure gnome-tweaks
-      community.general.dconf:
-        key: "{{ item.key }}"
-        value: "{{ item.value }}"
-      with_dict: "{{ gnome_tweaks_settings }}"
-      become: true
-      become_user: mainws
-
-    - name: Install gnome extensions
-      ansible.builtin.package:
-        name: gnome-extensions-app
-        state: present
-      become: true
+      register: gnome_user
 
     - name: Install gtk engine for lavanda theme
       ansible.builtin.package:
@@ -183,22 +90,22 @@
     - name: Clone Tiling-Assistant from github
       ansible.builtin.git:
         repo: "https://github.com/Leleat/Tiling-Assistant.git"
-        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/"
+        dest: "{{ gnome_user.home }}{{ download_tmp_dir }}Tiling-Assistant/"
         single_branch: true
         version: v43
         depth: 1
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     # TODO save default download/execution path to variable
     - name: Install Tiling-Assistant
       ansible.builtin.command: "./build.sh -i"
       args:
-        chdir: "{{ ui_user.home }}{{ download_tmp_dir }}Tiling-Assistant/scripts/"
+        chdir: "{{ gnome_user.home }}{{ download_tmp_dir }}Tiling-Assistant/scripts/"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     # TODO find a way to reload session without rebooting
     - name: Reboot the host and continue playbook
@@ -211,7 +118,7 @@
     - name: Wait for the host to come back online
       ansible.builtin.wait_for_connection:
         timeout: 300
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Configure gnome-extensions
       community.general.dconf:
@@ -219,7 +126,7 @@
         value: "{{ item.value }}"
       with_dict: "{{ gnome_extensions_settings }}"
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Configure panel-extension
       community.general.dconf:
@@ -227,7 +134,7 @@
         value: "{{ item.value }}"
       with_dict: "{{ dash_to_panel_extension_settings }}"
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Configure monitor-extension
       community.general.dconf:
@@ -235,7 +142,7 @@
         value: "{{ item.value }}"
       with_dict: "{{ system_monitor_extension_settings }}"
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Configure Tiling-Assistant
       community.general.dconf:
@@ -243,7 +150,7 @@
         value: "{{ item.value }}"
       with_dict: "{{ tiling_assistent_settings }}"
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Detect lm_sensors
       ansible.builtin.command: "sensors-detect --auto"
@@ -260,58 +167,58 @@
     - name: Clone lavanda theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
-        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/"
+        dest: "{{ gnome_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/"
         single_branch: true
         version: main
         depth: 1
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     # TODO save default download/execution path to variable
     - name: Install lavanda theme
-      ansible.builtin.command: "sh {{ ui_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
+      ansible.builtin.command: "sh {{ gnome_user.home }}{{ download_tmp_dir }}Lavanda-gtk-theme/install.sh --icon {{ ansible_distribution | lower }}"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Clone tela circle icon theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
-        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/"
+        dest: "{{ gnome_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/"
         single_branch: true
         version: master
         depth: 1
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     # TODO save default download/execution path to variable
     - name: Install tela circle icon theme
-      ansible.builtin.command: "sh {{ ui_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/install.sh -c purple"
+      ansible.builtin.command: "sh {{ gnome_user.home }}{{ download_tmp_dir }}Tela-circle-icon-theme/install.sh -c purple"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Clone Qogir-cursor-theme from github
       ansible.builtin.git:
         repo: "https://github.com/vinceliuice/Qogir-icon-theme.git"
-        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/"
+        dest: "{{ gnome_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/"
         single_branch: true
         version: master
         depth: 1
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     # TODO save default download/execution path to variable
     - name: Install Qogir-cursor-theme
       ansible.builtin.command: ./install.sh
       args:
-        chdir: "{{ ui_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/src/cursors/"
+        chdir: "{{ gnome_user.home }}{{ download_tmp_dir }}Qogir-icon-theme/src/cursors/"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     # TODO move usernames to vars
     - name: Copy profile pictures
@@ -322,7 +229,7 @@
         group: root
         mode: '0344'
       loop:
-        - mainws
+        - "{{ gnome_user.name }}"
         - remote_control
       become: true
 
@@ -338,7 +245,7 @@
         group: root
         mode: '0344'
       loop:
-        - mainws
+        - "{{ gnome_user.name }}"
         - remote_control
       become: true
 
@@ -348,22 +255,22 @@
         value: "{{ item.value }}"
       with_dict: "{{ gnome_theme_settings }}"
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Clone Linux_dynamic_Wallpapers from github
       ansible.builtin.git:
         repo: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
-        dest: "{{ ui_user.home }}{{ download_tmp_dir }}Linux_dynamic_Wallpapers/"
+        dest: "{{ gnome_user.home }}{{ download_tmp_dir }}Linux_dynamic_Wallpapers/"
         single_branch: true
         version: main
         depth: 1
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Install Linux_dynamic_Wallpapers
       ansible.builtin.command: ./install.sh
       args:
-        chdir: "{{ ui_user.home }}{{ download_tmp_dir }}Linux_dynamic_Wallpapers/"
+        chdir: "{{ gnome_user.home }}{{ download_tmp_dir }}Linux_dynamic_Wallpapers/"
       register: install_result
       changed_when: install_result.rc == 0
       become: true
@@ -374,13 +281,13 @@
         value: "{{ item.value }}"
       with_dict: "{{ gnome_background_settings }}"
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
     - name: Remove downloaded repositories
       ansible.builtin.file:
-        path: "{{ ui_user.home }}{{ download_tmp_dir }}"
+        path: "{{ gnome_user.home }}{{ download_tmp_dir }}"
         state: absent
       become: true
-      become_user: mainws
+      become_user: "{{ gnome_user.name }}"
 
 ...
