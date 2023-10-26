@@ -4,23 +4,13 @@
 - name: Import gnome config requirements
   ansible.builtin.import_tasks: gnome_config_requirements.yaml
 
-- name: Get local users home dir
-  ansible.builtin.user:
-    name: "{{ local_user }}"
-    state: present
-  register: gnome_user
-
-- name: Show gnome_user data
-  ansible.builtin.debug:
-    msg: "{{ gnome_user.name }}"
-
 - name: Configure gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ gnome_initial_settings }}"
   become: true
-  become_user: "{{ gnome_user.name }}"
+  become_user: "{{ local_user }}"
 
 # INFO partly broken visible columns show no effect
 - name: Configure nautilus
@@ -29,14 +19,14 @@
     value: "{{ item.value }}"
   with_dict: "{{ nautilus_settings }}"
   become: true
-  become_user: "{{ gnome_user.name }}"
+  become_user: "{{ local_user }}"
 
 - name: Add terminal profile
   community.general.dconf:
     key: "{{ terminal_profile_list }}"
     value: "['{{ terminal_profile_uuid }}']"
   become: true
-  become_user: "{{ gnome_user.name }}"
+  become_user: "{{ local_user }}"
 
 - name: Configure terminal profile
   community.general.dconf:
@@ -44,7 +34,7 @@
     value: "{{ item.value }}"
   with_dict: "{{ terminal_profile_settings }}"
   become: true
-  become_user: "{{ gnome_user.name }}"
+  become_user: "{{ local_user }}"
 
 - name: Configure terminal legacy settings
   community.general.dconf:
@@ -52,7 +42,7 @@
     value: "{{ item.value }}"
   with_dict: "{{ terminal_legacy_settings }}"
   become: true
-  become_user: "{{ gnome_user.name }}"
+  become_user: "{{ local_user }}"
 
 - name: Install gnome tweaks
   ansible.builtin.package:
@@ -66,10 +56,40 @@
     value: "{{ item.value }}"
   with_dict: "{{ gnome_tweaks_settings }}"
   become: true
-  become_user: "{{ gnome_user.name }}"
+  become_user: "{{ local_user }}"
 
 - name: Install gnome extensions
   ansible.builtin.package:
     name: gnome-extensions-app
     state: present
+  become: true
+
+# TODO image handling to it's own role
+# TODO access images from network while smb shares aren't available yet
+- name: Copy profile pictures
+  ansible.builtin.copy:
+    src: "local_files/{{ item }}"
+    dest: "/var/lib/AccountsService/icons/{{ item }}"
+    owner: root
+    group: root
+    mode: '0344'
+  loop:
+    - "{{ local_user }}"
+    - "{{ ansible_user }}"
+  become: true
+
+- name: Create the user configuration file
+  ansible.builtin.copy:
+    content: |
+      [User]
+      Session=
+      Icon=/var/lib/AccountsService/icons/{{ item }}
+      SystemAccount=false
+    dest: /var/lib/AccountsService/users/{{ item }}
+    owner: root
+    group: root
+    mode: '0344'
+  loop:
+    - "{{ local_user }}"
+    - "{{ ansible_user }}"
   become: true

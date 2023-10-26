@@ -1,0 +1,55 @@
+---
+
+# tasks file for gnome_themes
+
+- name: Get local users home dir
+  ansible.builtin.user:
+    name: "{{ local_user }}"
+    state: present
+  register: gnome_user
+
+- name: Import gnome themes requirements
+  ansible.builtin.import_tasks: gnome_themes_requirements.yaml
+
+- name: "Clone {{ item.value.name }} from github"
+  ansible.builtin.git:
+    repo: "{{ item.value.repo_url }}"
+    dest: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.download_dir }}"
+    single_branch: true
+    version: item.value.branch
+    depth: 1
+  loop: "{{ github_repo_themes | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: "Install {{ item.value.name }}"
+  ansible.builtin.command: "{{ item.value.install_cmd }}"
+  args:
+    chdir: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.install_dir }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  loop: "{{ github_repo_themes | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure gnome themes
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_theme_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure Wallpaper
+  community.general.dconf:
+    key: "{{ gnome_background_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_background_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+...

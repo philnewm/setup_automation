@@ -1,0 +1,15 @@
+---
+
+# requirements file for gnome_themes
+
+- name: Install gtk engine for lavanda theme
+  ansible.builtin.package:
+    name: gtk-murrine-engine
+    state: present
+  become: true
+
+- name: Install sassc for lavanda theme
+  ansible.builtin.package:
+    name: sassc
+    state: present
+  become: true

@@ -1,0 +1,51 @@
+---
+
+# vars file for gnome_themes
+
+github_repo_themes:
+  Lavanda_Theme:
+    name: "Lavanda-gtk-theme"
+    repo_url: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
+    branch: "main"
+    install_cmd: "./install.sh --icon {{ ansible_distribution | lower }}"
+    download_dir: "Lavanda-gtk-theme/"
+    install_dir: "Lavanda-gtk-theme/"
+
+  Tela_Circle_Icon_Theme:
+    name: "Tela-circle-icon-theme"
+    repo_url: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
+    branch: "master"
+    install_cmd: "./install.sh -c purple"
+    download_dir: "Tela-circle-icon-theme/"
+    install_dir: "Tela-circle-icon-theme/"
+
+  Qogir_cursor_theme:
+    name: "Qogir-icon-theme"
+    repo_url: "https://github.com/vinceliuice/Qogir-icon-theme.git"
+    branch: "master"
+    install_cmd: "./install.sh"
+    download_dir: "Qogir-icon-theme/"
+    install_dir: "Qogir-icon-theme/src/cursors/"
+
+  # TODO move to separate img role
+  Linux_dynamic_Wallpapers:
+    name: "Linux_Dynamic_Wallpapers"
+    repo_url: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
+    branch: "main"
+    install_cmd: "./install.sh"
+    download_dir: "Linux_dynamic_Wallpapers/"
+    install_dir: "Linux_dynamic_Wallpapers/"
+
+gnome_theme_settings:
+  "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
+  "/org/gnome/desktop/interface/gtk-theme": "'Lavanda-Dark'"
+  "/org/gnome/desktop/interface/icon-theme": "'Tela-circle-purple-dark'"
+  "/org/gnome/desktop/interface/cursor-theme": "'Qogir-ubuntu-cursors'"
+gnome_background_path: "/org/gnome/desktop/background/"
+# TODO change hardcoded image path
+gnome_background_settings:
+  "picture-options": "'zoom'"
+  "picture-uri": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+  "picture-uri-dark": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+
+...

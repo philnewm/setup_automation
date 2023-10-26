@@ -18,74 +18,12 @@
     - name: Just ping it
       ansible.builtin.ping:
 
-    - name: Get UI users home dir
-      ansible.builtin.user:
-        name: mainws
-        state: present
-      register: ui_user
-
-    - name: Show environment
+    - name: Show user environment varibales
       ansible.builtin.debug:
-        msg: "{{ ansible_env }}"
+        msg: "{{ user_env_variables }}"
 
-    - name: Show remote home
+    - name: Show global environment varibales
       ansible.builtin.debug:
-        msg: "{{ ansible_env.HOME }}"
-
-    # - name: Show username
-    #   ansible.builtin.debug:
-    #     msg: "{{ ansible_user_id }}"
-
-    # - name: Enable RPM Fusion Free repository
-    #   ansible.builtin.yum_repository:
-    #     name: rpmfusion-free
-    #     description: RPM Fusion Free for Fedora $releasever
-    #     metalink: https://mirrors.rpmfusion.org/metalink?repo=free-fedora-$releasever&arch=$basearch
-    #     enabled: true
-    #     metadata_expire: 14
-    #     gpgcheck: true
-    #     repo_gpgcheck: false
-    #     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever
-    #     state: present
-    #   become: true
-
-    # - name: Enable RPM Fusion Non-Free repository
-    #   ansible.builtin.yum_repository:
-    #     name: rpmfusion-nonfree
-    #     description: RPM Fusion Non-Free for Fedora $releasever
-    #     metalink: https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-$releasever&arch=$basearch
-    #     enabled: true
-    #     metadata_expire: 14
-    #     gpgcheck: true
-    #     repo_gpgcheck: false
-    #     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever
-    #     state: present
-    #   become: true
-
-    - name: Get firmware update devices
-      ansible.builtin.command: fwupdmgr get-devices
-      register: command_result
-      changed_when: command_result.rc == 0
-      become: true
-
-    - name: Refresh firmware metadata (force)
-      ansible.builtin.command: fwupdmgr refresh --force
-      register: command_result
-      changed_when: command_result.rc == 0
-      become: true
-
-    - name: Get firmware updates
-      ansible.builtin.command: fwupdmgr get-updates
-      register: command_result
-      failed_when: command_result.rc not in [0, 2]
-      changed_when: command_result.rc == 0
-      become: true
-
-    - name: Apply firmware updates
-      ansible.builtin.command: fwupdmgr update -y
-      register: command_result
-      failed_when: command_result.rc not in [0, 2]
-      changed_when: command_result.rc == 0
-      become: true
+        msg: "{{ global_env_variables }}"
 
 ...

@@ -1,0 +1,101 @@
+---
+
+# tasks file for gnome_extensions
+
+- name: Get local users home dir
+  ansible.builtin.user:
+    name: "{{ local_user }}"
+    state: present
+  register: gnome_user
+
+- name: Import gnome extension requirements
+  ansible.builtin.import_tasks: gnome_extension_requirements.yaml
+
+# TODO make extension usable without restart or relogging
+- name: Install fedora repo extension
+  ansible.builtin.package:
+    name: "{{ item.value }}"
+    state: present
+  with_dict: "{{ fedora_repo_extensions }}"
+  become: true
+
+# INFO needs upodate right after install
+- name: "Clone extensions from github"
+  ansible.builtin.git:
+    repo: "{{ item.value.repo_url }}"
+    dest: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.install_dir }}/"
+    single_branch: true
+    version: item.value.branch
+    depth: 1
+  loop: "{{ github_repo_extensions | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: "Install extensions from github"
+  ansible.builtin.command: "{{ item.value.install_cmd }}"
+  args:
+    chdir: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.install_dir }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  loop: "{{ github_repo_extensions | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+# TODO find a way to reload session without rebooting
+- name: Reboot the host and continue playbook
+  ansible.builtin.reboot:
+    msg: Reboot initiated by Ansible
+    pre_reboot_delay: 5
+    reboot_timeout: 300
+  become: true
+
+- name: Wait for the host to come back online
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure gnome-extensions
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_extensions_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure panel-extension
+  community.general.dconf:
+    key: "{{ dash_to_panel_extension_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ dash_to_panel_extension_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure monitor-extension
+  community.general.dconf:
+    key: "{{ monitor_extension_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ system_monitor_extension_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure Tiling-Assistant
+  community.general.dconf:
+    key: "{{ tiling_assistent_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ tiling_assistent_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+- name: Configure gpaste
+  community.general.dconf:
+    key: "{{ gpaste_extension_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gpaste_extension_settings }}"
+  become: true
+  become_user: "{{ gnome_user.name }}"
+
+...
