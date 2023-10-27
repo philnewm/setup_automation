@@ -11,28 +11,25 @@
 - name: Import gnome themes requirements
   ansible.builtin.import_tasks: gnome_themes_requirements.yaml
 
-- name: "Clone {{ item.value.name }} from github"
+# diskspace error while cloning
+- name: Clone repos from github
   ansible.builtin.git:
-    repo: "{{ item.value.repo_url }}"
-    dest: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.download_dir }}"
+    repo: "{{ item.repo_url }}"
+    dest: "{{ user_env_variables.USER_TMP_DIR }}{{ item.download_dir }}"
     single_branch: true
-    version: item.value.branch
+    version: "{{ item.branch }}"
     depth: 1
-  loop: "{{ github_repo_themes | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  loop: "{{ github_repo_themes }}"
   become: true
   become_user: "{{ gnome_user.name }}"
 
-- name: "Install {{ item.value.name }}"
-  ansible.builtin.command: "{{ item.value.install_cmd }}"
+- name: "Install {{ item.name }}"
+  ansible.builtin.command: "{{ item.install_cmd }}"
   args:
-    chdir: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.install_dir }}"
+    chdir: "{{ user_env_variables.USER_TMP_DIR }}{{ item.install_dir }}"
   register: install_result
   changed_when: install_result.rc == 0
-  loop: "{{ github_repo_themes | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  loop: "{{ github_repo_themes }}"
   become: true
   become_user: "{{ gnome_user.name }}"
 

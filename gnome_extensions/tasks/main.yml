@@ -22,26 +22,22 @@
 # INFO needs upodate right after install
 - name: "Clone extensions from github"
   ansible.builtin.git:
-    repo: "{{ item.value.repo_url }}"
-    dest: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.install_dir }}/"
+    repo: "{{ item.repo_url }}"
+    dest: "{{ user_env_variables.USER_TMP_DIR }}{{ item.download_dir }}/"
     single_branch: true
-    version: item.value.branch
+    version: "{{ item.branch }}"
     depth: 1
-  loop: "{{ github_repo_extensions | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  loop: "{{ github_repo_extensions }}"
   become: true
   become_user: "{{ gnome_user.name }}"
 
 - name: "Install extensions from github"
-  ansible.builtin.command: "{{ item.value.install_cmd }}"
+  ansible.builtin.command: "{{ item.install_cmd }}"
   args:
-    chdir: "{{ user_env_variables.USER_TMP_DIR }}{{ item.value.install_dir }}"
+    chdir: "{{ user_env_variables.USER_TMP_DIR }}{{ item.install_dir }}"
   register: install_result
   changed_when: install_result.rc == 0
-  loop: "{{ github_repo_extensions | dict2items }}"
-  loop_control:
-    label: "{{ item.key }}"
+  loop: "{{ github_repo_extensions }}"
   become: true
   become_user: "{{ gnome_user.name }}"
 
