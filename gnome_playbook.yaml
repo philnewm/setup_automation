@@ -1,19 +1,20 @@
 ---
 
-# - name: Reset Virtual Machine with Ansible
+- name: Reset Virtual Machine with Ansible
 
-#   hosts: dev_host
+  hosts: dev_host
 
-#   roles:
-#     - reset_vm
+  roles:
+    - reset_vm
 
 - name: Gnome Settings
 
   hosts: dev_client_fedora
 
   roles:
-    # - gnome_config
-    # - gnome_extensions
+    - gnome_config
+    # - gnome_images
+    - gnome_extensions
     - gnome_themes
 
 ...

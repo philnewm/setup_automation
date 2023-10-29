@@ -90,4 +90,5 @@ tiling_assistent_settings:
 gpaste_extension_path: "/org/gnome/GPaste/"
 gpaste_extension_settings:
   "images-support": "true"
+
 ...

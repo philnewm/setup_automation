@@ -64,32 +64,4 @@
     state: present
   become: true
 
-# TODO image handling to it's own role
-# TODO access images from network while smb shares aren't available yet
-- name: Copy profile pictures
-  ansible.builtin.copy:
-    src: "local_files/{{ item }}"
-    dest: "/var/lib/AccountsService/icons/{{ item }}"
-    owner: root
-    group: root
-    mode: '0344'
-  loop:
-    - "{{ local_user }}"
-    - "{{ ansible_user }}"
-  become: true
-
-- name: Create the user configuration file
-  ansible.builtin.copy:
-    content: |
-      [User]
-      Session=
-      Icon=/var/lib/AccountsService/icons/{{ item }}
-      SystemAccount=false
-    dest: /var/lib/AccountsService/users/{{ item }}
-    owner: root
-    group: root
-    mode: '0344'
-  loop:
-    - "{{ local_user }}"
-    - "{{ ansible_user }}"
-  become: true
+...

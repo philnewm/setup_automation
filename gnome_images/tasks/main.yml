@@ -1,6 +1,6 @@
 ---
 
-# tasks file for gnome_themes
+# tasks file for gnome_images
 
 - name: Get local users home dir
   ansible.builtin.user:
@@ -12,8 +12,33 @@
   ansible.builtin.set_fact:
     user_install_dir: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
 
-- name: Import gnome themes requirements
-  ansible.builtin.import_tasks: gnome_themes_requirements.yaml
+- name: Copy profile pictures
+  ansible.builtin.copy:
+    src: "local_files/{{ item }}"
+    dest: "/var/lib/AccountsService/icons/{{ item }}"
+    owner: root
+    group: root
+    mode: '0344'
+  loop:
+    - "{{ local_user }}"
+    - "{{ ansible_user }}"
+  become: true
+
+- name: Create the user configuration file
+  ansible.builtin.copy:
+    content: |
+      [User]
+      Session=
+      Icon=/var/lib/AccountsService/icons/{{ item }}
+      SystemAccount=false
+    dest: /var/lib/AccountsService/users/{{ item }}
+    owner: root
+    group: root
+    mode: '0344'
+  loop:
+    - "{{ local_user }}"
+    - "{{ ansible_user }}"
+  become: true
 
 - name: Clone repos from github
   ansible.builtin.git:
@@ -22,25 +47,24 @@
     single_branch: true
     version: "{{ item.branch }}"
     depth: 1
-  loop: "{{ github_repo_themes }}"
+  loop: "{{ github_repo_background }}"
   become: true
   become_user: "{{ gnome_user.name }}"
 
-- name: "Install {{ item.name }}"
+- name: "Install repos from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
   args:
     chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"
   register: install_result
   changed_when: install_result.rc == 0
-  loop: "{{ github_repo_themes }}"
+  loop: "{{ github_repo_background }}"
   become: true
-  become_user: "{{ gnome_user.name }}"
 
-- name: Configure gnome themes
+- name: Configure Wallpaper
   community.general.dconf:
-    key: "{{ item.key }}"
+    key: "{{ gnome_background_path }}{{ item.key }}"
     value: "{{ item.value }}"
-  with_dict: "{{ gnome_theme_settings }}"
+  with_dict: "{{ gnome_background_settings }}"
   become: true
   become_user: "{{ gnome_user.name }}"
 

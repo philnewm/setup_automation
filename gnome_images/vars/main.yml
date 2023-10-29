@@ -1,0 +1,18 @@
+---
+
+# vars file for gnome_images
+
+github_repo_background:
+  - name: "Linux_Dynamic_Wallpapers"
+    repo_url: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
+    branch: "main"
+    install_cmd: "./install.sh"
+    download_dir: "Linux_dynamic_Wallpapers"
+    install_dir: "Linux_dynamic_Wallpapers"
+gnome_background_path: "/org/gnome/desktop/background/"
+# TODO change hardcoded image path
+gnome_background_settings:
+  "picture-options": "'zoom'"
+  "picture-uri": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+  "picture-uri-dark": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+...

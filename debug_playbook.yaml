@@ -10,20 +10,35 @@
 - name: Debug
 
   hosts: dev_client_fedora
-  vars_files:
-    - gnome_settings.yaml
 
   tasks:
 
     - name: Just ping it
       ansible.builtin.ping:
 
-    - name: Show user environment varibales
-      ansible.builtin.debug:
-        msg: "{{ user_env_variables }}"
+    # - name: Check /tmp size
+    #   ansible.builtin.shell: |
+    #     set -o pipefail
+    #     df -h /tmp | awk 'NR==2 {gsub(/G/, "", $4); print $4}'
+    #   register: tmp_size
+    #   changed_when: false
 
-    - name: Show global environment varibales
+    # - name: Show output of df
+    #   ansible.builtin.debug:
+    #     msg: "{{ tmp_size }}"
+
+    - name: Get local users home dir
+      ansible.builtin.user:
+        name: "{{ local_user }}"
+        state: present
+      register: gnome_user
+
+    - name: Set user install dir
+      ansible.builtin.set_fact:
+        combined_path: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
+
+    - name: Show gnome_user install path
       ansible.builtin.debug:
-        msg: "{{ global_env_variables }}"
+        msg: "{{ combined_path }}"
 
 ...
