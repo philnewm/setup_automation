@@ -13,7 +13,7 @@
 
   roles:
     - gnome_config
-    # - gnome_images
+    - gnome_images
     - gnome_extensions
     - gnome_themes
 

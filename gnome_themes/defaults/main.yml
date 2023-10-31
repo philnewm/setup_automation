@@ -1,2 +1,32 @@
 ---
+
 # defaults file for gnome_themes
+
+github_repo_themes:
+  - name: "Lavanda-gtk-theme"
+    repo_url: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
+    branch: "main"
+    install_cmd: "./install.sh --icon {{ ansible_distribution | lower }}"
+    download_dir: "Lavanda-gtk-theme"
+    install_dir: "Lavanda-gtk-theme"
+
+  - name: "Tela-circle-icon-theme"
+    repo_url: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
+    branch: "master"
+    install_cmd: "./install.sh -c purple"
+    download_dir: "Tela-circle-icon-theme"
+    install_dir: "Tela-circle-icon-theme"
+
+  - name: "Qogir-icon-theme"
+    repo_url: "https://github.com/vinceliuice/Qogir-icon-theme.git"
+    branch: "master"
+    install_cmd: "./install.sh"
+    download_dir: "Qogir-icon-theme"
+    install_dir: "Qogir-icon-theme/src/cursors"
+gnome_theme_settings:
+  "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
+  "/org/gnome/desktop/interface/gtk-theme": "'Lavanda-Dark'"
+  "/org/gnome/desktop/interface/icon-theme": "'Tela-circle-purple-dark'"
+  "/org/gnome/desktop/interface/cursor-theme": "'Qogir-ubuntu-cursors'"
+
+...

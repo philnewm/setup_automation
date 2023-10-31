@@ -12,10 +12,19 @@
   ansible.builtin.set_fact:
     user_install_dir: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
 
-- name: Import gnome extension requirements
-  ansible.builtin.import_tasks: gnome_extension_requirements.yaml
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
 
-# TODO make extension usable without restart or relogging
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+  become: true
+  become_user: "{{ local_user }}"
+
 - name: Install fedora repo extension
   ansible.builtin.package:
     name: "{{ item.value }}"

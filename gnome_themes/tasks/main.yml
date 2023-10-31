@@ -12,10 +12,20 @@
   ansible.builtin.set_fact:
     user_install_dir: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
 
-- name: Import gnome themes requirements
-  ansible.builtin.import_tasks: gnome_themes_requirements.yaml
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
 
-- name: Clone repos from github
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+  become: true
+  become_user: "{{ local_user }}"
+
+- name: Clone theme repos from github
   ansible.builtin.git:
     repo: "{{ item.repo_url }}"
     dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
@@ -26,7 +36,7 @@
   become: true
   become_user: "{{ gnome_user.name }}"
 
-- name: "Install {{ item.name }}"
+- name: "Install themes from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
   args:
     chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"

@@ -1,8 +1,18 @@
 ---
 # tasks file for gnome_config
 
-- name: Import gnome config requirements
-  ansible.builtin.import_tasks: gnome_config_requirements.yaml
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+  become: true
+  become_user: "{{ local_user }}"
 
 - name: Configure gnome-settings
   community.general.dconf:
@@ -44,12 +54,6 @@
   become: true
   become_user: "{{ local_user }}"
 
-- name: Install gnome tweaks
-  ansible.builtin.package:
-    name: gnome-tweaks
-    state: present
-  become: true
-
 - name: Configure gnome-tweaks
   community.general.dconf:
     key: "{{ item.key }}"
@@ -57,11 +61,5 @@
   with_dict: "{{ gnome_tweaks_settings }}"
   become: true
   become_user: "{{ local_user }}"
-
-- name: Install gnome extensions
-  ansible.builtin.package:
-    name: gnome-extensions-app
-    state: present
-  become: true
 
 ...

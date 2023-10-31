@@ -14,8 +14,8 @@
 
 - name: Copy profile pictures
   ansible.builtin.copy:
-    src: "local_files/{{ item }}"
-    dest: "/var/lib/AccountsService/icons/{{ item }}"
+    src: "{{ picture_src_path }}{{ item }}"
+    dest: "{{ picture_dest_path }}{{ item }}"
     owner: root
     group: root
     mode: '0344'
@@ -29,7 +29,7 @@
     content: |
       [User]
       Session=
-      Icon=/var/lib/AccountsService/icons/{{ item }}
+      Icon={{ picture_dest_path }}{{ item }}
       SystemAccount=false
     dest: /var/lib/AccountsService/users/{{ item }}
     owner: root
