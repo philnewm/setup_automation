@@ -2,15 +2,9 @@
 
 # tasks file for gnome_images
 
-- name: Get local users home dir
-  ansible.builtin.user:
-    name: "{{ local_user }}"
-    state: present
-  register: gnome_user
-
 - name: Set user install dir
   ansible.builtin.set_fact:
-    user_install_dir: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
+    user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
 
 - name: Copy profile pictures
   ansible.builtin.copy:
@@ -48,8 +42,6 @@
     version: "{{ item.branch }}"
     depth: 1
   loop: "{{ github_repo_background }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 - name: "Install repos from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
@@ -65,7 +57,5 @@
     key: "{{ gnome_background_path }}{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ gnome_background_settings }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 ...

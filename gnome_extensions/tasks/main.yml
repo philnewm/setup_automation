@@ -2,15 +2,9 @@
 
 # tasks file for gnome_extensions
 
-- name: Get local users home dir
-  ansible.builtin.user:
-    name: "{{ local_user }}"
-    state: present
-  register: gnome_user
-
 - name: Set user install dir
   ansible.builtin.set_fact:
-    user_install_dir: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
+    user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
 
 - name: Install required packages
   ansible.builtin.package:
@@ -22,8 +16,6 @@
   ansible.builtin.pip:
     name: "{{ pip_packages }}"
     state: present
-  become: true
-  become_user: "{{ local_user }}"
 
 - name: Install fedora repo extension
   ansible.builtin.package:
@@ -41,8 +33,6 @@
     version: "{{ item.branch }}"
     depth: 1
   loop: "{{ github_repo_extensions }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 - name: "Install extensions from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
@@ -51,8 +41,6 @@
   register: install_result
   changed_when: install_result.rc == 0
   loop: "{{ github_repo_extensions }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 # TODO find a way to reload session without rebooting
 - name: Reboot the host and continue playbook
@@ -65,46 +53,35 @@
 - name: Wait for the host to come back online
   ansible.builtin.wait_for_connection:
     timeout: 300
-  become_user: "{{ gnome_user.name }}"
 
 - name: Configure gnome-extensions
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ gnome_extensions_settings }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 - name: Configure panel-extension
   community.general.dconf:
     key: "{{ dash_to_panel_extension_path }}{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ dash_to_panel_extension_settings }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 - name: Configure monitor-extension
   community.general.dconf:
     key: "{{ monitor_extension_path }}{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ system_monitor_extension_settings }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 - name: Configure Tiling-Assistant
   community.general.dconf:
     key: "{{ tiling_assistent_path }}{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ tiling_assistent_settings }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 - name: Configure gpaste
   community.general.dconf:
     key: "{{ gpaste_extension_path }}{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ gpaste_extension_settings }}"
-  become: true
-  become_user: "{{ gnome_user.name }}"
 
 ...
