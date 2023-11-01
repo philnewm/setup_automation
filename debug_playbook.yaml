@@ -27,18 +27,11 @@
     #   ansible.builtin.debug:
     #     msg: "{{ tmp_size }}"
 
-    - name: Get local users home dir
-      ansible.builtin.user:
-        name: "{{ local_user }}"
-        state: present
-      register: gnome_user
-
-    - name: Set user install dir
-      ansible.builtin.set_fact:
-        combined_path: "{{ (gnome_user.home, install_dir) | ansible.builtin.path_join }}"
-
     - name: Show gnome_user install path
       ansible.builtin.debug:
-        msg: "{{ combined_path }}"
+        msg: "{{ item }}"
+      loop:
+        - "{{ local_user }}"
+        - "{{ ansible_user }}"
 
 ...
