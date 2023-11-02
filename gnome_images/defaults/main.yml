@@ -1,7 +1,8 @@
 ---
 # defaults file for gnome_images
 
-picture_src_path: "local_files/"
+# INFO requires SMB mount to be setup already
+picture_src_path: "/mnt/library/ansible/images"
 picture_dest_path: "/var/lib/AccountsService/icons/"
 github_repo_background:
   - name: "Linux_Dynamic_Wallpapers"

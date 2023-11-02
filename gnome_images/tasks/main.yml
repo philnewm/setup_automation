@@ -8,7 +8,7 @@
 
 - name: Copy profile pictures
   ansible.builtin.copy:
-    src: "{{ picture_src_path }}{{ item }}"
+    src: "{{ (picture_src_path, item) | ansible.builtin.path_join }}"
     dest: "{{ picture_dest_path }}{{ item }}"
     owner: root
     group: root
