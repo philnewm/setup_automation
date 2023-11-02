@@ -1,0 +1,14 @@
+---
+
+# vars file for gnome_extensions
+
+install_packages:
+  - pip
+  - gnome-extensions-app
+  - lm_sensors
+  - gettext
+
+pip_packages:
+  - psutil
+
+...

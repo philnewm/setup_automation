@@ -1,0 +1,51 @@
+---
+# tasks file for gnome_config
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+
+- name: Configure gnome-settings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_initial_settings }}"
+
+# INFO partly broken visible columns show no effect
+- name: Configure nautilus
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ nautilus_settings }}"
+
+- name: Add terminal profile
+  community.general.dconf:
+    key: "{{ terminal_profile_list }}"
+    value: "['{{ terminal_profile_uuid }}']"
+
+- name: Configure terminal profile
+  community.general.dconf:
+    key: "{{ terminal_profile_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ terminal_profile_settings }}"
+
+- name: Configure terminal legacy settings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ terminal_legacy_settings }}"
+
+- name: Configure gnome-tweaks
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_tweaks_settings }}"
+
+...

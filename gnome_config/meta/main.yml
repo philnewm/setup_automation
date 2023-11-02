@@ -1,0 +1,16 @@
+galaxy_info:
+  author: philnewm
+  description: Adjust basic gnome settings
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Fedora
+    versions:
+    - 38
+
+  galaxy_tags: []
+
+dependencies: []

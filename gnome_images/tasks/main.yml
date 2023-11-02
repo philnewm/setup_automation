@@ -1,0 +1,61 @@
+---
+
+# tasks file for gnome_images
+
+- name: Set user install dir
+  ansible.builtin.set_fact:
+    user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
+
+- name: Copy profile pictures
+  ansible.builtin.copy:
+    src: "{{ picture_src_path }}{{ item }}"
+    dest: "{{ picture_dest_path }}{{ item }}"
+    owner: root
+    group: root
+    mode: '0344'
+  loop:
+    - "{{ local_user }}"
+    - "{{ ansible_user }}"
+  become: true
+
+- name: Create the user configuration file
+  ansible.builtin.copy:
+    content: |
+      [User]
+      Session=
+      Icon={{ picture_dest_path }}{{ item }}
+      SystemAccount=false
+    dest: /var/lib/AccountsService/users/{{ item }}
+    owner: root
+    group: root
+    mode: '0344'
+  loop:
+    - "{{ local_user }}"
+    - "{{ ansible_user }}"
+  become: true
+
+- name: Clone repos from github
+  ansible.builtin.git:
+    repo: "{{ item.repo_url }}"
+    dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
+    single_branch: true
+    version: "{{ item.branch }}"
+    depth: 1
+  loop: "{{ github_repo_background }}"
+
+- name: "Install repos from github"
+  ansible.builtin.command: "{{ item.install_cmd }}"
+  args:
+    chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  loop: "{{ github_repo_background }}"
+  become: true
+
+- name: Configure Wallpaper
+  community.general.dconf:
+    key: "{{ gnome_background_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_background_settings }}"
+
+...

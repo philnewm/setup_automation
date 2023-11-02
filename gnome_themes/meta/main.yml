@@ -1,0 +1,18 @@
+galaxy_info:
+  author: philnewm
+  description: Installs + enables shell, icon and cursor theme on gnome
+  company: your company (optional)
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Fedora
+    versions:
+    - 38
+
+
+  galaxy_tags: []
+
+dependencies: []

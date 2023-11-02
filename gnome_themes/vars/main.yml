@@ -1,0 +1,13 @@
+---
+
+# vars file for gnome_themes
+
+install_packages:
+  - pip
+  - gnome-extensions-app
+  - gtk-murrine-engine
+  - sassc
+pip_packages:
+  - psutil
+
+...

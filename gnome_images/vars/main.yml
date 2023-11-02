@@ -1,0 +1,11 @@
+---
+
+# vars file for gnome_images
+
+gnome_background_path: "/org/gnome/desktop/background/"
+gnome_background_settings:
+  "picture-options": "'zoom'"
+  "picture-uri": "'{{ picture_uri_path }}'"
+  "picture-uri-dark": "'{{ picture_uri_path }}'"
+
+...

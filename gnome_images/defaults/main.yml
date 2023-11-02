@@ -1,0 +1,15 @@
+---
+# defaults file for gnome_images
+
+picture_src_path: "local_files/"
+picture_dest_path: "/var/lib/AccountsService/icons/"
+github_repo_background:
+  - name: "Linux_Dynamic_Wallpapers"
+    repo_url: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
+    branch: "main"
+    install_cmd: "./install.sh"
+    download_dir: "Linux_dynamic_Wallpapers"
+    install_dir: "Linux_dynamic_Wallpapers"
+picture_uri_path: "file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml"
+
+...

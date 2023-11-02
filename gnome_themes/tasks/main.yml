@@ -1,0 +1,43 @@
+---
+
+# tasks file for gnome_themes
+
+- name: Set user install dir
+  ansible.builtin.set_fact:
+    user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+
+- name: Clone theme repos from github
+  ansible.builtin.git:
+    repo: "{{ item.repo_url }}"
+    dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
+    single_branch: true
+    version: "{{ item.branch }}"
+    depth: 1
+  loop: "{{ github_repo_themes }}"
+
+- name: "Install themes from github"
+  ansible.builtin.command: "{{ item.install_cmd }}"
+  args:
+    chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  loop: "{{ github_repo_themes }}"
+
+- name: Configure gnome themes
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_theme_settings }}"
+
+...

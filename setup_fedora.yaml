@@ -13,9 +13,12 @@
 
   roles:
     - initial_setup_fedora
-    - environment_variables
     - reboot
     - smb
     - grub_theme
+    - gnome_config
+    - gnome_images
+    - gnome_extensions
+    - gnome_themes
 
 ...
