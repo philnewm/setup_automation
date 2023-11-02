@@ -7,12 +7,6 @@
 #   roles:
 #     - reset_vm
 
-- name: Debug
-
-  hosts: dev_client_fedora
-
-  tasks:
-
     - name: Just ping it
       ansible.builtin.ping:
 
@@ -29,9 +23,14 @@
 
     - name: Show gnome_user install path
       ansible.builtin.debug:
-        msg: "{{ item }}"
-      loop:
-        - "{{ local_user }}"
-        - "{{ ansible_user }}"
+        msg: "{{ ansible_env }}"
+
+    - name: Show remote home
+      ansible.builtin.debug:
+        msg: "{{ ansible_env.HOME }}"
+
+    - name: Show TMP
+      ansible.builtin.debug:
+        msg: "{{ global_env_variables.TMP_DIR }}"
 
 ...

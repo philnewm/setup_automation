@@ -12,6 +12,7 @@
   hosts: dev_client_fedora
 
   roles:
+    - grub_config
     - initial_setup_fedora
     - reboot
     - smb
