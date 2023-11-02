@@ -1,0 +1,41 @@
+---
+# tasks file for grub_config
+
+# INFO set GRUB options
+- name: Set GRUB options
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    regex: "{{ item.regex }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state }}"
+  loop: "{{ grub_options }}"
+  become: true
+
+- name: Clone Grub2-Themes from github
+  ansible.builtin.git:
+    repo: "https://github.com/vinceliuice/grub2-themes.git"
+    dest: "{{ (global_env_variables.TMP_DIR, download_subdir) | ansible.builtin.path_join }}"
+    single_branch: true
+    version: master
+    depth: 1
+
+- name: Install Grub2-Themes
+  ansible.builtin.command: "./install.sh --theme tela --icon color --screen 1080p --boot"
+  args:
+    chdir: "{{ (global_env_variables.TMP_DIR, download_subdir) | ansible.builtin.path_join }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  become: true
+
+- name: Update GRUB
+  ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
+  register: grub2_result
+  changed_when: grub2_result.rc == 0
+  become: true
+
+- name: Remove downloaded repositories
+  ansible.builtin.file:
+    path: "{{ (global_env_variables.TMP_DIR, download_subdir) | ansible.builtin.path_join }}"
+    state: absent
+
+...

@@ -1,0 +1,22 @@
+---
+
+# defaults file for grub_config
+
+download_subdir: "grub2-themes"
+grub_options:
+  - name: "Set GRUB_TIMEOUT to 0"
+    path: "/etc/default/grub"
+    regex: "^GRUB_TIMEOUT="
+    line: "GRUB_TIMEOUT=2"
+    state: "present"
+
+  # INFO hit [ESC] or [F4] in case of UEFI or
+  # INFO [Shift] in case of Legacy Bios
+  # INFO after vendor logo to show grub2 menu on boot
+  - name: "Set GRUB_TIMEOUT_STYLE to 'hidden'"
+    path: "/etc/default/grub"
+    regex: "^GRUB_TIMEOUT_STYLE="
+    line: 'GRUB_TIMEOUT_STYLE="hidden"'
+    state: "present"
+
+...

@@ -1,17 +1,11 @@
 ---
 
-- name: Reset Virtual Machine with Ansible
+# - name: Reset Virtual Machine with Ansible
 
-  hosts: dev_host
+#   hosts: dev_host
 
-  roles:
-    - reset_vm
-
-- name: Debug
-
-  hosts: dev_client_fedora
-
-  tasks:
+#   roles:
+#     - reset_vm
 
 - name: Debug
 
@@ -36,15 +30,8 @@
       ansible.builtin.debug:
         msg: "{{ ansible_env.HOME }}"
 
-    - name: Source TMP_DIR
-      ansible.builtin.shell: |
-        source /etc/environment
-        echo $TMP_DIR
-      register: result
-      changed_when: false
-
-    - name: Show remote TMP_DIR
+    - name: Show TMP
       ansible.builtin.debug:
-        msg: "{{ result.stdout }}"
+        msg: "{{ global_env_variables.TMP_DIR }}"
 
 ...
