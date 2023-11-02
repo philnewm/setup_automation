@@ -29,6 +29,4 @@
         - "{{ ansible_user }}"
       become: true
 
-  - name
-
 ...
