@@ -1,2 +1,17 @@
 ---
+
 # vars file for reset_vm
+
+install_packages:
+# TODO add handling for debian systems
+  - name: "Install libvirt dependencies"
+    package: "libvirt-devel"
+
+  - name: "Install python dependencies"
+    package: "python-devel"
+
+install_pip_packages:
+  - name: "Install pip libvirt package"
+    package: "libvirt-python"
+
+...

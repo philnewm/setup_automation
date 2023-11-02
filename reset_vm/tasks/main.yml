@@ -1,8 +1,19 @@
 ---
 
 # tasks file for reset_vm
-- name: Import dependencies
-  ansible.builtin.import_tasks: vm_requirements.yaml
+- name: Install libvirt dependencies
+  ansible.builtin.package:
+    name: "{{ item.package }}"
+    state: present
+  loop: "{{ install_packages }}"
+  become: true
+
+- name: Install libvirt python dependencies
+  ansible.builtin.pip:
+    name: "{{ item.package }}"
+    state: present
+  loop: "{{ install_pip_packages }}"
+  become: true
 
 - name: Check if VM is running
   community.libvirt.virt:
