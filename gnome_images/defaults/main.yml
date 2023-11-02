@@ -3,7 +3,7 @@
 
 # INFO requires SMB mount to be setup already
 picture_src_path: "/mnt/library/ansible/images"
-picture_dest_path: "/var/lib/AccountsService/icons/"
+picture_dest_path: "/var/lib/AccountsService/icons"
 github_repo_background:
   - name: "Linux_Dynamic_Wallpapers"
     repo_url: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"

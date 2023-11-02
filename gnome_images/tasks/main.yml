@@ -9,7 +9,7 @@
 - name: Copy profile pictures
   ansible.builtin.copy:
     src: "{{ (picture_src_path, item) | ansible.builtin.path_join }}"
-    dest: "{{ picture_dest_path }}{{ item }}"
+    dest: "{{ (picture_dest_path, item) | ansible.builtin.path_join }}"
     owner: root
     group: root
     mode: '0344'
@@ -23,7 +23,7 @@
     content: |
       [User]
       Session=
-      Icon={{ picture_dest_path }}{{ item }}
+      Icon="{{ (picture_dest_path, item) | ansible.builtin.path_join }}"
       SystemAccount=false
     dest: /var/lib/AccountsService/users/{{ item }}
     owner: root
