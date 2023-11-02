@@ -6,31 +6,29 @@
 
 #   roles:
 #     - reset_vm
+- name: Debugging
 
+  hosts: dev_client_fedora
+  vars:
+    picture_src_path: "/mnt/library/ansible/images"
+    picture_dest_path: "/var/lib/AccountsService/icons"
+
+  tasks:
     - name: Just ping it
       ansible.builtin.ping:
 
-    # - name: Check /tmp size
-    #   ansible.builtin.shell: |
-    #     set -o pipefail
-    #     df -h /tmp | awk 'NR==2 {gsub(/G/, "", $4); print $4}'
-    #   register: tmp_size
-    #   changed_when: false
+    - name: Copy profile pictures
+      ansible.builtin.copy:
+        src: "{{ (picture_src_path, item) | ansible.builtin.path_join }}"
+        dest: "{{ (picture_dest_path, item) | ansible.builtin.path_join }}"
+        owner: root
+        group: root
+        mode: '0344'
+      loop:
+        - "{{ local_user }}"
+        - "{{ ansible_user }}"
+      become: true
 
-    # - name: Show output of df
-    #   ansible.builtin.debug:
-    #     msg: "{{ tmp_size }}"
-
-    - name: Show gnome_user install path
-      ansible.builtin.debug:
-        msg: "{{ ansible_env }}"
-
-    - name: Show remote home
-      ansible.builtin.debug:
-        msg: "{{ ansible_env.HOME }}"
-
-    - name: Show TMP
-      ansible.builtin.debug:
-        msg: "{{ global_env_variables.TMP_DIR }}"
+  - name
 
 ...

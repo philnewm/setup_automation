@@ -2,6 +2,10 @@
 
 # vars file for gnome_images
 
+install_packages:
+  - pip
+pip_packages:
+  - psutil
 gnome_background_path: "/org/gnome/desktop/background/"
 gnome_background_settings:
   "picture-options": "'zoom'"

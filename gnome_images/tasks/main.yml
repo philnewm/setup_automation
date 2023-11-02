@@ -6,6 +6,17 @@
   ansible.builtin.set_fact:
     user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
 
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+
 - name: Copy profile pictures
   ansible.builtin.copy:
     src: "{{ (picture_src_path, item) | ansible.builtin.path_join }}"
@@ -23,7 +34,7 @@
     content: |
       [User]
       Session=
-      Icon="{{ (picture_dest_path, item) | ansible.builtin.path_join }}"
+      Icon={{ (picture_dest_path, item) | ansible.builtin.path_join }}
       SystemAccount=false
     dest: /var/lib/AccountsService/users/{{ item }}
     owner: root
