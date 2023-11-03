@@ -1,3 +1,7 @@
 ---
 # vars file for initial_setup_fedora
-host_name: "ansible-test-system"
+
+install_packages:
+  - flatpak
+
+...

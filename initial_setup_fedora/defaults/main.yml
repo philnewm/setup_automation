@@ -1,2 +1,53 @@
 ---
+
 # defaults file for initial_setup_fedora
+host_name: "ansible-test-system"
+dnf_options:
+  - name: "Set max_parallel_downloads for dnf"
+    path: "/etc/dnf/dnf.conf"
+    regexp: "^max_parallel_downloads="
+    line: "max_parallel_downloads=10"
+    state: "present"
+
+  - name: "Set fastestmirror=true in dnf.conf"
+    path: "/etc/dnf/dnf.conf"
+    regexp: "^fastestmirror="
+    line: "fastestmirror=true"
+    state: "present"
+
+  - name: "Set deltarpm=true in dnf.conf"
+    path: "/etc/dnf/dnf.conf"
+    regexp: "^deltarpm="
+    line: "deltarpm=true"
+    state: "present"
+update_commands:
+  - "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
+  - "dnf upgrade --refresh -y"
+  - "dnf check"
+  - "dnf autoremove -y"
+  - "fwupdmgr get-devices"
+  - "fwupdmgr refresh --force"
+  - "fwupdmgr get-updates"
+  - "fwupdmgr update -y"
+additional_repos:
+  - name: rpmfusion-free
+    description: "RPM Fusion Free for Fedora $releasever"
+    metalink: "https://mirrors.rpmfusion.org/metalink?repo=free-fedora-$releasever&arch=$basearch"
+    enabled: "true"
+    metadata_expire: 14
+    gpgcheck: "true"
+    repo_gpgcheck: "false"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-free-fedora-$releasever"
+    state: "present"
+
+  - name: "rpmfusion-nonfree"
+    description: "RPM Fusion Non-Free for Fedora $releasever"
+    metalink: "https://mirrors.rpmfusion.org/metalink?repo=nonfree-fedora-$releasever&arch=$basearch"
+    enabled: "true"
+    metadata_expire: 14
+    gpgcheck: "true"
+    repo_gpgcheck: "false"
+    gpgkey: "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmfusion-nonfree-fedora-$releasever"
+    state: "present"
+
+...

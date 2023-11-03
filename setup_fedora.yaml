@@ -14,7 +14,6 @@
   roles:
     - grub_config
     - initial_setup_fedora
-    - reboot
     - smb
     - gnome_config
     - gnome_images

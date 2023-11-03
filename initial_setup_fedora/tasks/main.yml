@@ -2,17 +2,68 @@
 
 # tasks file for initial_setup_fedora
 
-- name: Import inital_options
-  ansible.builtin.import_tasks: inital_options.yaml
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
 
-- name: Import inital_updates
-  ansible.builtin.import_tasks: initial_updates.yaml
+- name: Set max_parallel_downloads for dnf
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: "{{ item.state }}"
+  loop: "{{ dnf_options }}"
+  become: true
 
-- name: Import additional_repos
-  ansible.builtin.import_tasks: additional_repos.yaml
+- name: Set host name "{{ host_name }}"
+  ansible.builtin.hostname:
+    name: "{{ host_name }}"
+  become: true
 
-- name: Import environment_variables
-  ansible.builtin.import_tasks: environment_variables.yaml
+# INFO failed_when override is neccessary for "fwupdmgr get-updates"
+# INFO prevents false errors but might cause silent errors
+- name: Initial updates
+  ansible.builtin.command: "{{ item }}"
+  register: command_result
+  failed_when: command_result.rc not in [0, 2]
+  changed_when: command_result.rc == 0
+  loop: "{{ update_commands }}"
+  become: true
+
+- name: Enable additional repos
+  ansible.builtin.yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    metalink: "{{ item.metalink }}"
+    enabled: "{{ item.enabled }}"
+    metadata_expire: "{{ item.metadata_expire }}"
+    gpgcheck: "{{ item.gpgcheck }}"
+    repo_gpgcheck: "{{ item.repo_gpgcheck }}"
+    gpgkey: "{{ item.gpgkey }}"
+    state: "{{ item.state }}"
+  loop: "{{ additional_repos }}"
+  become: true
+
+- name: Set system-wide environment variable
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    line: "{{ item.key }}={{ item.value }}"
+    create: true
+    state: present
+    mode: "0644"
+  with_dict: "{{ global_env_variables }}"
+  become: true
+
+- name: Set user environment variables
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: "{{ item.key }}={{ item.value }}"
+    create: true
+    state: present
+    mode: "0644"
+  with_dict: "{{ user_env_variables }}"
 
 - name: Reboot the host and continue playbook
   ansible.builtin.reboot:
