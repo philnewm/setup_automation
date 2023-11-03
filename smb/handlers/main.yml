@@ -3,7 +3,7 @@
 # handlers file for smb
 - name: Clean up after test
   ansible.builtin.file:
-    path: ~/Documents/setup_check.txt
+    path: "{{ (user_home_path, dummy_target, dummy_file) | ansible.builtin.path_join }}"
     state: absent
   become_user: "{{ local_user }}"
 

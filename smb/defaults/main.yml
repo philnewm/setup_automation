@@ -1,2 +1,46 @@
 ---
+
 # defaults file for smb
+
+user_home_path: "{{ ansible_env.HOME }}"
+hosts_file_path: /etc/hosts
+smb_credentials_file: .smb
+systemd_mount_file_path: /etc/systemd/system
+mount_file_ext: .mount
+auto_mount_file_ext: .automount
+dummy_path: library/dummy_data
+dummy_file: setup_check.txt
+dummy_target: Documents
+
+# vars file for smb
+smb_login: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          306665363266346262376166343936373766303165356537386332343836383436646435383839353339353838663234663032386461656634383933663638350a323835663831353339653739643237626132393464663437323463393964346535666265616634386466356336383336663439373864393136626531313638330a3234616338346331386335616230663338396539393266356665643330306439
+smb_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          326535666265383834376437346230373931323835313536313334383132373336326437373538346564656165636234326539313163343635666466366165640a336532626336376636353539326630356434313037633462393432323734343332393434623264633735323365383835636133303831393032356135373061370a3936303034356137623637643232353763343637666462393361373635396263
+# mount
+file_server: fileserver
+hosts_entry: "10.32.64.200 {{ file_server }}"
+
+target:
+  - { share: "usb_backup", mount: "archive" }
+  - { share: "documents", mount: "documents" }
+  - { share: "learning", mount: "learning" }
+  - { share: "library", mount: "library" }
+  - { share: "ressources", mount: "ressources" }
+mnt_point: mnt
+fs_type: cifs
+permission: rw
+serverino: noserverino
+charset: utf8
+user_id: 1000
+grp_id: 1000
+smb_mount_options: credentials={{ ansible_user_dir }}/.smb,{{ permission }},uid={{ user_id }},gid={{ grp_id }},iocharset={{ charset }},_netdev,{{ serverino }}
+run_lvl: multi-user.target
+dir_mode: 0700
+
+# auto-mount
+timeout_in_sec: 60
+
+...

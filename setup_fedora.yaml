@@ -12,13 +12,13 @@
   hosts: dev_client_fedora
 
   roles:
-    - grub_config
-    - initial_setup_fedora
-    - reboot
+    # - grub_config
+    # - initial_setup_fedora
+    # - reboot
     - smb
-    - gnome_config
-    - gnome_images
-    - gnome_extensions
-    - gnome_themes
+    # - gnome_config
+    # - gnome_images
+    # - gnome_extensions
+    # - gnome_themes
 
 ...

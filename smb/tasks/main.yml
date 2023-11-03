@@ -1,13 +1,45 @@
 ---
 
 # tasks file for smb
-- name: Import SMB requirements
-  ansible.builtin.import_tasks: smb_requirements.yaml
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Add fileserver to hosts
+  ansible.builtin.lineinfile:
+    path: "{{ hosts_file_path }}"
+    line: "{{ hosts_entry }}"
+    create: true
+    mode: "0644"
+  become: true
+
+- name: Write credentials
+  ansible.builtin.copy:
+    content: |
+      username={{ smb_login }}
+      password={{ smb_password }}
+    dest: "{{ (user_home_path, smb_credentials_file) | ansible.builtin.path_join }}"
+    owner: root
+    group: root
+    mode: "0600"
+  become: true
+
+- name: Create mount target
+  ansible.builtin.file:
+    path: "{{ (mnt_point, item.mount) | ansible.builtin.path_join }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop: "{{ target }}"
+  become: true
 
 - name: Copy mount template to remote host
   ansible.builtin.template:
     src: mountfile.mount.j2
-    dest: /etc/systemd/system/{{ mnt_point }}-{{ item.mount }}.mount
+    dest: "{{ (systemd_mount_file_path, mnt_point + '-' + item.mount + mount_file_ext) | ansible.builtin.path_join }}"
     mode: preserve
   loop: "{{ target }}"
   become: true
@@ -15,7 +47,7 @@
 - name: Copy automount template to remote host
   ansible.builtin.template:
     src: mountfile.automount.j2
-    dest: /etc/systemd/system/{{ mnt_point }}-{{ item.mount }}.automount
+    dest: "{{ (systemd_mount_file_path, mnt_point + '-' + item.mount + auto_mount_file_ext) | ansible.builtin.path_join }}"
     mode: preserve
   loop: "{{ target }}"
   become: true
@@ -41,13 +73,8 @@
     timeout: 300
   become_user: "{{ local_user }}"
 
-- name: Check home dir for "{{ local_user }}"
-  ansible.builtin.debug:
-    msg: "This is {{ ansible_env.USER }} currrent home dir: {{ ansible_env.HOME }}"
-  become_user: "{{ local_user }}"
-
 - name: Copy file using smb shares
-  ansible.builtin.command: cp /{{ mnt_point }}/library/dummy_data/setup_check.txt "{{ ansible_env.HOME }}/Documents/"
+  ansible.builtin.command: cp /{{ (mnt_point, dummy_path, dummy_file) | ansible.builtin.path_join }} {{ (ansible_env.HOME, dummy_target) | ansible.builtin.path_join }}
   register: copy_result
   changed_when: copy_result.rc == 0
   notify: Clean up after test
