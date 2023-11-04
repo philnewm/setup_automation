@@ -5,6 +5,5 @@
   ansible.builtin.file:
     path: "{{ (user_home_path, dummy_target, dummy_file) | ansible.builtin.path_join }}"
     state: absent
-  become_user: "{{ local_user }}"
 
 ...
