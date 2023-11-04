@@ -71,13 +71,11 @@
 - name: Wait for the host to come back online
   ansible.builtin.wait_for_connection:
     timeout: 300
-  become_user: "{{ local_user }}"
 
 - name: Copy file using smb shares
   ansible.builtin.command: cp /{{ (mnt_point, dummy_path, dummy_file) | ansible.builtin.path_join }} {{ (ansible_env.HOME, dummy_target) | ansible.builtin.path_join }}
   register: copy_result
   changed_when: copy_result.rc == 0
   notify: Clean up after test
-  become_user: "{{ local_user }}"
 
 ...
