@@ -19,6 +19,7 @@
 
 - name: Copy profile pictures
   ansible.builtin.copy:
+    remote_src: true
     src: "{{ (picture_src_path, item) | ansible.builtin.path_join }}"
     dest: "{{ (picture_dest_path, item) | ansible.builtin.path_join }}"
     owner: root
