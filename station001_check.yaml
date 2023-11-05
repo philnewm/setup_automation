@@ -18,6 +18,6 @@
       ansible.builtin.package:
         name: htop
         state: present
-      become: true
+      become: false
 
 ...
