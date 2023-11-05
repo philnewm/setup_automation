@@ -1,11 +1,11 @@
 ---
 
-# - name: Reset Virtual Machine with Ansible
+- name: Reset Virtual Machine with Ansible
 
-#   hosts: dev_host
+  hosts: dev_host
 
-#   roles:
-#     - reset_vm
+  roles:
+    - reset_vm
 
 - name: Run initial system Setup
 
