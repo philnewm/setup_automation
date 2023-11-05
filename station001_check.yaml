@@ -9,7 +9,6 @@
 - name: Debugging
 
   hosts: dev_host
-  become: true
 
   tasks:
     - name: Just ping it
@@ -19,5 +18,6 @@
       ansible.builtin.package:
         name: htop
         state: present
+      become: true
 
 ...
