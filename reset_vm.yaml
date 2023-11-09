@@ -1,0 +1,10 @@
+---
+
+- name: Reset Virtual Machine with Ansible
+
+  hosts: dev_host
+
+  roles:
+    - reset_vm
+
+...
