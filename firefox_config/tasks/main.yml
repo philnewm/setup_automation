@@ -1,0 +1,37 @@
+---
+# tasks file for firefox_config
+
+- name: Determine Firefox profile directory
+  ansible.builtin.command: "awk -F= '/\\[Profile0\\]/{p=1} p&&/Path/{print $2; exit}' ~/.mozilla/firefox/profiles.ini"
+  changed_when: false
+  register: profile_directory
+
+- name: Debug profile directory
+  ansible.builtin.debug:
+    msg: "{{ profile_directory }}"
+
+# /{{ (ansible_env.HOME, dummy_target) | ansible.builtin.path_join }}
+
+- name: Add preferences to policies.json
+  ansible.builtin.copy:
+    remote_src: true
+    src: /mnt/library/config/policies.json
+    dest: "/etc/firefox/policies/policies.json" 
+    mode: preserve
+
+- name: Create user.js file with preferences
+  ansible.builtin.copy:
+    remote_src: true
+    src: /mnt/library/config/user.js
+    dest: "{{ ansible_nev.HOME }}/.mozilla/firefox/{{ profile_directory.stdout }}/user.js"
+    mode: preserve
+
+- name: Ensure DefaultDownloadDirectory is configured in Firefox
+  ansible.builtin.lineinfile:
+    path: "/path/to/firefox/config/file"
+    regexp: '^\\s*"DefaultDownloadDirectory": "\\${user_env_variables.FIREFOX_DOWNLOAD_DIR}"'
+    line: '  "DefaultDownloadDirectory": "${user_env_variables.FIREFOX_DOWNLOAD_DIR}"'
+    state: present
+
+
+...
