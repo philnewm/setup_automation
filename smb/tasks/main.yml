@@ -73,9 +73,11 @@
     timeout: 300
 
 - name: Copy file using smb shares
-  ansible.builtin.command: cp /{{ (mnt_point, dummy_path, dummy_file) | ansible.builtin.path_join }} {{ (ansible_env.HOME, dummy_target) | ansible.builtin.path_join }}
-  register: copy_result
-  changed_when: copy_result.rc == 0
+  ansible.builtin.copy:
+    remote_src: true
+    src: /{{ (mnt_point, dummy_path, dummy_file) | ansible.builtin.path_join }}
+    dest: /{{ (ansible_env.HOME, dummy_target) | ansible.builtin.path_join }}
+    mode: preserve
   notify: Clean up after test
 
 ...
