@@ -4,12 +4,6 @@
             "Install":[
                 "https://addons.mozilla.org/firefox/downloads/file/4175386/darkreader-4.9.67.xpi", "https://addons.mozilla.org/firefox/downloads/file/3923294/behind_the_overlay-0.2.1.xpi", "https://addons.mozilla.org/firefox/downloads/file/4191732/bitwarden_password_manager-2023.10.2.xpi", "https://addons.mozilla.org/firefox/downloads/file/3914147/matte_black_violet-2022.2.23.xpi", "https://addons.mozilla.org/firefox/downloads/file/4188428/adguard_adblocker-4.2.209.xpi", "https://addons.mozilla.org/firefox/downloads/file/4128570/languagetool-7.1.13.xpi", "https://addons.mozilla.org/firefox/downloads/file/4189794/duckduckgo_for_firefox-2023.11.2.xpi"
             ]
-        },
-        "DefaultDownloadDirectory": "${user_env_variables.FIREFOX_DOWNLOAD_DIR}",
-        "HardwareAcceleration": true,
-        "Homepage": {
-            "URL": "https://duckduckgo.com/"
-        },
-        "StartPage": "homepage"
+        }
     }
 }

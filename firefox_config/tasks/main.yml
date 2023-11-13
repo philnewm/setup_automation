@@ -18,7 +18,7 @@
   ansible.builtin.debug:
     msg: "{{ profile_directory }}"
 
-- name: create directory if they don't exist
+- name: Create directory if they don't exist
   ansible.builtin.file:
     path: "/{{ policies_path }}"
     state: directory
@@ -40,7 +40,7 @@
   ansible.builtin.copy:
     # remote_src: true
     # src: "/{{ (config_server_path, user_config_file) | ansible.builtin.path_join }}"
-    src: "{{ user_config_file }}"
+    src: "user_config_file"
     dest: "{{ (ansible_env.HOME, firefox_config_path, profile_directory.stdout, user_config_file) | ansible.builtin.path_join }}"
     mode: preserve
 
