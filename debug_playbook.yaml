@@ -1,20 +1,21 @@
 ---
 
-# - name: Reset Virtual Machine with Ansible
+- name: Reset Virtual Machine with Ansible
 
-#   hosts: dev_host
+  hosts: dev_host
 
-#   roles:
-#     - reset_vm
+  roles:
+    - reset_vm
+
 - name: Debugging
 
   hosts: dev_client_fedora
 
-  # tasks:
-  #   - name: Just ping it
-  #     ansible.builtin.ping:
+  tasks:
+    - name: Just ping it
+      ansible.builtin.ping:
 
-  roles:
-    - firefox_config
+  # roles:
+  #   - firefox_config
 
 ...
