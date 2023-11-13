@@ -9,4 +9,6 @@ install_packages:
 pip_packages:
   - psutil
 
+gnome_basic_config_file: "gnome_basics_config.yml"
+
 ...
