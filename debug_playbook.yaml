@@ -15,7 +15,7 @@
     - name: Just ping it
       ansible.builtin.ping:
 
-  # roles:
-  #   - firefox_config
+  roles:
+    - firefox_config
 
 ...
