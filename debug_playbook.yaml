@@ -6,6 +6,7 @@
 
 #   roles:
 #     - reset_vm
+
 - name: Debugging
 
   hosts: dev_host
@@ -13,5 +14,13 @@
   tasks:
     - name: Just ping it
       ansible.builtin.ping:
+
+    - name: Copy default config
+      ansible.builtin.copy:
+        src: /mnt/Projects/coding/config/gnome/gnome_basics_config.yml
+        dest: default/
+
+  # roles:
+  #   - gnome_config
 
 ...

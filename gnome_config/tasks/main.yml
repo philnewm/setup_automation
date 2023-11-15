@@ -1,8 +1,13 @@
 ---
 # tasks file for gnome_config
 
-- name: Import vars
-  ansible.builtin.import_vars: "/{{ (config_dir, gnome_basic_config_file) | ansible.builtin.path_join }}"
+- name: Include vars
+  ansible.builtin.include_vars: "/{{ (config_dir, gnome_basic_config_file) | ansible.builtin.path_join }}"
+  ignore_errors: true
+
+- name: Combine dictionaries
+  ansible.builtin.set_fact:
+    combined_settings: "{{ gnome_initial_settings | combine(gnome_tweaks_settings) | combine(nautilus_settings) | combine(terminal_legacy_settings) | combine(terminal_profile_settings) }}"
 
 - name: Install required packages
   ansible.builtin.package:
@@ -14,6 +19,11 @@
   ansible.builtin.pip:
     name: "{{ pip_packages }}"
     state: present
+
+- name: Show gnome settings
+  ansible.builtin.debug:
+    msg: "{{ gnome_initial_settings }}"
+
 
 - name: Configure gnome-settings
   community.general.dconf:
