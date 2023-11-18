@@ -35,14 +35,14 @@
     mode: "0775"
   become: true
 
-- name: Add preferences to policies.json
+- name: copy policies.json to host
   ansible.builtin.copy:
     src: "{{ policies_file }}"
     dest: "/{{ (policies_path, policies_file) | ansible.builtin.path_join }}"
     mode: preserve
   become: true
 
-- name: Create user.js file with preferences
+- name: Copy user.js to host
   ansible.builtin.copy:
     src: "{{ user_config_file }}"
     dest: "{{ (ansible_env.HOME, firefox_config_path, profile_directory.stdout, user_config_file) | ansible.builtin.path_join }}"
