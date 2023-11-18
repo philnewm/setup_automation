@@ -1,13 +1,15 @@
 ---
 # tasks file for firefox_config
 
-- name: Create default firefox profile
-  ansible.builtin.command: "firefox -headless -P default_profile_by_ansible -no-remote"
-  async: 2
-  poll: 0
+- name: Remove original profile
+  ansible.builtin.file:
+    path: "{{ (ansible_env.HOME, firefox_config_path) | ansible.builtin.path_join }}"
+    state: absent
+
+- name: Recreate firefox default profile
+  ansible.builtin.command: firefox -headless -CreateProfile default_profile_by_ansible
   register: result
-  changed_when: true
-  ignore_errors: true
+  changed_when: result.rc == 0
 
 - name: Determine Firefox profile directory
   ansible.builtin.command: "awk -F= '/\\[Profile0\\]/{p=1} p&&/Path/{print $2; exit}' ~/.mozilla/firefox/profiles.ini"
@@ -17,6 +19,12 @@
 - name: Debug profile directory
   ansible.builtin.debug:
     msg: "{{ profile_directory }}"
+
+- name: Populate default profile
+  ansible.builtin.command: firefox -headless -P default_profile_by_ansible
+  async: 1
+  poll: 1
+  ignore_errors: true
 
 - name: Create directory if they don't exist
   ansible.builtin.file:
@@ -29,8 +37,6 @@
 
 - name: Add preferences to policies.json
   ansible.builtin.copy:
-    # remote_src: true
-    # src: "/{{ (config_server_path, policies_file) | ansible.builtin.path_join }}"
     src: "{{ policies_file }}"
     dest: "/{{ (policies_path, policies_file) | ansible.builtin.path_join }}"
     mode: preserve
@@ -38,18 +44,8 @@
 
 - name: Create user.js file with preferences
   ansible.builtin.copy:
-    # remote_src: true
-    # src: "/{{ (config_server_path, user_config_file) | ansible.builtin.path_join }}"
-    src: "user_config_file"
+    src: "{{ user_config_file }}"
     dest: "{{ (ansible_env.HOME, firefox_config_path, profile_directory.stdout, user_config_file) | ansible.builtin.path_join }}"
     mode: preserve
-
-# - name: Ensure DefaultDownloadDirectory is configured in Firefox
-#   ansible.builtin.lineinfile:
-#     path: "/{{ (policies_path, policies_file) | ansible.builtin.path_join }}"
-#     regexp: '^\\s*"DefaultDownloadDirectory": "\\${user_env_variables.FIREFOX_DOWNLOAD_DIR}"'
-#     line: '  "DefaultDownloadDirectory": "${user_env_variables.FIREFOX_DOWNLOAD_DIR}"'
-#     state: present
-#   become: true
 
 ...
