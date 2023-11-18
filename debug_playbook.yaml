@@ -15,10 +15,22 @@
     - name: Just ping it
       ansible.builtin.ping:
 
+    - name: Clear config
+      ansible.builtin.file:
+        path: configs/gnome_config.yml
+        state: absent
+
     - name: Copy default config
       ansible.builtin.copy:
-        src: /mnt/Projects/coding/config/gnome/gnome_basics_config.yml
-        dest: default/
+        src: /mnt/Projects/coding/config/gnome/default/gnome_44_default.yml
+        dest: configs/gnome_config.yml
+        mode: preserve
+
+    # WARNING might not work on windows host
+    - name: Patch config
+      ansible.posix.patch:
+        src: /mnt/Projects/coding/config/gnome/custom/gnome_basics_config.yml
+        dest: configs/gnome_config.yml
 
   # roles:
   #   - gnome_config
