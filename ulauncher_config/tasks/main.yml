@@ -1,0 +1,18 @@
+---
+
+# tasks file for ulauncher_config
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Write settings
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}settings.json"
+    # dest: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansbile.builtin.join_path }}settings.json"
+    content: "{{ ulauncher_settings | to_json }}"
+    mode: 00344
+
+...

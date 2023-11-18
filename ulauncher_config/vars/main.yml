@@ -1,0 +1,8 @@
+---
+
+# vars file for ulauncher_config
+
+install_packages:
+  - ulauncher
+
+...
