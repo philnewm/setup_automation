@@ -1,5 +1,12 @@
 ---
 
+- name: Reset Virtual Machine with Ansible
+
+  hosts: dev_host
+
+  roles:
+    - reset_vm
+
 - name: Run initial system Setup
 
   hosts: dev_client_fedora
@@ -13,5 +20,6 @@
     - gnome_config
     - gnome_extensions
     - gnome_themes
+    - firefox_config
 
 ...

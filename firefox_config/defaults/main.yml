@@ -1,0 +1,12 @@
+---
+
+# defaults file for firefox_config
+
+config_server_path: "/mnt/library/config/"
+policies_path: "etc/firefox/policies"
+policies_file: "policies.json"
+
+user_config_file: "user.js"
+firefox_config_path: ".mozilla/firefox"
+
+...
