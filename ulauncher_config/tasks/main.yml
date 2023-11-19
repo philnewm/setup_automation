@@ -30,8 +30,21 @@
 
 - name: Write extension settings
   ansible.builtin.copy:
-    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'settings.json') | ansible.builtin.path_join }}"
-    content: "{{ ulauncher_settings | to_json(indent=4) }}"
+    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'extensions.json') | ansible.builtin.path_join }}"
+    content: "{{ extension_settings | to_json(indent=4) }}"
     mode: "0644"
+
+- name: Write extension settings
+  ansible.builtin.copy:
+    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'shortcuts.json') | ansible.builtin.path_join }}"
+    content: "{}"
+    mode: "0644"
+
+- name: Enable and start the ulauncher service
+  ansible.builtin.systemd:
+    name: ulauncher.service
+    state: started
+    enabled: true
+    scope: user
 
 ...
