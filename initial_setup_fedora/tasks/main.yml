@@ -17,6 +17,20 @@
   loop: "{{ dnf_options }}"
   become: true
 
+- name: Check if wayland is default session type
+  ansible.builtin.shell: "grep -q '^#WaylandEnable=false$' /etc/gdm/custom.conf"
+  register: wayland_enabled
+  changed_when: false
+
+- name: Update GDM configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/gdm/custom.conf
+    backrefs: true
+    regexp: '^#WaylandEnable=false$'
+    line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
+    state: "{{ 'present' if wayland_enabled.rc == 0 else 'absent' }}"
+  become: true
+
 - name: Set host name "{{ host_name }}"
   ansible.builtin.hostname:
     name: "{{ host_name }}"
