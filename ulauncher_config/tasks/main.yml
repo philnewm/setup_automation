@@ -8,11 +8,24 @@
     state: present
   become: true
 
+- name: Ansible check directory.
+  stat:
+    path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
+  register: settings_dir
+
+- name: "Create settings directory"
+  file:
+    path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
+    state: directory
+    mode: "0755"
+    group: "{{ ansible_effective_group_id }}"
+    owner: "{{ ansible_env.USER }}"
+  when: settings_dir.stat.exists == false
+
 - name: Write settings
   ansible.builtin.copy:
-    dest: "{{ ansible_env.HOME }}settings.json"
-    # dest: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansbile.builtin.join_path }}settings.json"
-    content: "{{ ulauncher_settings | to_json }}"
-    mode: 00344
+    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'settings.json') | ansible.builtin.path_join }}"
+    content: "{{ ulauncher_settings | to_json(indent=4) }}"
+    mode: "0644"
 
 ...

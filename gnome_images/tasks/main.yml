@@ -40,7 +40,7 @@
     dest: /var/lib/AccountsService/users/{{ item }}
     owner: root
     group: root
-    mode: '0344'
+    mode: 0644
   loop:
     - "{{ local_user }}"
     - "{{ ansible_user }}"
