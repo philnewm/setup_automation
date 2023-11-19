@@ -17,6 +17,15 @@
   loop: "{{ dnf_options }}"
   become: true
 
+- name: Update GDM configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/gdm/custom.conf
+    backrefs: true
+    regexp: '^#WaylandEnable=false$'
+    line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
+    state: present
+  become: true
+
 - name: Set host name "{{ host_name }}"
   ansible.builtin.hostname:
     name: "{{ host_name }}"
