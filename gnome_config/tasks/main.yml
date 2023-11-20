@@ -1,9 +1,6 @@
 ---
 # tasks file for gnome_config
 
-- name: Import vars
-  ansible.builtin.import_vars: "/{{ (config_dir, gnome_basic_config_file) | ansible.builtin.path_join }}"
-
 - name: Install required packages
   ansible.builtin.package:
     name: "{{ install_packages }}"
