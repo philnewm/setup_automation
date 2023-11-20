@@ -8,14 +8,14 @@
     state: present
   become: true
 
-- name: Ansible check directory.
-  stat:
+- name: Ansible check directory
+  ansible.builtin.stat:
     path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
   register: settings_dir
 
 - name: "Create settings directory"
-  file:
-    path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
+  ansible.builtin.file:
+    path: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'user-themes') | ansible.builtin.path_join }}"
     state: directory
     mode: "0755"
     group: "{{ ansible_effective_group_id }}"
@@ -34,11 +34,26 @@
     content: "{{ extension_settings | to_json(indent=4) }}"
     mode: "0644"
 
-- name: Write extension settings
+- name: Write shortcut settings
   ansible.builtin.copy:
     dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'shortcuts.json') | ansible.builtin.path_join }}"
     content: "{}"
     mode: "0644"
+
+- name: Write extension settings
+  ansible.builtin.copy:
+    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'extensions.json') | ansible.builtin.path_join }}"
+    content: "{{ extension_settings | to_json(indent=4) }}"
+    mode: "0644"
+
+- name: Clone repos from github
+  ansible.builtin.git:
+    repo: "{{ item.repo_url }}"
+    dest: "{{ item.download_dir }}"
+    single_branch: true
+    version: "{{ item.branch }}"
+    depth: 1
+  loop: "{{ github_repo_theme }}"
 
 - name: Enable and start the ulauncher service
   ansible.builtin.systemd:
