@@ -21,5 +21,6 @@
     - gnome_extensions
     - gnome_themes
     - firefox_config
+    - ulauncher_config
 
 ...
