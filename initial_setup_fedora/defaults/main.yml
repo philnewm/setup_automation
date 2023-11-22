@@ -22,7 +22,6 @@ dnf_options:
     state: "present"
 
 update_commands:
-  - "flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
   - "dnf upgrade --refresh -y"
   - "dnf check"
   - "dnf autoremove -y"
@@ -30,6 +29,7 @@ update_commands:
   - "fwupdmgr refresh --force"
   - "fwupdmgr get-updates"
   - "fwupdmgr update -y"
+
 additional_repos:
   - name: rpmfusion-free
     description: "RPM Fusion Free for Fedora $releasever"
