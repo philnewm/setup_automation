@@ -29,6 +29,7 @@ update_commands:
   - "fwupdmgr refresh --force"
   - "fwupdmgr get-updates"
   - "fwupdmgr update -y"
+
 additional_repos:
   - name: rpmfusion-free
     description: "RPM Fusion Free for Fedora $releasever"
