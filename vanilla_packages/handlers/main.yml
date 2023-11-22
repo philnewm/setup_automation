@@ -1,9 +1,0 @@
----
-# handlers file for vanilla_packages
-
-- name: Rescan repo cache
-  ansible.builtin.command: dnf makecache
-  become: true
-  notify: Restart services
-
-...
