@@ -20,6 +20,7 @@
     - gnome_config
     - gnome_extensions
     - gnome_themes
+    - vanilla_packages
     - firefox_config
     - ulauncher_config
 

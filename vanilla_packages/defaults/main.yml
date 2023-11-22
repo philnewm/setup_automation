@@ -41,6 +41,7 @@ remove_packages:
   - gnome-weather
   - malcontent-control
 
+# TODO should survive reboot
 flatpak_packages:
   - flathub
   - com.teamspeak.TeamSpeak
