@@ -2,6 +2,8 @@
 
 # defaults file for vanilla_packages
 
+rpm_key_version: 2020
+
 codecs:
   - gstreamer1-libav:
     command: gstreamer1-libav
@@ -19,9 +21,7 @@ dnf_packages:
   - gwe
   - parsec
   - shutter
-  - steam
   - terminator
-  - texstudio
   - cockpit
   - gstreamer1-plugins-bad-*
   - gstreamer1-plugins-good-*
@@ -42,11 +42,12 @@ remove_packages:
   - malcontent-control
 
 flatpak_packages:
-  - org.jitsi.jitsi-meet
+  - flathub
   - com.teamspeak.TeamSpeak
   - org.zulip.Zulip
   - com.github.zadam.trilium
   - io.github.achetagames.epic_asset_manager
   - org.onlyoffice.desktopeditors
+  - org.jitsi.jitsi-meet
 
 ...

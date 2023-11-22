@@ -1,10 +1,11 @@
 ---
 
 # tasks file for vanilla_packages
+# TODO make sure every install tasks shows all package in output log
 
 - name: Import RPM Fusion free GPG key
   ansible.builtin.rpm_key:
-    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020"
+    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-{{ rpm_key_version }}"
     state: present
   become: true
 
@@ -16,7 +17,7 @@
 
 - name: Import RPM Fusion nonfree GPG key
   ansible.builtin.rpm_key:
-    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020"
+    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-{{ rpm_key_version }}"
     state: present
   become: true
 
@@ -36,19 +37,23 @@
 
 - name: Install dnf packages
   ansible.builtin.package:
-    name: "{{ dnf_packages }}"
+    name: "{{ item }}"
     state: present
+  loop: "{{ dnf_packages }}"
   become: true
 
 - name: Remove dnf packages
   ansible.builtin.package:
-    name: "{{ remove_packages }}"
+    name: "{{ item }}"
     state: absent
+  loop: "{{ remove_packages }}"
   become: true
 
 - name: Install flatpak packages
-  community.general.flatpak:
-    name: "{{ flatpak_packages }}"
+  community.general.flatpak_remote:
+    name: "{{ item }}"
     state: present
+    method: user
+  loop: "{{ flatpak_packages }}"
 
 ...

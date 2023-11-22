@@ -41,6 +41,8 @@
   loop: "{{ update_commands }}"
   become: true
 
+# move repos into separat role
+# ? repos as dependency ?
 - name: Enable additional repos
   ansible.builtin.yum_repository:
     name: "{{ item.name }}"
