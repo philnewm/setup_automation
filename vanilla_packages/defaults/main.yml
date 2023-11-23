@@ -37,18 +37,19 @@ remove_packages:
   - gnome-contacts
   - gnome-maps
   - rhythmbox
-  - totem*
+  - totem
   - gnome-weather
   - malcontent-control
 
-# TODO should survive reboot
-flatpak_packages:
+flatpak_remotes:
   - flathub
+
+flatpak_packages:
   - com.teamspeak.TeamSpeak
   - org.zulip.Zulip
   - com.github.zadam.trilium
-  - io.github.achetagames.epic_asset_manager
   - org.onlyoffice.desktopeditors
   - org.jitsi.jitsi-meet
+  - net.nokyan.Resources
 
 ...

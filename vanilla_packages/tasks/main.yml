@@ -49,11 +49,22 @@
   loop: "{{ remove_packages }}"
   become: true
 
-- name: Install flatpak packages
+# TODO only install on user level
+- name: Add flathub
   community.general.flatpak_remote:
     name: "{{ item }}"
     state: present
-    method: user
+    method: system
+  become: true
+  loop: "{{ flatpak_remotes }}"
+
+- name: Install flatpak packages
+  community.general.flatpak:
+    name: "{{ item }}"
+    remote: flathub
+    state: present
+    method: system
+  become: true
   loop: "{{ flatpak_packages }}"
 
 ...
