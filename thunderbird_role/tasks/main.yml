@@ -1,0 +1,43 @@
+---
+# tasks file for thunderbird_role
+
+- name: Install thuderbird
+  ansible.builtin.package:
+    name: thunderbird
+    state: present
+  become: true
+
+- name: Remove original profile
+  ansible.builtin.file:
+    path: "{{ (ansible_env.HOME, thunderbird_config_path) | ansible.builtin.path_join }}"
+    state: absent
+
+- name: Recreate firefox default profile
+  ansible.builtin.command: thunderbird -headless -CreateProfile default_profile_by_ansible
+  register: result
+  changed_when: result.rc == 0
+
+- name: Determine Firefox profile directory
+  ansible.builtin.command: "awk -F= '/\\[Profile0\\]/{p=1} p&&/Path/{print $2; exit}' ~/.thunderbird/profiles.ini"
+  changed_when: false
+  register: profile_directory
+
+- name: Debug profile directory
+  ansible.builtin.debug:
+    msg: "{{ profile_directory }}"
+
+- name: Populate default profile
+  ansible.builtin.command: thunderbird -headless -P default_profile_by_ansible
+  async: 1
+  poll: 1
+  ignore_errors: true
+
+- name: Generate user.js from templates/user.js.j2
+  ansible.builtin.template:
+    src: user.js.j2
+    dest: "{{ (ansible_env.HOME, thunderbird_config_path, profile_directory.stdout, user_config_file) | ansible.builtin.path_join }}"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_user_gid }}"
+    mode: "0600"
+
+...

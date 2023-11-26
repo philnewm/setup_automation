@@ -1,0 +1,31 @@
+{% for mail_config in mail_list %}
+user_pref("mail.account.account{{ loop.index }}.identities", "id{{ loop.index }}");
+user_pref("mail.account.account{{ loop.index }}.server", "server{{ loop.index }}");
+user_pref("mail.identity.id{{ loop.index }}.fullName", "{{ mail_config.full_name }}");
+user_pref("mail.identity.id{{ loop.index }}.useremail", "{{ mail_config.mail }}");
+user_pref("mail.identity.id{{ loop.index }}.valid", {{ mail_config.valid }});
+user_pref("mail.server.server{{ loop.index }}.authMethod", {{ mail_config.server_auth_method }});
+user_pref("mail.server.server{{ loop.index }}.hostname", "{{ mail_config.server_hostname }}");
+user_pref("mail.server.server{{ loop.index }}.port", {{ mail_config.imap_port }});
+user_pref("mail.server.server{{ loop.index }}.socketType", {{ mail_config.socket_type }});
+user_pref("mail.server.server{{ loop.index }}.type", "{{ mail_config.type }}");
+user_pref("mail.server.server{{ loop.index }}.userName", "{{ mail_config.mail }}");
+user_pref("mail.smtpserver.smtp{{ loop.index }}.authMethod", {{ mail_config.smtp_auth_method }});
+user_pref("mail.smtpserver.smtp{{ loop.index }}.hostname", "{{ mail_config.smtp_hostname }}");
+user_pref("mail.smtpserver.smtp{{ loop.index }}.port", {{ mail_config.smtp_port }});
+
+{% endfor %}
+{%- set accounts = [] -%}
+{%- set smtpservers = [] -%}
+{%- for index in range(mail_list | length) -%}
+    {%- set account_name = 'account' ~ (index + 1) -%}
+    {%- set smtp_name = 'smtp' ~ (index + 1) -%}
+    {%- set _ = accounts.append(account_name) -%}
+    {%- set _ = smtpservers.append(smtp_name) -%}
+{%- endfor -%}
+user_pref("mail.accountmanager.accounts", "{{ accounts | join(',') }}");
+user_pref("mail.smtpservers", "{{ smtpservers | join(',') }}");
+
+{% for key, value in thunderbird_settings.items() %}
+user_pref("{{ key }}", {{ value }});
+{% endfor %}
