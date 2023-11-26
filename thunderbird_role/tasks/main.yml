@@ -40,4 +40,20 @@
     group: "{{ ansible_user_gid }}"
     mode: "0600"
 
+- name: Create directory if they don't exist
+  ansible.builtin.file:
+    path: "/{{ policies_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0775"
+  become: true
+
+- name: copy policies.json to host
+  ansible.builtin.copy:
+    src: "{{ policies_file }}"
+    dest: "/{{ (policies_path, policies_file) | ansible.builtin.path_join }}"
+    mode: preserve
+  become: true
+
 ...

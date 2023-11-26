@@ -1,0 +1,9 @@
+{
+    "policies":{
+        "Extensions":{
+            "Install":[
+                "https://addons.thunderbird.net/thunderbird/downloads/latest/darko_t/addon-987944-latest.xpi", "https://addons.thunderbird.net/thunderbird/downloads/latest/mailbox-alert/addon-2610-latest.xpi", "https://addons.thunderbird.net/thunderbird/downloads/latest/manually-sort-folders/addon-15102-latest.xpi", "https://addons.thunderbird.net/thunderbird/downloads/latest/importexporttools-ng/addon-986686-latest.xpi", "https://addons.thunderbird.net/thunderbird/downloads/latest/dark-electric-violet/addon-988551-latest.xpi"
+            ]
+        }
+    }
+}
