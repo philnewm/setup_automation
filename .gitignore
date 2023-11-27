@@ -6,3 +6,5 @@ hosts
 remote_control.png
 local_files/
 debug_playbook.yaml
+user.js
+thunderbird_role/defaults/main.yml
