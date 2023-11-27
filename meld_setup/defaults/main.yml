@@ -10,6 +10,7 @@ meld_settings:
   "/org/gnome/meld/prefer-dark-theme": "true"
   "/org/gnome/meld/show-line-numbers": "true"
   "/org/gnome/meld/style-scheme": "'oblivion'"
+  # TODO add in comment filters
 
   "/org/gnome/meld/wrap-mode": "'none'"
 
