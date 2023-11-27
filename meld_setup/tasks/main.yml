@@ -1,0 +1,17 @@
+---
+
+# tasks file for meld_setup
+
+- name: Install meld
+  ansible.builtin.package:
+    name: meld
+    state: present
+  become: true
+
+- name: Configure meld
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ meld_settings }}"
+
+...

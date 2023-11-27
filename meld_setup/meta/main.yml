@@ -1,0 +1,13 @@
+galaxy_info:
+  author: Phil Newm
+  description: Installs and configures meld
+  
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Fedora
+    - 38
+
+dependencies: []
