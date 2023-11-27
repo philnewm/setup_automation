@@ -2,6 +2,17 @@
 
 # tasks file for meld_setup
 
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  become: true
+
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+    state: present
+
 - name: Install meld
   ansible.builtin.package:
     name: meld
