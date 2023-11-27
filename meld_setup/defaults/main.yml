@@ -10,7 +10,7 @@ meld_settings:
   "/org/gnome/meld/prefer-dark-theme": "true"
   "/org/gnome/meld/show-line-numbers": "true"
   "/org/gnome/meld/style-scheme": "'oblivion'"
-  "/org/gnome/meld/text-filters": "[('CVS/SVN keywords', false, '\\$\\w+(:[^\\n$]+)?\\$'), ('C++ comment', true, '//.*'), ('C comment', false, '/\\*.*?\\*/'), ('All whitespace', false, '[ \\t\\r\\f\\v]*'), ('Leading whitespace', false, '^[ \\t\\r\\f\\v]*'), ('Trailing whitespace', false, '[ \\t\\r\\f\\v]*$'), ('Script comment', true, '#.*')]"
+
   "/org/gnome/meld/wrap-mode": "'none'"
 
 ...

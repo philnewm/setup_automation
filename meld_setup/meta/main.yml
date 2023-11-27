@@ -8,6 +8,7 @@ galaxy_info:
 
   platforms:
   - name: Fedora
+    versions:
     - 38
 
 dependencies: []
