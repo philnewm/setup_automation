@@ -25,6 +25,12 @@
     value: "{{ item.value }}"
   with_dict: "{{ nautilus_settings }}"
 
+- name: Configure text editor
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ text_editor_settings }}"
+
 - name: Add terminal profile
   community.general.dconf:
     key: "{{ terminal_profile_list }}"
