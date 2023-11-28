@@ -1,0 +1,5 @@
+install_packages:
+  - pip
+
+pip_packages:
+  - psutil

@@ -1,0 +1,17 @@
+---
+
+# defaults file for meld_setup
+
+meld_settings:
+  "/org/gnome/meld/enable-space-drawer": "true"
+  "/org/gnome/meld/highlight-current-line": "true"
+  "/org/gnome/meld/highlight-syntax": "true"
+  "/org/gnome/meld/indent-width": "4"
+  "/org/gnome/meld/prefer-dark-theme": "true"
+  "/org/gnome/meld/show-line-numbers": "true"
+  "/org/gnome/meld/style-scheme": "'oblivion'"
+  # TODO add in comment filters
+
+  "/org/gnome/meld/wrap-mode": "'none'"
+
+...
