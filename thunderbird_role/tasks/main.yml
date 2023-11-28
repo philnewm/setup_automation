@@ -7,6 +7,10 @@
     state: present
   become: true
 
+- name: Include encrypted
+  ansible.builtin.include_vars:
+    file: defaults/encrypted.yml
+
 - name: Remove original profile
   ansible.builtin.file:
     path: "{{ (ansible_env.HOME, thunderbird_config_path) | ansible.builtin.path_join }}"

@@ -1,0 +1,20 @@
+gmail.com:
+  imap_port: 993
+  server_auth_method: 10
+  server_hostname: imap.gmail.com
+  smtp_auth_method: 10
+  smtp_hostname: smtp.gmail.com
+  smtp_port: 465
+  socket_type: 3
+  type: imap
+  valid: 'true'
+web.de:
+  imap_port: 993
+  server_auth_method: null
+  server_hostname: imap.web.de
+  smtp_auth_method: 3
+  smtp_hostname: smtp.gmail.com
+  smtp_port: 587
+  socket_type: 3
+  type: imap
+  valid: 'true'
