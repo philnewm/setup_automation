@@ -1,0 +1,36 @@
+---
+# defaults file for thunderbird_role
+
+thunderbird_config_path: ".thunderbird"
+user_config_file: "user.js"
+
+policies_path: "etc/thunderbird/policies"
+policies_file: "policies.json"
+
+provider_settings:
+  gmail.com:
+    imap_port: 993
+    server_auth_method: 10
+    server_hostname: imap.gmail.com
+    smtp_auth_method: 10
+    smtp_hostname: smtp.gmail.com
+    smtp_port: 465
+    socket_type: 3
+    type: imap
+    valid: 'true'
+  web.de:
+    imap_port: 993
+    server_auth_method: null
+    server_hostname: imap.web.de
+    smtp_auth_method: 3
+    smtp_hostname: smtp.web.de
+    smtp_port: 587
+    socket_type: 3
+    type: imap
+    valid: 'true'
+
+thunderbird_settings:
+  "mail.accountmanager.defaultaccount": "account1"
+  "mail.smtp.defaultserver": "smtp1"
+  "app.donation.eoy.version.viewed": 2
+  "general.autoScroll": "true"
