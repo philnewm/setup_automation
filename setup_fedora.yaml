@@ -22,6 +22,7 @@
     - gnome_themes
     - vanilla_packages
     - firefox_config
+    - thunderbird_setup
     - ulauncher_config
 
 ...
