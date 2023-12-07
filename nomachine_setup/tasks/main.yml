@@ -1,0 +1,37 @@
+---
+# tasks file for nomachine_setup
+
+# - name: Remove old installer
+#   ansible.builtin.file:
+#     path: "{ (ansible_env.USER, Downloads, nomachine_*.rpm | ansible.builtin.path_join) }"
+#     state: absent
+
+# - name: Download nomachine installer
+#   ansible.builtin.get_url:
+#     url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
+#     dest: "{ (ansible_env.USER, Downloads, nomachine_8.10.1_1.rpm | ansible.builtin.path_join) }"
+#     mode: '0440'
+
+# - name: Install nomachine
+#   ansible.builtin.package:
+#       name: "{ (ansible_env.USER, Downloads, nomachine_*.rpm | ansible.builtin.path_join) }"
+#       state: present
+
+- name: Copy basic xml file
+  ansible.builtin.copy:
+    src: files/player.cfg
+    dest: "{{ ansible_env.HOME }}/.nx/config/player.cfg"
+    mode: "0600"
+
+- name: Generate XML
+  community.general.xml:
+    path: "{{ ansible_env.HOME }}/.nx/config/player.cfg"
+    xpath: /NXClientSettings/group[@name='NXClient']
+    pretty_print: true
+    add_children:
+    - option:
+        key: "{{ item.key }}"
+        value: "{{ item.value }}"
+  with_dict: "{{ nx_client }}"
+
+...

@@ -1,0 +1,125 @@
+---
+
+# defaults file for nomachine_setup
+
+
+nx_client:
+  Allow users to send files to this client: '"true"'
+  Amount of data received before changing the UDP encryption key: 32G
+  Audio is muted: 'false'
+  Audio playback is muted: 'false'
+  Audio playback volume: '15'
+  Audio volume: '15'
+  Automatic proxy configuration URL for any connections: ''
+  Automatic viewport scrolling sensitive area size: '40'
+  Automatically reconnect to the server: 'true'
+  Cache size: '16'
+  Cache size on disk: '64'
+  Change current monitor shortcut modifier: Ctrl+Alt
+  Connections ordering direction: ascending
+  Connections ordering method: date
+  Delete file when removing the favorite: 'true'
+  Discover other NoMachine servers in the network: 'true'
+  Emulate middle mouse button for any connections: 'true'
+  Emulate right mouse button: 'false'
+  Enable Ctrl+Alt+Del shortcut: 'true'
+  Enable GPU rendering: 'true'
+  Enable HTTP proxy for any connections: 'false'
+  Enable active keyboard grabbing: 'false'
+  Enable change current monitor shortcut: 'true'
+  Enable fullscreen shortcut: 'true'
+  Enable hardware accelerated decoding: 'true'
+  Enable identify monitors shortcut: 'true'
+  Enable keyboard grabbing shortcut: 'true'
+  Enable minimize window shortcut: 'true'
+  Enable multimonitor fullscreen shortcut: 'true'
+  Enable playback bar shortcut: 'true'
+  Enable quick server connect: 'false'
+  Enable quick toolbar access: 'true'
+  Enable remote cursor tracking for any connections: 'false'
+  Enable terminate session shortcut: 'true'
+  Enable the toolbar hotkey: 'true'
+  Enable view all monitors shortcut: 'true'
+  File browsing current directory: ''
+  File transfer directory: /home/philnewm/Downloads
+  Fixed font: Monospace,8,-1,5,50,0,0,0,0,0
+  Forward Error Correction group size: ''
+  GUI theme: moonlight
+  Grab keyboard input for any connections: 'false'
+  Grab mouse input for any connections: 'false'
+  HTTP proxy host for any connections: ''
+  HTTP proxy password for any connections: EMPTY_PASSWORD
+  HTTP proxy port for any connections: '8080'
+  HTTP proxy username for any connections: ''
+  Identify monitors shortcut: Ctrl+Alt+I
+  Language: English
+  Last session: ''
+  Limit the maximum size of files to transfer: 'false'
+  Local server version: consumer
+  Manual proxy configuration type for any connections: http
+  Maximum port of the UDP ports range: '4999'
+  Maximum size of files to transfer: 100MB
+  Minimize window shortcut: Ctrl+Alt+M
+  Minimum port of the UDP ports range: '4011'
+  Node button list mode: icon
+  Nodes ordering direction: ascending
+  Nodes ordering method: name
+  Player toolbar hotkey: Ctrl+Alt+0
+  Port for UDP communication: ''
+  Proxy configuration mode for any connections: automatic
+  Quality of the audio recording: '5'
+  Quality of the video recording: '5'
+  Quick toolbar access extended mode: 'false'
+  Quick toolbar access position: top-right
+  Remember HTTP proxy password for any connections: 'false'
+  Remember client window size and position: ''
+  Remote list ordering direction: ascending
+  Remote list ordering method: default
+  Remote session button list mode: icon
+  Remote session list owner filter: my sessions
+  Remove old sessions: 'true'
+  SSH client mode: library
+  Save file transfers always in the same folder: 'false'
+  Save screenshot of session: 'true'
+  Send Ctrl+Alt+Del shortcut: Ctrl+Alt+End
+  Server button list mode: icon
+  Server list ordering direction: ascending
+  Server list ordering method: name
+  Server list view mode: children
+  Session button list mode: grid
+  Session type button list mode: grid
+  Session type ordering direction: ascending
+  Session type ordering method: default
+  Show SSL certificate storage warning: 'true'
+  Show address retrieving tutorial: 'false'
+  Show cluster configuration tutorial: 'true'
+  Show connection wizard tutorial: 'true'
+  Show desktop sharing tutorial: 'false'
+  Show local desktop connection information: 'true'
+  Show menu panel mode selection: 'true'
+  Show menu panel tutorial: 'true'
+  Show opening menu panel tutorial: 'true'
+  Show scrollbars in viewport mode: 'true'
+  Show server name tutorial: 'true'
+  Show the recording blinking frame: 'false'
+  Show video toolbar tutorial: 'true'
+  Software update check timestamp: ''
+  Switch to software decoding on Windows if resolution is bigger than 1920x1080: 'false'
+  Terminate session shortcut: Ctrl+Alt+T
+  Toggle fullscreen shortcut: Ctrl+Alt+F
+  Toggle keyboard grabbing shortcut: Ctrl+Alt+K
+  Toggle multimonitor fullscreen shortcut: Ctrl+Alt+Shift+F
+  Turn off energy saving while in fullscreen mode: 'true'
+  Use TOR for SOCKS proxy connections for any connections: 'false'
+  Use URL for automatic proxy configuration for any connections: 'false'
+  Use a random port in the configured range: 'true'
+  Use upnp to map the port: 'true'
+  Video toolbar hotkey: Ctrl+Alt+R
+  Video toolbar position: center
+  View all monitors shortcut: Ctrl+Alt+A
+  Voice is muted: default
+  Voice volume: '15'
+  Wave background image: dark gray
+  Window state: normal
+
+...
