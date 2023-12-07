@@ -1,0 +1,39 @@
+---
+
+# tasks file for reset_unraid_vm
+
+- name: Check if VM is running
+  ansible.builtin.command: "virsh domstate {{ vm_name }}"
+  register: vm_status
+  changed_when: false
+
+- name: Shutdown running VM
+  ansible.builtin.command: "virsh shutdown {{ vm_name }}"
+  when: vm_status.stdout == "running"
+  register: result
+  changed_when: result.rc == 0
+
+- name: Wait till VM is shut down
+  ansible.builtin.command: "virsh domstate {{ vm_name }}"
+  register: vm_status
+  until: vm_status.stdout == "shut off"
+  retries: 60
+  delay: 2
+  changed_when: false
+
+- name: Remove "active state" vdisk
+  ansible.builtin.file:
+    path: "{{ (domain_path, vm_name, snapshot_dir, reset_snapshot) | ansible.builtin.path_join }}"
+    state: absent
+
+- name: Create new "active state" vdisk
+  ansible.builtin.command: cp --reflink=always "{{ (domain_path, vm_name, orig_img) | ansible.builtin.path_join }}" "{{ (domain_path, vm_name, snapshot_dir, reset_snapshot) | ansible.builtin.path_join }}"
+  register: result
+  changed_when: result.rc == 0
+
+- name: Start VM
+  ansible.builtin.command: "virsh start {{ vm_name }}"
+  register: result
+  changed_when: result.rc == 0
+
+...
