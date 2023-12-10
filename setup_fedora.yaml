@@ -1,15 +1,15 @@
 ---
 
-# - name: Reset Virtual Machine with Ansible
+- name: Reset Virtual Machine with Ansible
 
-#   hosts: dev_host
+  hosts: dev_host
 
-#   roles:
-#     - reset_vm
+  roles:
+    - reset_vm
 
 - name: Run initial system Setup
 
-  hosts: dev_client_gpu
+  hosts: dev_client_fedora
 
   roles:
     - initial_setup_fedora
