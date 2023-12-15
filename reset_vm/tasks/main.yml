@@ -60,7 +60,7 @@
 
 - name: Wait til host reachable
   ansible.builtin.wait_for:
-    host: 10.32.64.82
+    host: "{{ hostvars[groups['dev_client_fedora'][0]]['groups']['dev_client_fedora'][0] }}" # TODO change to shorter command
     port: 22
     state: present
 

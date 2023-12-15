@@ -1,0 +1,11 @@
+---
+
+# defaults file for reset_unraid_vm
+
+vm_name: Fedora38
+reset_snapshot: vdisk1_active_state.img
+domain_path: /mnt/cache/domains
+snapshot_dir: snapshots
+orig_img: vdisk1.img
+
+...

@@ -1,0 +1,23 @@
+---
+
+# - name: Reset Virtual Machine with Ansible
+
+#   hosts: dev_host
+
+#   roles:
+#     - reset_vm
+- name: Debugging
+
+  hosts: vm_server
+
+  tasks:
+    - name: Just ping it
+      ansible.builtin.ping:
+
+    - name: Install htop
+      ansible.builtin.package:
+        name: htop
+        state: present
+      become: true
+
+...
