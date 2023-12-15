@@ -36,4 +36,10 @@
   register: result
   changed_when: result.rc == 0
 
+- name: Wait till host reachable
+  ansible.builtin.wait_for:
+    host: "{{ hostvars[groups['dev_client_gpu'][0]]['groups']['dev_client_gpu'][0] }}" # TODO change to shorter command
+    port: 22
+    state: present
+
 ...
