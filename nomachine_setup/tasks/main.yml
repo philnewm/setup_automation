@@ -1,26 +1,45 @@
 ---
 # tasks file for nomachine_setup
 
-# - name: Remove old installer
-#   ansible.builtin.file:
-#     path: "{ (ansible_env.USER, Downloads, nomachine_*.rpm | ansible.builtin.path_join) }"
-#     state: absent
+- name: Remove old installer
+  ansible.builtin.file:
+    path: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    state: absent
 
-# - name: Download nomachine installer
-#   ansible.builtin.get_url:
-#     url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
-#     dest: "{ (ansible_env.USER, Downloads, nomachine_8.10.1_1.rpm | ansible.builtin.path_join) }"
-#     mode: '0440'
+- name: "Check if nomachine is installed"
+  command: rpm -q nomachine
+  register: package_check
+  when: ansible_facts['os_family'] == "RedHat"
+  changed_when: false
+  ignore_errors: true
 
-# - name: Install nomachine
-#   ansible.builtin.package:
-#       name: "{ (ansible_env.USER, Downloads, nomachine_*.rpm | ansible.builtin.path_join) }"
-#       state: present
+- name: Download nomachine installer
+  ansible.builtin.get_url:
+    url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
+    dest: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    mode: '0440'
+  when: package_check.rc == 1
+
+- name: Install nomachine
+  ansible.builtin.package:
+    name: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    state: present
+    disable_gpg_check: yes
+  when: package_check.rc == 1
+  become: true
+
+- name: Ensure nx config path exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.nx/config"  # TODO move config path to variable
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_user_gid }}"
+    mode: "0700"
+    state: directory
 
 - name: Copy basic xml file
   ansible.builtin.copy:
     src: files/player.cfg
-    dest: "{{ ansible_env.HOME }}/.nx/config/player.cfg"
+    dest: "{{ ansible_env.HOME }}/.nx/config/player.cfg" # TODO move config path to variable
     mode: "0600"
 
 - name: Generate XML
@@ -29,9 +48,26 @@
     xpath: /NXClientSettings/group[@name='NXClient']
     pretty_print: true
     add_children:
-    - option:
-        key: "{{ item.key }}"
-        value: "{{ item.value }}"
+      - option:
+          key: "{{ item.key }}"
+          value: "{{ item.value }}"
   with_dict: "{{ nx_client }}"
+
+- name: Start nomachine service
+  ansible.builtin.command: /usr/NX/bin/nxserver --restart  # ? --start starts the server but doesn't enable th desktop why?
+  register: status
+  changed_when: status.rc == 0
+  become: true
+
+- name: Check if nomachine service is running
+  ansible.builtin.command: /usr/NX/bin/nxserver --status
+  register: status
+  changed_when: false
+  failed_when: status.stdout_lines != success_state
+  
+- name: Remove installer
+  ansible.builtin.file:
+    path: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    state: absent
 
 ...

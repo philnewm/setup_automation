@@ -122,4 +122,10 @@ nx_client:
   Wave background image: dark gray
   Window state: normal
 
+success_state:
+  - "NX> 111 New connections to NoMachine server are enabled."
+  - "NX> 161 Enabled service: nxserver."
+  - "NX> 161 Enabled service: nxnode."
+  - "NX> 161 Enabled service: nxd."
+
 ...

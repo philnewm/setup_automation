@@ -1,0 +1,26 @@
+---
+
+- name: Reset Unraid Virtual Machine with Ansible
+
+  hosts: vm_server
+
+  roles:
+    - reset_unraid_vm
+
+- name: Setup nomachine in vm
+
+  hosts: dev_client_gpu
+
+  roles:
+    - nomachine_setup
+
+...
+
+# added packsges
+# slackware:
+# - pkg-config
+# - /usr/lib64/pkgconfig/libvirt.pc (custom copy from local system)
+#
+# pip:
+# - wheel
+# - libvirt-python==8.7.0

@@ -26,6 +26,7 @@
   changed_when: false
   register: profile_directory
 
+# TODO remove debug command
 - name: Debug profile directory
   ansible.builtin.debug:
     msg: "{{ profile_directory }}"
