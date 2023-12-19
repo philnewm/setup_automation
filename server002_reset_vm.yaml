@@ -1,0 +1,19 @@
+---
+
+- name: Reset Unraid Virtual Machine with Ansible
+
+  hosts: vm_server
+
+  roles:
+    - reset_unraid_vm
+
+...
+
+# added packsges
+# slackware:
+# - pkg-config
+# - /usr/lib64/pkgconfig/libvirt.pc (custom copy from local system)
+#
+# pip:
+# - wheel
+# - libvirt-python==8.7.0
