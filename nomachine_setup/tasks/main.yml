@@ -1,13 +1,34 @@
 ---
 # tasks file for nomachine_setup
 
+- name: Update GDM configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/gdm/custom.conf
+    backrefs: true
+    regexp: '^#WaylandEnable=false$'
+    line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
+    state: present
+  become: true
+
+- name: Reboot the host and continue playbook
+  ansible.builtin.reboot:
+    msg: Reboot initiated by Ansible
+    pre_reboot_delay: 5
+    reboot_timeout: 300
+  become: true
+
+- name: Wait for the host to come back online
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+  become_user: "{{ ansible_user_id }}"
+
 - name: Remove old installer
   ansible.builtin.file:
-    path: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    path: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
 - name: "Check if nomachine is installed"
-  command: rpm -q nomachine
+  ansible.builtin.command: rpm -q nomachine
   register: package_check
   when: ansible_facts['os_family'] == "RedHat"
   changed_when: false
@@ -16,21 +37,22 @@
 - name: Download nomachine installer
   ansible.builtin.get_url:
     url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
-    dest: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    dest: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
     mode: '0440'
   when: package_check.rc == 1
 
+# TODO reenable gpg_check and figure out how to make it work
 - name: Install nomachine
   ansible.builtin.package:
-    name: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    name: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
     state: present
-    disable_gpg_check: yes
+    disable_gpg_check: true
   when: package_check.rc == 1
   become: true
 
 - name: Ensure nx config path exists
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.nx/config"  # TODO move config path to variable
+    path: "{{ (ansible_env.HOME, config_path) | ansible.builtin.path_join }}"
     owner: "{{ ansible_env.USER }}"
     group: "{{ ansible_user_gid }}"
     mode: "0700"
@@ -39,12 +61,12 @@
 - name: Copy basic xml file
   ansible.builtin.copy:
     src: files/player.cfg
-    dest: "{{ ansible_env.HOME }}/.nx/config/player.cfg" # TODO move config path to variable
+    dest: "{{ (ansible_env.HOME, config_path, player_config_file) | ansible.builtin.path_join }}"
     mode: "0600"
 
 - name: Generate XML
   community.general.xml:
-    path: "{{ ansible_env.HOME }}/.nx/config/player.cfg"
+    path: "{{ (ansible_env.HOME, config_path, player_config_file) | ansible.builtin.path_join }}"
     xpath: /NXClientSettings/group[@name='NXClient']
     pretty_print: true
     add_children:
@@ -53,21 +75,22 @@
           value: "{{ item.value }}"
   with_dict: "{{ nx_client }}"
 
+# INFO only works out-of-the-box on Xorg
 - name: Start nomachine service
-  ansible.builtin.command: /usr/NX/bin/nxserver --restart  # ? --start starts the server but doesn't enable th desktop why?
+  ansible.builtin.command: "{{ server_exec }} --start"
   register: status
   changed_when: status.rc == 0
   become: true
 
 - name: Check if nomachine service is running
-  ansible.builtin.command: /usr/NX/bin/nxserver --status
+  ansible.builtin.command: "{{ server_exec }} --status"
   register: status
   changed_when: false
   failed_when: status.stdout_lines != success_state
-  
+
 - name: Remove installer
   ansible.builtin.file:
-    path: "{{ (ansible_env.HOME, 'Downloads', 'nomachine_8.10.1_1_x86_64.rpm') | ansible.builtin.path_join }}"
+    path: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
 ...
