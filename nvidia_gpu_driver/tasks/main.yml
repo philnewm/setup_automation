@@ -43,10 +43,10 @@
   when: gpu_check.rc == 0
 
 - name: Update all packages
-  dnf:
+  ansible.builtin.package:
     name: '*'
     state: latest
-    update_cache: yes
+    update_cache: true
   when: gpu_check.rc == 0
   become: true
 
@@ -78,6 +78,7 @@
   when: gpu_check.rc == 0
   become: true
 
+# TODO fix cuda installation
 - name: Install required packages
   ansible.builtin.package:
     name: "{{ install_packages }}"
