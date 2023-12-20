@@ -1,0 +1,11 @@
+---
+
+# defaults file for nvidia_gpu_driver
+
+rpm_key_version: 2020
+
+install_packages:
+  - akmod-nvidia
+  - xorg-x11-drv-nvidia-cuda
+
+...

@@ -1,0 +1,101 @@
+---
+
+# tasks file for nvidia_gpu_driver
+
+- name: Check for NVIDIA GPU
+  ansible.builtin.shell: lspci | grep -i nvidia
+  register: gpu_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Show gpu_check
+  ansible.builtin.debug:
+    msg: "{{  gpu_check }}"
+
+- name: Check if nvidia gpu driver is installed
+  ansible.builtin.command: rpm -q akmod-nvidia
+  register: package_check
+  when: ansible_facts['os_family'] == "RedHat" and gpu_check.rc == 0
+  changed_when: false
+  ignore_errors: true
+
+- name: Update GDM configuration file
+  ansible.builtin.lineinfile:
+    path: /etc/gdm/custom.conf
+    backrefs: true
+    regexp: '^#WaylandEnable=false$'
+    line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
+    state: present
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Reboot the host and continue playbook
+  ansible.builtin.reboot:
+    msg: Reboot initiated by Ansible
+    pre_reboot_delay: 5
+    reboot_timeout: 300
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Wait for the host to come back online
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+  when: gpu_check.rc == 0
+
+- name: Update all packages
+  dnf:
+    name: '*'
+    state: latest
+    update_cache: yes
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Import RPM Fusion free GPG key
+  ansible.builtin.rpm_key:
+    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-{{ rpm_key_version }}"
+    state: present
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Enable the RPM Fusion free repository
+  ansible.builtin.package:
+    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    state: present
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Import RPM Fusion nonfree GPG key
+  ansible.builtin.rpm_key:
+    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-{{ rpm_key_version }}"
+    state: present
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Enable the RPM Fusion nonfree repository
+  ansible.builtin.package:
+    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    state: present
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ install_packages }}"
+    state: present
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Reboot the host and continue playbook
+  ansible.builtin.reboot:
+    msg: Reboot initiated by Ansible
+    pre_reboot_delay: 5
+    reboot_timeout: 300
+  when: gpu_check.rc == 0
+  become: true
+
+- name: Wait for the host to come back online
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+  when: gpu_check.rc == 0
+
+...
