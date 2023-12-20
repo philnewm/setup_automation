@@ -8,3 +8,4 @@ local_files/
 debug_playbook.yaml
 user.js
 thunderbird_role/defaults/main.yml
+server002_fedora_vm_setup.yaml
