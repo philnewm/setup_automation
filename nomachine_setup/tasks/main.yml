@@ -34,6 +34,7 @@
   changed_when: false
   ignore_errors: true
 
+# TODO move installer to server
 - name: Download nomachine installer
   ansible.builtin.get_url:
     url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
