@@ -12,6 +12,7 @@
   hosts: dev_client_gpu
 
   roles:
+    - nvidia_gpu_driver
     - nomachine_setup
 
 ...

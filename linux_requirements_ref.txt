@@ -1,0 +1,2 @@
+https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
+https://vfxplatform.com/
