@@ -21,7 +21,7 @@
   ansible.builtin.package:
     name: "{{ item.value }}"
     state: present
-  with_dict: "{{ fedora_repo_extensions }}"
+  with_dict: "{{ gnome_40_extensions }}"
   become: true
 
 # INFO needs upodate right after install

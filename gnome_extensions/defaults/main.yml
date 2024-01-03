@@ -2,15 +2,15 @@
 
 # defaults file for gnome_extensions
 
-fedora_repo_extensions:
+gnome_40_extensions:
   "user-themes": "gnome-shell-extension-user-theme"
   "dash-to-panel": "gnome-shell-extension-dash-to-panel"
   "app-indicator": "gnome-shell-extension-appindicator"
   "drive-menu": "gnome-shell-extension-drive-menu"
   "no-overview": "gnome-shell-extension-no-overview"
   "just-perfection": "gnome-shell-extension-just-perfection"
-  "freon": "gnome-shell-extension-freon"
-  "gpaste": "gnome-shell-extension-gpaste"
+  # "freon": "gnome-shell-extension-freon"
+  # "gpaste": "gnome-shell-extension-gpaste"
   "system-monitor": "gnome-shell-extension-system-monitor-applet"
 github_repo_extensions:
   - name: "Tiling-Assistant"
