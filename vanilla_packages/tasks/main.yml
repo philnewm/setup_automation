@@ -3,28 +3,18 @@
 # tasks file for vanilla_packages
 # TODO make sure every install tasks shows all package in output log
 
-- name: Import RPM Fusion free GPG key
-  ansible.builtin.rpm_key:
-    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-{{ rpm_key_version }}"
-    state: present
+- name: Install EPEL repository
+  ansible.builtin.dnf:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+    disable_gpg_check: true
+  when: ansible_distribution == "CentOS"
   become: true
 
-- name: Enable the RPM Fusion free repository
-  ansible.builtin.package:
-    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-    state: present
-  become: true
-
-- name: Import RPM Fusion nonfree GPG key
-  ansible.builtin.rpm_key:
-    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-{{ rpm_key_version }}"
-    state: present
-  become: true
-
-- name: Enable the RPM Fusion nonfree repository
-  ansible.builtin.package:
-    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-    state: present
+- name: Enable RPM Fusion repositories
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+  loop: "{{ rpm_fusion_repos }}"
   become: true
 
 - name: Install codecs
@@ -39,32 +29,33 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-  loop: "{{ dnf_packages }}"
+  loop: "{{ centosstream9_repo_packages }}"
   become: true
 
 - name: Remove dnf packages
   ansible.builtin.package:
     name: "{{ item }}"
     state: absent
-  loop: "{{ remove_packages }}"
+  loop: "{{ remove_packages_centosstream9 }}"
   become: true
 
-# TODO only install on user level
-- name: Add flathub
+- name: Add the flathub flatpak repository remote to the user installation
   community.general.flatpak_remote:
-    name: "{{ item }}"
+    name: flathub
     state: present
-    method: system
-  become: true
-  loop: "{{ flatpak_remotes }}"
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: user
 
-- name: Install flatpak packages
+- name: Install Flatpak packages
   community.general.flatpak:
     name: "{{ item }}"
-    remote: flathub
     state: present
-    method: system
-  become: true
-  loop: "{{ flatpak_packages }}"
+    method: user
+  loop: "{{ flatpak_packages_centosstream9 }}"
+  register: flatpak_installation_result
+
+- name: Display installed Flatpak packages
+  ansible.builtin.debug:
+    var: flatpak_installation_result
 
 ...

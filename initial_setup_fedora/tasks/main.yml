@@ -41,22 +41,6 @@
   loop: "{{ update_commands }}"
   become: true
 
-# move repos into separat role
-# ? repos as dependency ?
-- name: Enable additional repos
-  ansible.builtin.yum_repository:
-    name: "{{ item.name }}"
-    description: "{{ item.description }}"
-    metalink: "{{ item.metalink }}"
-    enabled: "{{ item.enabled }}"
-    metadata_expire: "{{ item.metadata_expire }}"
-    gpgcheck: "{{ item.gpgcheck }}"
-    repo_gpgcheck: "{{ item.repo_gpgcheck }}"
-    gpgkey: "{{ item.gpgkey }}"
-    state: "{{ item.state }}"
-  loop: "{{ additional_repos }}"
-  become: true
-
 - name: Set system-wide environment variable
   ansible.builtin.lineinfile:
     path: /etc/environment

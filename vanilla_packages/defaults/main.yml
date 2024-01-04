@@ -2,8 +2,6 @@
 
 # defaults file for vanilla_packages
 
-rpm_key_version: 2020
-
 codecs:
   - gstreamer1-libav:
     command: gstreamer1-libav
@@ -12,7 +10,7 @@ codecs:
     command: lame*
     exclude: lame-devel
 
-dnf_packages:
+fedora38_repo_packages:
   - discord
   - vlc
   - menulibre
@@ -29,11 +27,30 @@ dnf_packages:
   - gstreamer1-plugins-base
   - gstreamer1-plugin-openh264
 
-remove_packages:
+centosstream9_repo_packages:
+  - vlc
+  # TODO fix dependencies
+  # - shutter
+  - filezilla
+  - gimp
+  - terminator
+  - neofetch
+  - cockpit
+  - gstreamer1-plugins-bad-*
+  - gstreamer1-plugins-good-*
+  - gstreamer1-plugins-base
+  - gstreamer1-plugin-openh264
+
+remove_packages_centosstream9:
+  - gnome-tour
+  - cheese
+  - totem
+
+remove_packages_fedora38:
   - gnome-tour
   - gnome-boxes
-  - libreoffice-*
-  - cheese*
+  - cheese
+  - libreoffice  # INFO untested
   - gnome-connections
   - gnome-contacts
   - gnome-maps
@@ -45,7 +62,22 @@ remove_packages:
 flatpak_remotes:
   - flathub
 
-flatpak_packages:
+flatpak_packages_centosstream9:
+  - com.discordapp.Discord
+  - com.teamspeak.TeamSpeak
+  - com.bitwarden.desktop
+  # TODO threw error for outdated opendesktop platform gnome 42 which doesn't make sense
+  # - org.bluesabre.MenuLibre
+  - com.leinardi.gwe
+  - com.parsecgaming.parsec
+  - org.zulip.Zulip
+  - com.github.zadam.trilium
+  - org.flameshot.Flameshot
+  - org.onlyoffice.desktopeditors
+  - org.jitsi.jitsi-meet
+  - net.nokyan.Resources
+
+flatpak_packages_fedora38:
   - com.teamspeak.TeamSpeak
   - com.bitwarden.desktop
   - org.zulip.Zulip

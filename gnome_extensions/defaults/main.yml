@@ -1,6 +1,7 @@
 ---
 
 # defaults file for gnome_extensions
+# TODO checks for gnome versions and according extension version
 
 gnome_40_extensions:
   "user-themes": "gnome-shell-extension-user-theme"
@@ -15,13 +16,13 @@ gnome_40_extensions:
 github_repo_extensions:
   - name: "Tiling-Assistant"
     repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
-    branch: "v43"
+    branch: "v32"
     install_cmd: "./build.sh -i"
     download_dir: "Tiling-Assistant/"
     install_dir: "Tiling-Assistant/scripts/"
 gnome_extensions_settings:
   "/org/gnome/shell/disabled-extensions": "['background-logo@fedorahosted.org']"
-  "/org/gnome/shell/enabled-extensions": "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-panel@jderose9.github.com', 'appindicatorsupport@rgcjonas.gmail.com', 'GPaste@gnome-shell-extensions.gnome.org', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'no-overview@fthx', 'system-monitor@paradoxxx.zero.gmail.com', 'tiling-assistant@leleat-on-github']"
+  "/org/gnome/shell/enabled-extensions": "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-panel@jderose9.github.com', 'appindicatorsupport@rgcjonas.gmail.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'no-overview@fthx', 'system-monitor@paradoxxx.zero.gmail.com', 'tiling-assistant@leleat-on-github']"
 dash_to_panel_extension_path: "/org/gnome/shell/extensions/dash-to-panel/"
 dash_to_panel_extension_settings:
   "animate-appicon-hover": "false"

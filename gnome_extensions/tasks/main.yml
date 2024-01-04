@@ -2,6 +2,21 @@
 
 # tasks file for gnome_extensions
 
+# INFO only neccessary for CentOS Distros
+- name: Install EPEL repository
+  ansible.builtin.dnf:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+    disable_gpg_check: true
+  when: ansible_distribution == "CentOS"
+  become: true
+
+- name: Enable RPM Fusion repositories
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+  loop: "{{ rpm_fusion_repos }}"
+  become: true
+
 - name: Set user install dir
   ansible.builtin.set_fact:
     user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
@@ -17,14 +32,14 @@
     name: "{{ pip_packages }}"
     state: present
 
-- name: Install fedora repo extension
+- name: "Install repo extension for {{ ansible_distribution }}"
   ansible.builtin.package:
     name: "{{ item.value }}"
     state: present
   with_dict: "{{ gnome_40_extensions }}"
   become: true
 
-# INFO needs upodate right after install
+# INFO needs update right after install
 - name: "Clone extensions from github"
   ansible.builtin.git:
     repo: "{{ item.repo_url }}"
@@ -32,6 +47,12 @@
     single_branch: true
     version: "{{ item.branch }}"
     depth: 1
+  loop: "{{ github_repo_extensions }}"
+
+- name: Update installer permissions
+  ansible.builtin.file:
+    path: "{{ (user_install_dir, item.install_dir, 'build.sh') | ansible.builtin.path_join }}"
+    mode: "0755"
   loop: "{{ github_repo_extensions }}"
 
 - name: "Install extensions from github"
@@ -78,10 +99,12 @@
     value: "{{ item.value }}"
   with_dict: "{{ tiling_assistent_settings }}"
 
-- name: Configure gpaste
-  community.general.dconf:
-    key: "{{ gpaste_extension_path }}{{ item.key }}"
-    value: "{{ item.value }}"
-  with_dict: "{{ gpaste_extension_settings }}"
+# TODO implement check for gnome version
+# INFO doesn't work for gnome 40
+# - name: Configure gpaste
+#   community.general.dconf:
+#     key: "{{ gpaste_extension_path }}{{ item.key }}"
+#     value: "{{ item.value }}"
+#   with_dict: "{{ gpaste_extension_settings }}"
 
 ...
