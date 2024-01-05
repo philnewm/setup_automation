@@ -12,6 +12,7 @@
   ansible.builtin.debug:
     msg: "{{  gpu_check }}"
 
+# TODO check based on package list (package_facts)
 - name: Check if nvidia gpu driver is installed
   ansible.builtin.command: rpm -q akmod-nvidia
   register: package_check
@@ -42,6 +43,7 @@
     timeout: 300
   when: gpu_check.rc == 0
 
+# TODO update based on installed packages and/or control version
 - name: Update all packages
   ansible.builtin.package:
     name: '*'
