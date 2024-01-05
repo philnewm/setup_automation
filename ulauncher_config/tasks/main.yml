@@ -7,13 +7,45 @@
     name: "{{ install_packages }}"
     state: present
   become: true
+  when: ansible_distribution == 'Fedora'
 
-- name: Ansible check directory
+- name: Clone Ulauncher from github
+  ansible.builtin.git:
+    repo: https://github.com/Ulauncher/Ulauncher.git
+    dest: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
+    single_branch: true
+    version: v5
+    depth: 1
+  when: ansible_distribution == 'CentOS'
+
+- name: "Install extensions from github"
+  ansible.builtin.command: ./bin/ulauncher
+  args:
+    chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  when: ansible_distribution == 'CentOS'
+
+- name: Update installer permissions
+  ansible.builtin.file:
+    path: "{{ (user_install_dir, 'Ulauncher', 'bin', 'ulauncher') | ansible.builtin.path_join }}"
+    mode: "0755"
+  when: ansible_distribution == 'CentOS'
+
+- name: "Install Ulauncher"
+  ansible.builtin.command: ./bin/ulauncher
+  args:
+    chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  when: ansible_distribution == 'CentOS'
+
+- name: Check for settings directory
   ansible.builtin.stat:
     path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
   register: settings_dir
 
-- name: "Create settings directory"
+- name: Create settings directory
   ansible.builtin.file:
     path: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'user-themes') | ansible.builtin.path_join }}"
     state: directory

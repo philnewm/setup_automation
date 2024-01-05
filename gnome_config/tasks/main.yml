@@ -19,6 +19,8 @@
   with_dict: "{{ gnome_initial_settings }}"
 
 # INFO partly broken visible columns show no effect
+# TODO sort folders before files
+# TODO Expendable folders in list view
 - name: Configure nautilus
   community.general.dconf:
     key: "{{ item.key }}"
