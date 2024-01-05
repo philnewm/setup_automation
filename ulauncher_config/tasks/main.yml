@@ -18,7 +18,10 @@
     depth: 1
   when: ansible_distribution == 'CentOS'
 
-- name: "Install extensions from github"
+# TODO dependencies: https://github.com/Ulauncher/Ulauncher/issues/376
+# TODO build .rpm on centosstream9 using scripts/build-rpm.sh
+
+- name: "Install ulauncher from github"
   ansible.builtin.command: ./bin/ulauncher
   args:
     chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
