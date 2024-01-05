@@ -13,6 +13,7 @@ gnome_40_extensions:
   # "freon": "gnome-shell-extension-freon"
   # "gpaste": "gnome-shell-extension-gpaste"
   "system-monitor": "gnome-shell-extension-system-monitor-applet"
+  "sound-output-device-chooser": "gnome-shell-extension-sound-output-device-chooser"
 github_repo_extensions:
   - name: "Tiling-Assistant"
     repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
