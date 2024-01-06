@@ -1,8 +1,25 @@
 ---
 
 # tasks file for ulauncher_config
+
 - name: Build ULauncher on CentOSStream9
   block:
+    - name: Install EPEL repository
+      ansible.builtin.dnf:
+        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+        disable_gpg_check: true
+      become: true
+
+    - name: Install required tasks
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ required_packages_centosstream9 }}"
+      become: true
+
+    # INFO python package are installed but cant be found by compile process
+    # INFO check module location
+
     - name: Clone Ulauncher from github
       ansible.builtin.git:
         repo: https://github.com/Ulauncher/Ulauncher.git
@@ -43,10 +60,9 @@
   block:
     - name: Install required packages
       ansible.builtin.package:
-        name: "{{ install_packages }}"
+        name: "{{ install_packages_fedora38 }}"
         state: present
       become: true
-      when: ansible_distribution == 'Fedora'
 
     - name: Check for settings directory
       ansible.builtin.stat:
