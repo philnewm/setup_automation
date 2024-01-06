@@ -18,7 +18,7 @@
       become: true
 
     # INFO python package are installed but cant be found by compile process
-    # INFO check module location
+    # INFO check module location print(a_module.__file__)
 
     - name: Clone Ulauncher from github
       ansible.builtin.git:
