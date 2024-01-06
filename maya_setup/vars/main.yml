@@ -1,0 +1,9 @@
+---
+
+# vars file for maya_setup
+
+dependencies:
+  - libnsl
+  - mesa-libGLU
+
+...
