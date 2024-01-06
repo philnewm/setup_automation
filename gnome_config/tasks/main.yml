@@ -27,6 +27,7 @@
     value: "{{ item.value }}"
   with_dict: "{{ nautilus_settings }}"
 
+# TODO check if overview, tabs, font and color theme oblivion get actually applied
 - name: Configure text editor
   community.general.dconf:
     key: "{{ item.key }}"

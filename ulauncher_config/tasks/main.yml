@@ -1,100 +1,106 @@
 ---
 
 # tasks file for ulauncher_config
-
-- name: Install required packages
-  ansible.builtin.package:
-    name: "{{ install_packages }}"
-    state: present
-  become: true
-  when: ansible_distribution == 'Fedora'
-
-- name: Clone Ulauncher from github
-  ansible.builtin.git:
-    repo: https://github.com/Ulauncher/Ulauncher.git
-    dest: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
-    single_branch: true
-    version: v5
-    depth: 1
-  when: ansible_distribution == 'CentOS'
+- name: Build ULauncher on CentOSStream9
+  block:
+    - name: Clone Ulauncher from github
+      ansible.builtin.git:
+        repo: https://github.com/Ulauncher/Ulauncher.git
+        dest: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
+        single_branch: true
+        version: v5
+        depth: 1
+      when: ansible_distribution == 'CentOS'
 
 # TODO dependencies: https://github.com/Ulauncher/Ulauncher/issues/376
 # TODO build .rpm on centosstream9 using scripts/build-rpm.sh
 
-- name: "Install ulauncher from github"
-  ansible.builtin.command: ./bin/ulauncher
-  args:
-    chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
-  register: install_result
-  changed_when: install_result.rc == 0
-  when: ansible_distribution == 'CentOS'
+# - name: "Install ulauncher from github"
+#   ansible.builtin.command: ./bin/ulauncher
+#   args:
+#     chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
+#   register: install_result
+#   changed_when: install_result.rc == 0
+#   when: ansible_distribution == 'CentOS'
 
-- name: Update installer permissions
-  ansible.builtin.file:
-    path: "{{ (user_install_dir, 'Ulauncher', 'bin', 'ulauncher') | ansible.builtin.path_join }}"
-    mode: "0755"
-  when: ansible_distribution == 'CentOS'
+# - name: Update installer permissions
+#   ansible.builtin.file:
+#     path: "{{ (user_install_dir, 'Ulauncher', 'bin', 'ulauncher') | ansible.builtin.path_join }}"
+#     mode: "0755"
+#   when: ansible_distribution == 'CentOS'
 
-- name: "Install Ulauncher"
-  ansible.builtin.command: ./bin/ulauncher
-  args:
-    chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
-  register: install_result
-  changed_when: install_result.rc == 0
-  when: ansible_distribution == 'CentOS'
+# - name: "Install Ulauncher"
+#   ansible.builtin.command: ./bin/ulauncher
+#   args:
+#     chdir: "{{ (user_install_dir, 'Ulauncher') | ansible.builtin.path_join }}"
+#   register: install_result
+#   changed_when: install_result.rc == 0
+#   when: ansible_distribution == 'CentOS'
 
-- name: Check for settings directory
-  ansible.builtin.stat:
-    path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
-  register: settings_dir
+# TODO make settings independent of install method
 
-- name: Create settings directory
-  ansible.builtin.file:
-    path: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'user-themes') | ansible.builtin.path_join }}"
-    state: directory
-    mode: "0755"
-    group: "{{ ansible_effective_group_id }}"
-    owner: "{{ ansible_env.USER }}"
-  when: settings_dir.stat.exists == false
+- name: Create Ulauncher settings
+  block:
+    - name: Install required packages
+      ansible.builtin.package:
+        name: "{{ install_packages }}"
+        state: present
+      become: true
+      when: ansible_distribution == 'Fedora'
 
-- name: Write app settings
-  ansible.builtin.copy:
-    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'settings.json') | ansible.builtin.path_join }}"
-    content: "{{ ulauncher_settings | to_json(indent=4) }}"
-    mode: "0644"
+    - name: Check for settings directory
+      ansible.builtin.stat:
+        path: "{{ (ansible_env.HOME, '.config', 'ulauncher') | ansible.builtin.path_join }}"
+      register: settings_dir
 
-- name: Write extension settings
-  ansible.builtin.copy:
-    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'extensions.json') | ansible.builtin.path_join }}"
-    content: "{{ extension_settings | to_json(indent=4) }}"
-    mode: "0644"
+    - name: Create settings directory
+      ansible.builtin.file:
+        path: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'user-themes') | ansible.builtin.path_join }}"
+        state: directory
+        mode: "0755"
+        group: "{{ ansible_effective_group_id }}"
+        owner: "{{ ansible_env.USER }}"
+      when: settings_dir.stat.exists == false
 
-- name: Write shortcut settings
-  ansible.builtin.copy:
-    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'shortcuts.json') | ansible.builtin.path_join }}"
-    content: "{}"
-    mode: "0644"
+    - name: Write app settings
+      ansible.builtin.copy:
+        dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'settings.json') | ansible.builtin.path_join }}"
+        content: "{{ ulauncher_settings | to_json(indent=4) }}"
+        mode: "0644"
 
-- name: Write extension settings
-  ansible.builtin.copy:
-    dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'extensions.json') | ansible.builtin.path_join }}"
-    content: "{{ extension_settings | to_json(indent=4) }}"
-    mode: "0644"
+    - name: Write extension settings
+      ansible.builtin.copy:
+        dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'extensions.json') | ansible.builtin.path_join }}"
+        content: "{{ extension_settings | to_json(indent=4) }}"
+        mode: "0644"
 
-- name: Clone repos from github
-  ansible.builtin.git:
-    repo: "{{ item.repo_url }}"
-    dest: "{{ item.download_dir }}"
-    single_branch: true
-    version: "{{ item.branch }}"
-    depth: 1
-  loop: "{{ github_repo_theme }}"
+    - name: Write shortcut settings
+      ansible.builtin.copy:
+        dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'shortcuts.json') | ansible.builtin.path_join }}"
+        content: "{}"
+        mode: "0644"
 
-- name: Enable and start the ulauncher service
-  ansible.builtin.systemd:
-    name: ulauncher.service
-    state: started
-    enabled: true
-    scope: user
+    - name: Write extension settings
+      ansible.builtin.copy:
+        dest: "{{ (ansible_env.HOME, '.config', 'ulauncher', 'extensions.json') | ansible.builtin.path_join }}"
+        content: "{{ extension_settings | to_json(indent=4) }}"
+        mode: "0644"
+
+    - name: Clone repos from github
+      ansible.builtin.git:
+        repo: "{{ item.repo_url }}"
+        dest: "{{ item.download_dir }}"
+        single_branch: true
+        version: "{{ item.branch }}"
+        depth: 1
+      loop: "{{ github_repo_theme }}"
+
+    - name: Enable and start the ulauncher service
+      ansible.builtin.systemd:
+        name: ulauncher.service
+        state: started
+        enabled: true
+        scope: user
+  when: ansible_distribution == 'Fedora'
 
 ...

@@ -70,4 +70,6 @@
     value: "{{ item.value }}"
   with_dict: "{{ gnome_background_settings }}"
 
+# TODO remove install dir after installation
+
 ...
