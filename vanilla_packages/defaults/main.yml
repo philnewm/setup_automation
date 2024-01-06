@@ -29,8 +29,6 @@ fedora38_repo_packages:
 
 centosstream9_repo_packages:
   - vlc
-  # TODO fix dependencies
-  # - shutter
   - filezilla
   - gimp
   - terminator
@@ -43,8 +41,10 @@ centosstream9_repo_packages:
 
 remove_packages_centosstream9:
   - gnome-tour
+  - yelp
   - cheese
   - totem
+  - brasero
 
 remove_packages_fedora38:
   - gnome-tour
@@ -66,8 +66,7 @@ flatpak_packages_centosstream9:
   - com.discordapp.Discord
   - com.teamspeak.TeamSpeak
   - com.bitwarden.desktop
-  # TODO threw error for outdated opendesktop platform gnome 42 which doesn't make sense
-  # - org.bluesabre.MenuLibre
+  - org.bluesabre.MenuLibre
   - com.leinardi.gwe
   - com.parsecgaming.parsec
   - org.zulip.Zulip
