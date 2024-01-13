@@ -1,3 +1,4 @@
 sudo xorriso -as mkisofs   -o /mnt/Projects/downloads/CentOS-Stream-9-latest-x86_64-dvd-ks.iso -c isolinux/boot.cat -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table --eltorito-alt-boot -e images/efiboot.img -no-emul-boot -isohybrid-gpt-basdat -J -joliet-long -V "CentOS-Stream-9-BaseOS-x86_64"   .
 
 # INFO create pssword hash for new users using "openssl passwd -1"
+# INFO isoinfo -d -i -> print out iso metadata
