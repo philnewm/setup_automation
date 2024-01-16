@@ -1,2 +1,6 @@
 ---
+
 # defaults file for recreate_unraid_vm
+vm_uuid : "{{ 'virtual' | to_uuid(namespace='11111111-2222-3333-4444-555555555555') }}"
+vm_name: VM_Check
+...
