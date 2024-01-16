@@ -1,0 +1,21 @@
+---
+
+# tasks file for recreate_unraid_vm
+
+- name: Check if VM exists
+  ansible.builtin.command: "virsh domstate {{ vm_name }}"
+  register: vm_status
+  changed_when: false
+
+- name: Check if VM is running
+  ansible.builtin.command: "virsh domstate {{ vm_name }}"
+  register: vm_status
+  changed_when: false
+
+- name: Shutdown running VM
+  ansible.builtin.command: "virsh shutdown {{ vm_name }}"
+  when: vm_status.stdout == "running"
+  register: result
+  changed_when: result.rc == 0
+
+...
