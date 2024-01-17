@@ -26,6 +26,8 @@
     path: "{{ (domain_path, vm_name, snapshot_dir, reset_snapshot) | ansible.builtin.path_join }}"
     state: absent
 
+# TODO implement snapshot behaviour described here: https://wiki.qemu.org/Documentation/CreateSnapshot
+
 - name: Create new "active state" vdisk
   ansible.builtin.command: cp --reflink=always "{{ (domain_path, vm_name, orig_img) | ansible.builtin.path_join }}" "{{ (domain_path, vm_name, snapshot_dir, reset_snapshot) | ansible.builtin.path_join }}"
   register: result
