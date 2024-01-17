@@ -1,11 +1,11 @@
 ---
 
-- name: Reset Unraid Virtual Machine with Ansible
+# - name: Reset Unraid Virtual Machine with Ansible
 
-  hosts: vm_server
+#   hosts: vm_server
 
-  roles:
-    - reset_unraid_vm
+#   roles:
+#     - reset_unraid_vm
 
 - name: Setup nomachine in vm
 

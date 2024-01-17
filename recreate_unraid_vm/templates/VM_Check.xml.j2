@@ -46,7 +46,7 @@
   <devices>
     <emulator>/usr/local/sbin/qemu</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='raw' cache='writeback'/>
+      <driver name='qemu' type='qcow2' cache='writeback'/>
       <source file='/mnt/user/domains/VM_Check/vdisk1.img'/>
       <target dev='hdc' bus='virtio'/>
       <serial>vdisk1</serial>

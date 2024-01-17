@@ -17,13 +17,14 @@
   ansible.builtin.command: "virsh shutdown {{ vm_name }}"
   when: vm_status.stdout == "running"
 
-# - name: Wait till VM is shut down
-#   ansible.builtin.command: "virsh domstate {{ vm_name }}"
-#   register: vm_status
-#   until: vm_status.stdout == "shut off"
-#   retries: 60
-#   delay: 2
-#   changed_when: false
+- name: Wait till VM is shut down
+  ansible.builtin.command: "virsh domstate {{ vm_name }}"
+  register: result
+  until: result.stdout == "shut off"
+  retries: 60
+  delay: 2
+  changed_when: false
+  when: vm_status.stdout == "running"
 
 - name: Remove existing VM
   block:
@@ -65,11 +66,12 @@
 
   when: vm_status.rc == 0
 
+# TODO write xml from yaml dictionary
 - name: Template VM xml definition
   ansible.builtin.template:
     src: "{{ vm_name }}.xml.j2"
     dest: "/etc/libvirt/qemu/{{ vm_name }}.xml"
-    mode: 0700
+    mode: "0700"
 
 - name: Show generated UUID
   ansible.builtin.debug:
@@ -78,7 +80,7 @@
 - name: Copy nvram definition
   ansible.builtin.copy:
     remote_src: true
-    src: /usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd
+    src: /usr/share/qemu/ovmf-x64/OVMF_VARS-pure-efi.fd
     dest: "/etc/libvirt/qemu/nvram/{{ vm_uuid }}_VARS-pure-efi.fd"
 
 - name: "Create {vm_name} dir"
@@ -90,16 +92,21 @@
     owner: "{{ ansible_env.USER }}"
 
 - name: Create the virtual disk
-  command: "qemu-img create -f raw /mnt/user/domains/{{ vm_name }}/vdisk1.img 25G"
+  ansible.builtin.command: "qemu-img create -f qcow2 /mnt/user/domains/{{ vm_name }}/vdisk1.img 25G"
 
 - name: Define new VM
   ansible.builtin.command: |
     virsh define /etc/libvirt/qemu/{{ vm_name }}.xml
 
-# - name: Create new VM
-#   ansible.builtin.command: |
-#     virsh start {{ vm_name }}
+- name: Create new VM
+  ansible.builtin.command: |
+    virsh start {{ vm_name }}
 
 # TODO implement snapshot behaviour described here: https://wiki.qemu.org/Documentation/CreateSnapshot
+
+# TODO update snapshot img to qcow2
+
+# TODO remove installation media
+
 
 ...
