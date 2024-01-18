@@ -92,11 +92,21 @@
     owner: "{{ ansible_env.USER }}"
 
 - name: Create the virtual disk
-  ansible.builtin.command: "qemu-img create -f qcow2 /mnt/user/domains/{{ vm_name }}/vdisk1.img 25G"
+  ansible.builtin.command: "qemu-img create -f qcow2 /mnt/user/domains/{{ vm_name }}/init_install.img 25G"
 
 - name: Define new VM
   ansible.builtin.command: |
     virsh define /etc/libvirt/qemu/{{ vm_name }}.xml
+
+- name: Create the virtual machine's snapshots dir
+  ansible.builtin.file:
+    path: "/mnt/user/domains/{{ vm_name }}/snapshots/"
+    state: "directory"
+    mode: '0755'
+
+- name: Create first snapshot
+  ansible.builtin.command: |
+    qemu-img create -f qcow2 -b /mnt/user/domains/{{ vm_name }}/init_install.img -F qcow2 /mnt/user/domains/{{ vm_name }}/snapshots/snapshot01.img
 
 - name: Create new VM
   ansible.builtin.command: |
