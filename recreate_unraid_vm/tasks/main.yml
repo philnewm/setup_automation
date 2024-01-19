@@ -112,7 +112,7 @@
   ansible.builtin.command: |
     virsh start {{ vm_name }}
 
-# TODO implement snapshot behaviour described here: https://wiki.qemu.org/Documentation/CreateSnapshot
+
 
 # TODO update snapshot img to qcow2
 
