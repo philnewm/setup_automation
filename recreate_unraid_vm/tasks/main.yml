@@ -104,19 +104,36 @@
     state: "directory"
     mode: '0755'
 
+- name: Create new VM
+  ansible.builtin.command: |
+    virsh start {{ vm_name }}
+  changed_when: false
+
+# TODO write signal file from kickstart through shared directoty to enable usage of wait_for module
+- name: Wait till VM is shut down
+  ansible.builtin.command: "virsh domstate {{ vm_name }}"
+  register: result
+  until: result.stdout == "shut off"
+  retries: 60
+  delay: 20
+  changed_when: false
+
 - name: Create first snapshot
   ansible.builtin.command: |
     qemu-img create -f qcow2 -b /mnt/user/domains/{{ vm_name }}/init_install.img -F qcow2 /mnt/user/domains/{{ vm_name }}/snapshots/snapshot01.img
 
-- name: Create new VM
-  ansible.builtin.command: |
-    virsh start {{ vm_name }}
-
-
-
 # TODO update snapshot img to qcow2
+- name: Update VM XML file
+  community.general.xml:
+    path: /etc/libvirt/qemu/{{ vm_name }}.xml
+    xpath: "/domain/devices/disk[@device='disk']/source/@file"
+    value: "/mnt/user/domains/{{ vm_name }}/snapshots/snapshot01.img"
 
 # TODO remove installation media
-
+- name: Remove installation media from VM XML file
+  community.general.xml:
+    path: /etc/libvirt/qemu/{{ vm_name }}.xml
+    xpath: "/domain/devices/disk[@device='cdrom']"
+    state: absent
 
 ...
