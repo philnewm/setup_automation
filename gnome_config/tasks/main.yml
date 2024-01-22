@@ -12,6 +12,12 @@
     name: "{{ pip_packages }}"
     state: present
 
+- name: Install additional packages
+  ansible.builtin.package:
+    name: "{{ install_optional_packages }}"
+    state: present
+  become: true
+
 - name: Configure gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"

@@ -5,6 +5,7 @@ install_packages:
   - pip
   - gnome-tweaks
   - gnome-extensions-app
+  - 
 
 pip_packages:
   - psutil
