@@ -1,6 +1,9 @@
 ---
 
-# defaults file for gnome_config
+# defaults file 
+install_optional_packages:
+  - NetworkManager-openvpn
+  - NetworkManager-openvpn-gnome
 
 gnome_initial_settings:
   "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"

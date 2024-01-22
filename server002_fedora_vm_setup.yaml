@@ -1,0 +1,40 @@
+---
+
+- name: Reset Unraid Virtual Machine with Ansible
+
+  hosts: vm_server
+
+  roles:
+    - reset_unraid_vm
+
+- name: Setup fedora VM
+
+  hosts: dev_client_gpu
+
+  roles:
+    - initial_setup_fedora
+    - grub_config
+    - nvidia_gpu_driver
+    - smb
+    - gnome_images
+
+    - gnome_config
+    - nomachine_setup
+    - gnome_extensions
+    - gnome_themes
+    - vanilla_packages
+    - firefox_config
+    - thunderbird_setup
+    # - ulauncher_config
+    - meld_setup
+
+...
+
+# added packsges
+# slackware:
+# - pkg-config
+# - /usr/lib64/pkgconfig/libvirt.pc (custom copy from local system)
+#
+# pip:
+# - wheel
+# - libvirt-python==8.7.0
