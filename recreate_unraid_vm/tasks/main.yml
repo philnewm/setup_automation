@@ -48,11 +48,13 @@
         msg: "{{ (qemu_vm_path, dom_uuid.stdout) | path_join }}_VARS-pure-efi.fd"
 
     - name: Undefine the virtual machine
-      command: "virsh undefine {{ vm_name }}"
+      ansible.builtin.command: "virsh undefine {{ vm_name }}"
+      register: result
+      changed_when: result.rc == 0
 
     - name: Remove the virtual machine's disk image
       ansible.builtin.file:
-        path: "{{ (vm_domain_path, vm_name) | path_join }}init_install.img"
+        path: "{{ (vm_domain_path, vm_name, default_img_name) | path_join }}"
         state: absent
 
     - name: Remove the virtual machine's snapshots
@@ -62,7 +64,7 @@
 
     - name: Remove the virtual machine's dir
       ansible.builtin.file:
-        path: "{{ vm_domain_path }}"
+        path: "{{ (vm_domain_path, vm_name) | path_join }}"
         state: absent
 
     - name: Remove the virtual machine's XML configuration file
@@ -92,13 +94,13 @@
 
 - name: "Create {vm_name} dir"
   ansible.builtin.file:
-    path: "{{ (vm_domain_path, vm_name) | path_join }}"
+    path: "{{ vm_domain_path }}"
     state: directory
     mode: "0755"
     group: "{{ ansible_effective_group_id }}"
     owner: "{{ ansible_env.USER }}"
 
-- name: Create the virtual disk
+- name: Create virtual disk
   ansible.builtin.command: "qemu-img create -f qcow2 {{ (vm_domain_path, vm_name, default_img_name) | path_join }} 25G"
   register: result
   changed_when: result.rc == 0
@@ -126,71 +128,5 @@
     port: 22
     state: started
     timeout: 600
-
-# TODO move snapshot feature to own role
-- name: Check if VM exists
-  ansible.builtin.command: "virsh domstate {{ vm_name }}"
-  register: vm_status
-  changed_when: false
-
-- name: Shutdown running VM
-  ansible.builtin.command: "virsh shutdown {{ vm_name }}"
-  when: vm_status.stdout == "running"
-  register: result
-  changed_when: result.rc == 0
-
-- name: Wait till VM is shut down
-  ansible.builtin.command: "virsh domstate {{ vm_name }}"
-  register: result
-  until: result.stdout == "shut off"
-  retries: 60
-  delay: 2
-  changed_when: false
-
-- name: Create first snapshot
-  ansible.builtin.command: |
-    qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, current_img_name) | path_join }}
-  register: result
-  changed_when: result.rc == 0
-
-# TODO move xml definition updating mechanism to new role
-
-- name: Remove the virtual machine's nvram file
-  ansible.builtin.file:
-    path: "{{ (nvram_qemu_path, dom_uuid.stdout) | path_join }}_VARS-pure-efi.fd"
-    state: absent
-
-- name: Undefine the virtual machine
-  ansible.builtin.command: "virsh undefine {{ vm_name }}"
-  register: result
-  changed_when: result.rc == 0
-
-- name: Remove the virtual machine's XML configuration file
-  ansible.builtin.file:
-    path: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
-    state: absent
-
-# TODO write xml from yaml dictionary
-- name: Template VM xml definition
-  ansible.builtin.template:
-    src: "{{ vm_name }}_snapshot.xml.j2"
-    dest: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
-    mode: "0700"
-
-- name: Copy nvram definition
-  ansible.builtin.copy:
-    remote_src: true
-    src: "{{ nvram_src_path }}"
-    dest: "{{ (nvram_qemu_path, vm_uuid) | path_join }}_VARS-pure-efi.fd"
-    mode: "0644"
-
-- name: Define new VM
-  ansible.builtin.command: |
-    virsh define {{ (qemu_vm_path, vm_name) | path_join }}.xml
-
-- name: Start VM
-  ansible.builtin.command: |
-    virsh start {{ vm_name }}
-  changed_when: false
 
 ...
