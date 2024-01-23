@@ -1,6 +1,18 @@
 ---
 
 # defaults file for recreate_unraid_vm
-vm_uuid : "{{ 'virtual' | to_uuid(namespace='11111111-2222-3333-4444-555555555555') }}"
+vm_uuid: "{{ 'virtual' | to_uuid(namespace='11111111-2222-3333-4444-555555555555') }}"
 vm_name: VM_Check
+mnt_path: /mnt
+etc_path: /etc
+usr_path: /usr
+vm_domain_path: "{{ (mnt_path, 'user/domains', vm_name) | path_join }}"
+default_img_name: init_install.img
+vm_snapshot_path: "{{ (vm_domain_path, vm_name, 'snapshots') | path_join }}"
+current_img_name: snapshot01.img
+qemu_vm_path: "{{ (etc_path, 'libvirt/qemu') | path_join }}"
+nvram_qemu_path: "{{ (etc_path, 'libvirt/qemu/nvram') | path_join }}"
+nvram_file_name_end: _VARS-pure-efi.fd
+nvram_src_path: "{{ (usr_path, 'share/qemu/ovmf-x64/OVMF_VARS-pure-efi.fd') | path_join }}"
+
 ...
