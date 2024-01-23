@@ -129,4 +129,6 @@
     state: started
     timeout: 600
 
+# TODO remove install iamge from xml
+
 ...
