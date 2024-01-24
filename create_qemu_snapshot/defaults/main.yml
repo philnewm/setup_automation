@@ -10,9 +10,8 @@ usr_path: /usr
 vm_domain_path: "{{ (mnt_path, 'user/domains') | path_join }}"
 default_img_name: init_install.img
 vm_snapshot_path: "{{ (vm_domain_path, vm_name, 'snapshots') | path_join }}"
-current_img_name: snapshot01.img
+first_snapshot: snapshot_001.img
 qemu_vm_path: "{{ (etc_path, 'libvirt/qemu') | path_join }}"
-nvram_qemu_path: "{{ (etc_path, 'libvirt/qemu/nvram') | path_join }}"
 nvram_file_name_end: _VARS-pure-efi.fd
 nvram_src_path: "{{ (usr_path, 'share/qemu/ovmf-x64/OVMF_VARS-pure-efi.fd') | path_join }}"
 

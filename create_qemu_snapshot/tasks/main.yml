@@ -2,11 +2,11 @@
 
 # tasks file for create_qemu_snapshot
 
-# TODO early return for non existing vm definition
 - name: Get xml definition
-  ansible.builtin.command: | 
+  ansible.builtin.command: |
     virsh dumpxml {{ vm_name }}
   register: vm_defintion_xml
+  changed_when: false
 
 - name: Get nvram path from xml
   community.general.xml:
@@ -15,9 +15,18 @@
     content: text
   register: nvram_path
 
+- name: Show variable
+  ansible.builtin.debug:
+    var: nvram_path.matches[0].nvram
+
+- name: Grep nvram dir path
+  ansible.builtin.set_fact:
+    nvram_qemu_path: "{{ nvram_path.matches[0].nvram | dirname }}"
+
 - name: Get VMs UUID
   ansible.builtin.command: "virsh domuuid {{ vm_name }}"
   register: dom_uuid
+  changed_when: false
 
 - name: Check for existing snapshots
   community.general.xml:
@@ -26,11 +35,11 @@
     content: attribute
   register: image_path_long
 
-- name: shorten_image_path
+- name: Shorten image path
   ansible.builtin.set_fact:
     image_path: "{{ image_path_long.matches[0].source.file }}"
 
-- name: shorten_image_path
+- name: Grep image dir path
   ansible.builtin.set_fact:
     image_dir_path: "{{ image_path | dirname }}"
 
@@ -58,17 +67,32 @@
   changed_when: false
   when: vm_status.stdout == "running"
 
-- name: initialize snapshots
+- name: Initialize snapshots
   block:
-    - name: Create first snapshot
+    - name: Get current snapshot version
+      ansible.builtin.set_fact:
+        three_digits: "{{ image_path | regex_search('\\d{3}') }}"
+
+    - name: Increment snapshot version
+      ansible.builtin.set_fact:
+        incremented_number: "{{ '%03d'|format(three_digits | int + 1) }}"
+
+    - name: Replace the original three-digit number with the incremented value
+      ansible.builtin.set_fact:
+        image_path_incremented: "{{ image_path | regex_replace('\\d{3}', incremented_number | string) }}"
+
+    - name: Show incremented path
+      ansible.builtin.debug:
+        var: image_path_incremented
+
+    - name: Create snapshot
       ansible.builtin.command: |
-        qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, current_img_name) | path_join }}
+        qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ image_path_incremented }}
       register: result
       changed_when: result.rc == 0
 
     - name: Remove the virtual machine's nvram file
       ansible.builtin.file:
-      # TODO get nvram_qemu_path from .xml
         path: "{{ (nvram_qemu_path, dom_uuid.stdout) | path_join }}_VARS-pure-efi.fd"
         state: absent
 
@@ -77,16 +101,15 @@
       register: result
       changed_when: result.rc == 0
 
-    # TODO get qemu_vm_path from xml if possible
     - name: Remove the virtual machine's XML configuration file
       ansible.builtin.file:
         path: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
         state: absent
 
-    # TODO write xml from yaml dictionary
+  #   # TODO write xml from yaml dictionary
     - name: Template VM xml definition
       ansible.builtin.template:
-        src: "{{ vm_name }}_snapshot.xml.j2"
+        src: "{{ vm_name }}.xml.j2"
         dest: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
         mode: "0700"
 
@@ -94,7 +117,8 @@
       ansible.builtin.copy:
         remote_src: true
         src: "{{ nvram_src_path }}"
-        dest: "{{ (nvram_qemu_path, vm_uuid) | path_join }}_VARS-pure-efi.fd"
+        # fix path combinations
+        dest: "{{ (nvram_qemu_path, dom_uuid.stdout) | path_join(nvram_file_name_end) }}"
         mode: "0644"
 
     - name: Define new VM
@@ -105,7 +129,55 @@
       ansible.builtin.command: |
         virsh start {{ vm_name }}
       changed_when: false
+  when: snapshot_present == true
 
-# TODO create active state snapshot which is always the one in use and create anew one after every new snapshot
+- name: Create first snapshot
+  block:
+  # TODO only this part seems to differ in both blocks
+  - name: Create snapshot
+    ansible.builtin.command: |
+      qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, first_snapshot) | path_join }}
+    register: result
+    changed_when: result.rc == 0
+
+  - name: Remove the virtual machine's nvram file
+    ansible.builtin.file:
+      path: "{{ (nvram_qemu_path, dom_uuid.stdout) | path_join }}_VARS-pure-efi.fd"
+      state: absent
+
+  - name: Undefine the virtual machine
+    ansible.builtin.command: "virsh undefine {{ vm_name }}"
+    register: result
+    changed_when: result.rc == 0
+
+  - name: Remove the virtual machine's XML configuration file
+    ansible.builtin.file:
+      path: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
+      state: absent
+
+  #   # TODO write xml from yaml dictionary
+  - name: Template VM xml definition
+    ansible.builtin.template:
+      src: "{{ vm_name }}.xml.j2"
+      dest: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
+      mode: "0700"
+
+  - name: Copy nvram definition
+    ansible.builtin.copy:
+      remote_src: true
+      src: "{{ nvram_src_path }}"
+      # fix path combinations
+      dest: "{{ (nvram_qemu_path, dom_uuid.stdout) | path_join(nvram_file_name_end) }}"
+      mode: "0644"
+
+  - name: Define new VM
+    ansible.builtin.command: |
+      virsh define {{ (qemu_vm_path, vm_name) | path_join }}.xml
+
+  - name: Start VM
+    ansible.builtin.command: |
+      virsh start {{ vm_name }}
+    changed_when: false
+  when: snapshot_present == false
 
 ...
