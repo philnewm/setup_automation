@@ -11,7 +11,7 @@ usr_path: /usr
 vm_domain_path: "{{ (mnt_path, 'user/domains') | path_join }}"
 default_img_name: init_install.img
 vm_snapshot_path: "{{ (vm_domain_path, vm_name, 'snapshots') | path_join }}"
-initial_snapshot_name: snapshot01.img
+initial_snapshot_name: snapshot_001.img
 active_state_snapshot: active_state_from_{{ initial_snapshot_name }}
 qemu_vm_path: "{{ (etc_path, 'libvirt/qemu') | path_join }}"
 nvram_qemu_path: "{{ (etc_path, 'libvirt/qemu/nvram') | path_join }}"

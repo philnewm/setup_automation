@@ -127,7 +127,7 @@
     virsh start {{ vm_name }}
   changed_when: false
 
-- name: Wait for VM setup ssh conenction
+- name: Wait for VM setup ssh connection
   ansible.builtin.wait_for:
     host: "{{ ip_address }}"
     port: 22
@@ -153,11 +153,12 @@
   register: result
   changed_when: result.rc == 0
 
-- name: Create active-state snapshot
-  ansible.builtin.command: |
-    qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, active_state_snapshot) | path_join }}
-  register: result
-  changed_when: result.rc == 0
+- name: Create active-state snapshot as copy
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ (vm_snapshot_path, initial_snapshot_name) | path_join }}"
+    dest: "{{ (vm_snapshot_path, active_state_snapshot) | path_join }}"
+    mode: "0644"
 
 - name: Remove the virtual machine's nvram file
   ansible.builtin.file:
