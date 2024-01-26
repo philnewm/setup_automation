@@ -115,7 +115,7 @@
   when: snapshot_present == false
 
 # TODO only copy active state -> new snapshot
-# TODO rename active to version number from new snapshot
+# TODO rename active state to version number from new snapshot
 
 - name: Copy current active-state
   ansible.builtin.copy:
