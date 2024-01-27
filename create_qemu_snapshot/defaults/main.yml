@@ -1,8 +1,6 @@
 ---
 
 # defaults file for recreate_unraid_vm
-# TODO try to get as many values as possible from .xml file
-vm_uuid: "{{ 'virtual' | to_uuid(namespace='11111111-2222-3333-4444-555555555555') }}"
 vm_name: VM_Check
 mnt_path: /mnt
 etc_path: /etc
@@ -13,7 +11,7 @@ vm_snapshot_path: "{{ (vm_domain_path, vm_name, 'snapshots') | path_join }}"
 snapshot_name: snapshot
 init_version: "001"
 image_ext: ".img"
-active_state_snapshot: active_state_from
+active_state_snapshot: active_state
 qemu_vm_path: "{{ (etc_path, 'libvirt/qemu') | path_join }}"
 nvram_file_name_end: _VARS-pure-efi.fd
 nvram_src_path: "{{ (usr_path, 'share/qemu/ovmf-x64/OVMF_VARS-pure-efi.fd') | path_join }}"

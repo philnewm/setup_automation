@@ -147,18 +147,47 @@
   delay: 2
   changed_when: false
 
+- name: Define active_state_name
+  ansible.builtin.set_fact:
+    active_state_name: "{{ active_state_snapshot + image_ext }}"
+
+- name: Define active_state_path
+  ansible.builtin.set_fact:
+    active_state_path: "{{ (vm_snapshot_path, active_state_name) | path_join }}"
+
+- name: Define snapshot_name
+  ansible.builtin.set_fact:
+    snapshot_name: "{{ (snapshot_name, init_version + image_ext) | join('_') }}"
+
+- name: Define snapshot_name_path
+  ansible.builtin.set_fact:
+    snapshot_name_path: "{{ (vm_snapshot_path, active_state_name) | path_join }}"
+
 - name: Create initial snapshot
   ansible.builtin.command: |
-    qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, initial_snapshot_name) | path_join }}
+    qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ active_state_path }}
   register: result
   changed_when: result.rc == 0
 
-- name: Create active-state snapshot as copy
+- name: Copy snapshot from current active-state
   ansible.builtin.copy:
     remote_src: true
-    src: "{{ (vm_snapshot_path, initial_snapshot_name) | path_join }}"
-    dest: "{{ (vm_snapshot_path, active_state_snapshot) | path_join }}"
+    src: "{{ active_state_path }}"
+    dest: "{{ snapshot_name_path }}"
     mode: "0644"
+
+# - name: Create initial snapshot
+#   ansible.builtin.command: |
+#     qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, initial_snapshot_name) | path_join }}
+#   register: result
+#   changed_when: result.rc == 0
+
+# - name: Create active-state snapshot as copy
+#   ansible.builtin.copy:
+#     remote_src: true
+#     src: "{{ (vm_snapshot_path, initial_snapshot_name) | path_join }}"
+#     dest: "{{ (vm_snapshot_path, active_state_snapshot) | path_join }}"
+#     mode: "0644"
 
 - name: Remove the virtual machine's nvram file
   ansible.builtin.file:

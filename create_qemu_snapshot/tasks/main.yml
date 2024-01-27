@@ -94,23 +94,22 @@
 
     - name: Increment snapshot version
       ansible.builtin.set_fact:
-        next_version: "{{ '%03d'|format(org_version | int + 1) }}"
+        next_version: "{{ '%03d' | format(org_version | int + 1) }}"
 
-    - name: Define snapshot_name
+    - name: Define next_snapshot_name
       ansible.builtin.set_fact:
-        snapshot_name: "{{ (snapshot_name, next_version + image_ext) | join('_') }}"
+        next_snapshot_name: "{{ (snapshot_name, next_version + image_ext) | join('_') }}"
+
+    - name: Define next_snapshot_path
+      ansible.builtin.set_fact:
+        next_snapshot_path: "{{ (vm_snapshot_path, next_snapshot_name) | path_join }}"
 
     - name: Copy current active-state to snapshot
       ansible.builtin.copy:
         remote_src: true
         src: "{{ org_active_state_path }}}"
-        dest: "{{ snapshot_name }}"
+        dest: "{{ next_snapshot_path }}"
         mode: "0644"
-
-    # TODO adjust variables
-    - name: Rename active state snapshot
-      ansible.builtin.command: |
-        mv {{() vm_snapshot_path, active_state_name) | path_join }} 
 
     - name: Show incremented path
       ansible.builtin.debug:
@@ -121,8 +120,8 @@
   block:
     - name: Define active_state_name
       ansible.builtin.set_fact:
-        active_state_name: "{{ (active_state_snapshot, init_version + image_ext) | join('_') }}"
-    
+        active_state_name: "{{ active_state_snapshot + image_ext }}"
+
     - name: Define active_state_path
       ansible.builtin.set_fact:
         active_state_path: "{{ (vm_snapshot_path, active_state_name) | path_join }}"
