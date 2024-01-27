@@ -96,14 +96,18 @@
       ansible.builtin.set_fact:
         next_version: "{{ '%03d'|format(org_version | int + 1) }}"
 
-    # TODO adjust variables
-    - name: Copy current active-state
+    - name: Define snapshot_name
+      ansible.builtin.set_fact:
+        snapshot_name: "{{ (snapshot_name, next_version + image_ext) | join('_') }}"
+
+    - name: Copy current active-state to snapshot
       ansible.builtin.copy:
         remote_src: true
-        src: "{{ (vm_snapshot_path, (active_state_snapshot, init_version + image_ext) | join('_') ) | path_join }}}"
-        dest: "{{ (vm_snapshot_path, (snapshot_name, active_state_name | path_join }}"
+        src: "{{ org_active_state_path }}}"
+        dest: "{{ snapshot_name }}"
         mode: "0644"
 
+    # TODO adjust variables
     - name: Rename active state snapshot
       ansible.builtin.command: |
         mv {{() vm_snapshot_path, active_state_name) | path_join }} 
