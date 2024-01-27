@@ -37,15 +37,15 @@
 
 - name: Shorten image path
   ansible.builtin.set_fact:
-    image_path: "{{ image_path_long.matches[0].source.file }}"
+    org_active_state_path: "{{ image_path_long.matches[0].source.file }}"
 
 - name: Grep image dir path
   ansible.builtin.set_fact:
-    image_dir_path: "{{ image_path | dirname }}"
+    active_state_dir_path: "{{ org_active_state_path | dirname }}"
 
 - name: Check if "snapshot" is present
   ansible.builtin.set_fact:
-    snapshot_present: "{{ image_dir_path | regex_search('snapshot') is not none }}"
+    snapshot_present: "{{ active_state_dir_path | regex_search('snapshot') is not none }}"
 
 - name: Check VM state
   ansible.builtin.command: "virsh domstate {{ vm_name }}"
@@ -86,19 +86,27 @@
   block:
     - name: Grep image dir path
       ansible.builtin.set_fact:
-        image_file_name: "{{ image_path | basename }}"
+        active_state_file_name: "{{ org_active_state_path | basename }}"
 
     - name: Get current snapshot version
       ansible.builtin.set_fact:
-        three_digits: "{{ image_file_name | regex_search('\\d{3}') }}"
+        org_version: "{{ active_state_file_name | regex_search('\\d{3}') }}"
 
     - name: Increment snapshot version
       ansible.builtin.set_fact:
-        incremented_number: "{{ '%03d'|format(three_digits | int + 1) }}"
+        next_version: "{{ '%03d'|format(org_version | int + 1) }}"
 
-    - name: Assign current snapshot_image_path
-      ansible.builtin.set_fact:
-        current_image_file_name: "{{ image_file_name | regex_replace('\\d{3}', incremented_number | string) }}"
+    # TODO adjust variables
+    - name: Copy current active-state
+      ansible.builtin.copy:
+        remote_src: true
+        src: "{{ (vm_snapshot_path, (active_state_snapshot, init_version + image_ext) | join('_') ) | path_join }}}"
+        dest: "{{ (vm_snapshot_path, (snapshot_name, active_state_name | path_join }}"
+        mode: "0644"
+
+    - name: Rename active state snapshot
+      ansible.builtin.command: |
+        mv {{() vm_snapshot_path, active_state_name) | path_join }} 
 
     - name: Show incremented path
       ansible.builtin.debug:
@@ -107,22 +115,35 @@
 
 - name: Create first snapshot
   block:
+    - name: Define active_state_name
+      ansible.builtin.set_fact:
+        active_state_name: "{{ (active_state_snapshot, init_version + image_ext) | join('_') }}"
+    
+    - name: Define active_state_path
+      ansible.builtin.set_fact:
+        active_state_path: "{{ (vm_snapshot_path, active_state_name) | path_join }}"
+
+    - name: Define snapshot_name
+      ansible.builtin.set_fact:
+        snapshot_name: "{{ (snapshot_name, init_version + image_ext) | join('_') }}"
+
+    - name: Define snapshot_name_path
+      ansible.builtin.set_fact:
+        snapshot_name_path: "{{ (vm_snapshot_path, active_state_name) | path_join }}"
+
     - name: Create initial snapshot
       ansible.builtin.command: |
-        qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, init_snapshot) | path_join }}
+        qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ active_state_path }}
       register: result
       changed_when: result.rc == 0
+
+    - name: Copy snapshot from current active-state
+      ansible.builtin.copy:
+        remote_src: true
+        src: "{{ active_state_path }}"
+        dest: "{{ snapshot_name_path }}"
+        mode: "0644"
   when: snapshot_present == false
-
-# TODO only copy active state -> new snapshot
-# TODO rename active state to version number from new snapshot
-
-- name: Copy current active-state
-  ansible.builtin.copy:
-    remote_src: true
-    src: "{{ (vm_snapshot_path, snapshot_image_path) | path_join }}"
-    dest: "{{ (vm_snapshot_path, active_state_snapshot) | path_join }}"
-    mode: "0644"
 
 # TODO write xml from yaml dictionary
 - name: Template VM xml definition
