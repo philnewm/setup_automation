@@ -193,4 +193,11 @@
     virsh start {{ vm_name }}
   changed_when: false
 
+- name: Wait for VM setup ssh connection
+  ansible.builtin.wait_for:
+    host: "{{ ip_address }}"
+    port: 22
+    state: started
+    timeout: 60
+
 ...
