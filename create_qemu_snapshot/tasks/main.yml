@@ -2,6 +2,12 @@
 
 # tasks file for create_qemu_snapshot
 
+# - name: Install python dependencies
+#   ansible.builtin.pip:
+#     name: "{{ item }}"
+#     state: present
+#   loop: "{{ install_pip_packages }}"
+
 - name: Get xml definition
   ansible.builtin.command: |
     virsh dumpxml {{ vm_name }}
@@ -83,12 +89,13 @@
     state: absent
 
 - name: Initialize snapshots
+  when: snapshot_present
   block:
     - name: Grep image dir path
       ansible.builtin.set_fact:
         active_state_file_name: "{{ org_active_state_path | basename }}"
 
-    - name: Get current snapshot version
+    - name: Get original snapshot version
       ansible.builtin.set_fact:
         org_version: "{{ active_state_file_name | regex_search('\\d{3}') }}"
 
@@ -104,23 +111,37 @@
       ansible.builtin.set_fact:
         next_snapshot_path: "{{ (vm_snapshot_path, next_snapshot_name) | path_join }}"
 
+    - name: Define next_active_state_name
+      ansible.builtin.set_fact:
+        next_active_state_name: "{{ (active_state_snapshot, next_version + image_ext) | join('_') }}"
+
+    - name: Define next_active_state_path
+      ansible.builtin.set_fact:
+        next_active_state_path: "{{ (vm_snapshot_path, next_active_state_name) | path_join }}"
+
     - name: Copy current active-state to snapshot
       ansible.builtin.copy:
         remote_src: true
-        src: "{{ org_active_state_path }}}"
+        src: "{{ org_active_state_path }}"
         dest: "{{ next_snapshot_path }}"
         mode: "0644"
 
+    - name: Rename active-state snapshot
+      ansible.builtin.command: |
+        mv {{ org_active_state_path }} {{ next_active_state_path }}
+      register: result
+      changed_when: result.rc == 0
+
     - name: Show incremented path
       ansible.builtin.debug:
-        var: current_image_file_name
-  when: snapshot_present == true
+        var: next_snapshot_name
 
 - name: Create first snapshot
+  when: not snapshot_present
   block:
     - name: Define active_state_name
       ansible.builtin.set_fact:
-        active_state_name: "{{ active_state_snapshot + image_ext }}"
+        active_state_name: "{{ (active_state_snapshot, init_version + image_ext) | join }}"
 
     - name: Define active_state_path
       ansible.builtin.set_fact:
@@ -146,7 +167,6 @@
         src: "{{ active_state_path }}"
         dest: "{{ snapshot_name_path }}"
         mode: "0644"
-  when: snapshot_present == false
 
 # TODO write xml from yaml dictionary
 - name: Template VM xml definition
@@ -165,6 +185,8 @@
 - name: Define new VM
   ansible.builtin.command: |
     virsh define {{ (qemu_vm_path, vm_name) | path_join }}.xml
+  register: result
+  changed_when: result.rc == 0
 
 - name: Start VM
   ansible.builtin.command: |

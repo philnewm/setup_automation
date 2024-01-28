@@ -3,7 +3,6 @@
 # tasks file for recreate_unraid_vm
 
 # TODO get community.libvirt.virt to work on unraid
-
 - name: Show path
   ansible.builtin.debug:
     msg: "{{ (nvram_qemu_path, vm_uuid + nvram_file_name_end) | path_join }}"
@@ -34,10 +33,12 @@
   when: vm_status.stdout == "running"
 
 - name: Remove existing VM
+  when: vm_status.rc == 0
   block:
     - name: Get VMs UUID
       ansible.builtin.command: "virsh domuuid {{ vm_name }}"
       register: dom_uuid
+      changed_when: false
 
     - name: Show UUID
       ansible.builtin.debug:
@@ -76,8 +77,6 @@
       ansible.builtin.file:
         path: "{{ (qemu_vm_path, vm_name) | path_join }}.xml"
         state: absent
-
-  when: vm_status.rc == 0
 
 # TODO write xml from yaml dictionary
 - name: Template VM xml definition
@@ -149,7 +148,7 @@
 
 - name: Define active_state_name
   ansible.builtin.set_fact:
-    active_state_name: "{{ active_state_snapshot + image_ext }}"
+    active_state_name: "{{ (active_state_snapshot, init_version + image_ext) | join('_') }}"
 
 - name: Define active_state_path
   ansible.builtin.set_fact:
@@ -161,7 +160,7 @@
 
 - name: Define snapshot_name_path
   ansible.builtin.set_fact:
-    snapshot_name_path: "{{ (vm_snapshot_path, active_state_name) | path_join }}"
+    snapshot_name_path: "{{ (vm_snapshot_path, snapshot_name) | path_join }}"
 
 - name: Create initial snapshot
   ansible.builtin.command: |
@@ -175,19 +174,6 @@
     src: "{{ active_state_path }}"
     dest: "{{ snapshot_name_path }}"
     mode: "0644"
-
-# - name: Create initial snapshot
-#   ansible.builtin.command: |
-#     qemu-img create -f qcow2 -b {{ (vm_domain_path, vm_name, default_img_name) | path_join }} -F qcow2 {{ (vm_snapshot_path, initial_snapshot_name) | path_join }}
-#   register: result
-#   changed_when: result.rc == 0
-
-# - name: Create active-state snapshot as copy
-#   ansible.builtin.copy:
-#     remote_src: true
-#     src: "{{ (vm_snapshot_path, initial_snapshot_name) | path_join }}"
-#     dest: "{{ (vm_snapshot_path, active_state_snapshot) | path_join }}"
-#     mode: "0644"
 
 - name: Remove the virtual machine's nvram file
   ansible.builtin.file:

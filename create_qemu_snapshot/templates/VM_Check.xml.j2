@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <domain type='kvm'>
   <name>VM_Check</name>
-  <uuid>{{ dom_uuid }}</uuid>
+  <uuid>{{ dom_uuid.stdout }}</uuid>
   <metadata>
     <vmtemplate xmlns="unraid" name="CentOS" icon="centos.png" os="centos"/>
   </metadata>
@@ -24,7 +24,7 @@
   <os>
     <type arch='x86_64' machine='pc-q35-7.2'>hvm</type>
     <loader readonly='yes' type='pflash'>/usr/share/qemu/ovmf-x64/OVMF_CODE-pure-efi.fd</loader>
-    <nvram>/etc/libvirt/qemu/nvram/{{ dom_uuid }}_VARS-pure-efi.fd</nvram>
+    <nvram>/etc/libvirt/qemu/nvram/{{ dom_uuid.stdout }}_VARS-pure-efi.fd</nvram>
   </os>
   <features>
     <acpi/>
@@ -47,7 +47,7 @@
     <emulator>/usr/local/sbin/qemu</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' cache='writeback'/>
-      <source file='{{ (vm_snapshot_path, active_state_snapshot + image_ext) | path_join }}'/>
+      <source file='{{ next_active_state_path }}'/>
       <target dev='hdc' bus='virtio'/>
       <serial>vdisk1</serial>
       <boot order='1'/>

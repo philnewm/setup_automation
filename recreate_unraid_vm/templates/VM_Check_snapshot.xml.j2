@@ -47,7 +47,7 @@
     <emulator>/usr/local/sbin/qemu</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' cache='writeback'/>
-      <source file='/mnt/user/domains/{{ vm_name }}/snapshots/{{ active_state_snapshot }}'/>
+      <source file='{{ active_state_path }}'/>
       <target dev='hdc' bus='virtio'/>
       <serial>vdisk1</serial>
       <boot order='1'/>

@@ -1,2 +1,8 @@
 ---
 # vars file for create_qemu_snapshot
+
+install_pip_packages:
+  - pkg_resources
+  - lxml
+
+...
