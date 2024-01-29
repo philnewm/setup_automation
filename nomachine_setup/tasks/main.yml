@@ -8,9 +8,12 @@
     regexp: '^#WaylandEnable=false$'
     line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
     state: present
+  register: updated
   become: true
+
 # TODO only reboot if gdm/custom.conf got changed
 - name: Reboot the host and continue playbook
+  when: updated.changed
   ansible.builtin.reboot:
     msg: Reboot initiated by Ansible
     pre_reboot_delay: 5
@@ -55,7 +58,7 @@
       path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
       mode: '0700'
 
-  - name: Show instalelr path
+  - name: Show installer path
     ansible.builtin.debug:
       msg: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
 
@@ -99,6 +102,7 @@
   changed_when: status.rc == 0
   become: true
 
+# TODO rework this check since it false-fails a lot
 # - name: Check if nomachine service is running
 #   ansible.builtin.command: "{{ server_exec }} --status"
 #   register: status
