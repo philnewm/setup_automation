@@ -245,7 +245,7 @@
 - name: Copy SSH public key using expect
   ansible.builtin.expect:
     command: |
-      ssh-copy-id -i {{ lookup('env', 'HOME') + '/.ssh/id_rsa.pub' }}{{ hostvars.dev_client_gpu.ansible_user }}@{{ hostvars.dev_client_gpu.ansible_host }}
+      ssh-copy-id -i {{ lookup('env', 'HOME') + '/.ssh/id_rsa.pub' }} {{ hostvars.dev_client_gpu.ansible_user }}@{{ hostvars.dev_client_gpu.ansible_host }}
     responses:
       "Are you sure you want to continue connecting?": "yes"
       "password": "{{ hostvars.dev_client_gpu.ansible_become_pass }}"
