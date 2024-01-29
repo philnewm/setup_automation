@@ -11,7 +11,6 @@
   register: updated
   become: true
 
-# TODO only reboot if gdm/custom.conf got changed
 - name: Reboot the host and continue playbook
   when: updated.changed
   ansible.builtin.reboot:
