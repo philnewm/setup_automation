@@ -2,7 +2,6 @@
 
 # defaults file for nomachine_setup
 
-user_download_dir: "{{ (ansible_env.HOME, 'Downloads') | ansible.builtin.path_join }}"
 config_path: .nx/config
 player_config_file: player.cfg
 installer_name: nomachine_8.10.1_1_x86_64.rpm
