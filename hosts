@@ -1,11 +1,9 @@
-[dev_host]
-10.32.64.10
+[control_host]
+dev_host ansible_host=10.32.64.10
 
-[dev_client_fedora]
-10.32.64.82
+[dev_client]
+dev_client_fedora ansible_host=10.32.64.82
+dev_client_gpu ansible_host=10.32.64.102
 
-[dev_client_gpu]
-10.32.64.102
-
-[vm_server]
-10.32.64.220
+[server]
+vm_server ansible_host=10.32.64.220
