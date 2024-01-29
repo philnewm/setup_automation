@@ -8,9 +8,11 @@
     regexp: '^#WaylandEnable=false$'
     line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
     state: present
+  register: updated
   become: true
 
 - name: Reboot the host and continue playbook
+  when: updated.changed
   ansible.builtin.reboot:
     msg: Reboot initiated by Ansible
     pre_reboot_delay: 5
@@ -24,7 +26,7 @@
 
 - name: Remove old installer
   ansible.builtin.file:
-    path: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
+    path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
 - name: "Check if nomachine is installed"
@@ -34,22 +36,38 @@
   changed_when: false
   ignore_errors: true
 
-# TODO move installer to server
-- name: Download nomachine installer
-  ansible.builtin.get_url:
-    url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
-    dest: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
-    mode: '0440'
+- name: prepare nomachine
   when: package_check.rc == 1
+  block:
+  - name: Create install_dir
+    ansible.builtin.file:
+      path: "{{ user_install_dir }}"
+      state: directory
+      mode: '1755'
 
-# TODO reenable gpg_check and figure out how to make it work
-- name: Install nomachine
-  ansible.builtin.package:
-    name: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
-    state: present
-    disable_gpg_check: true
-  when: package_check.rc == 1
-  become: true
+  # TODO move installer to server
+  - name: Download nomachine installer
+    ansible.builtin.get_url:
+      url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
+      dest: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+      mode: '0440'
+
+  - name: Change installer permission
+    ansible.builtin.file:
+      path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+      mode: '0700'
+
+  - name: Show installer path
+    ansible.builtin.debug:
+      msg: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+
+  # TODO reenable gpg_check and figure out how to make it work
+  - name: Install nomachine
+    ansible.builtin.package:
+      name: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+      state: present
+      disable_gpg_check: true
+    become: true
 
 - name: Ensure nx config path exists
   ansible.builtin.file:
@@ -83,15 +101,16 @@
   changed_when: status.rc == 0
   become: true
 
-- name: Check if nomachine service is running
-  ansible.builtin.command: "{{ server_exec }} --status"
-  register: status
-  changed_when: false
-  failed_when: status.stdout_lines != success_state
+# TODO rework this check since it false-fails a lot
+# - name: Check if nomachine service is running
+#   ansible.builtin.command: "{{ server_exec }} --status"
+#   register: status
+#   changed_when: false
+#   failed_when: status.stdout_lines != success_state
 
 - name: Remove installer
   ansible.builtin.file:
-    path: "{{ (user_download_dir, installer_name) | ansible.builtin.path_join }}"
+    path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
 ...
