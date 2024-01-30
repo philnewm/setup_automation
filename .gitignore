@@ -1,6 +1,7 @@
 .vscode/
 scripts/
 group_vars/
+host_vars/
 hosts
 *.code-workspace
 remote_control.png
