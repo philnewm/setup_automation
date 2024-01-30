@@ -26,7 +26,7 @@
 
 - name: Remove old installer
   ansible.builtin.file:
-    path: "{{ (host_vars.user_install_dir, installer_name) | ansible.builtin.path_join }}"
+    path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
 - name: "Check if nomachine is installed"
