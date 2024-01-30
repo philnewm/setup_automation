@@ -113,4 +113,6 @@
     path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
+
+
 ...

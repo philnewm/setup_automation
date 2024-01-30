@@ -222,35 +222,35 @@
     state: started
     timeout: 60
 
-- name: Install dependencies
-  ansible.builtin.pip:
-    name: pexpect
-    state: present
+- name: Recreate host key entry on control node
   delegate_to: localhost
+  block:
+    - name: Remove old host key
+      ansible.builtin.lineinfile:
+        path: "{{ lookup('env', 'HOME') }}/.ssh/known_hosts"
+        regexp: '^{{ hostvars.dev_client_gpu.ansible_host | regex_escape }}\s'
+        state: absent
+  
+    - name: Ensure known_hosts file exists
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.ssh/known_hosts"
+        state: touch
+        mode: "0600"
 
-- name: Remove old host key
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env', 'HOME') }}/.ssh/known_hosts"
-    regexp: '^10\.32\.64\.102\s' # TODO replace with variable filtered to regex
-    state: absent
-  delegate_to: localhost
+    - name: Install dependencies
+      ansible.builtin.pip:
+        name: pexpect
+        state: present
+      delegate_to: localhost
 
-- name: Ensure known_hosts file exists
-  ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.ssh/known_hosts"
-    state: touch
-    mode: "0600"
-  delegate_to: localhost
-
-- name: Copy SSH public key using expect
-  ansible.builtin.expect:
-    command: |
-      ssh-copy-id -i {{ lookup('env', 'HOME') + '/.ssh/id_rsa.pub' }} {{ hostvars.dev_client_gpu.ansible_user }}@{{ hostvars.dev_client_gpu.ansible_host }}
-    responses:
-      "Are you sure you want to continue connecting?": "yes"
-      "password": "{{ hostvars.dev_client_gpu.ansible_become_pass }}"
-  become: false
-  # no_log: true
-  delegate_to: localhost
+    - name: Copy SSH public key using expect
+      ansible.builtin.expect:
+        command: |
+          ssh-copy-id -i {{ lookup('env', 'HOME') + '/.ssh/id_rsa.pub' }} {{ hostvars.dev_client_gpu.ansible_user }}@{{ hostvars.dev_client_gpu.ansible_host }}
+        responses:
+          "Are you sure you want to continue connecting?": "yes"
+          "password": "{{ hostvars.dev_client_gpu.ansible_become_pass }}"
+      become: false
+      no_log: true
 
 ...
