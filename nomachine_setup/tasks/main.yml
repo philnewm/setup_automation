@@ -26,7 +26,7 @@
 
 - name: Remove old installer
   ansible.builtin.file:
-    path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+    path: "{{ (host_vars.user_install_dir, installer_name) | ansible.builtin.path_join }}"
     state: absent
 
 - name: "Check if nomachine is installed"
@@ -36,38 +36,38 @@
   changed_when: false
   ignore_errors: true
 
-- name: prepare nomachine
+- name: Prepare nomachine
   when: package_check.rc == 1
   block:
-  - name: Create install_dir
-    ansible.builtin.file:
-      path: "{{ user_install_dir }}"
-      state: directory
-      mode: '1755'
+    - name: Create install_dir
+      ansible.builtin.file:
+        path: "{{ user_install_dir }}"
+        state: directory
+        mode: '1755'
 
-  # TODO move installer to server
-  - name: Download nomachine installer
-    ansible.builtin.get_url:
-      url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
-      dest: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
-      mode: '0440'
+    # TODO move installer to server
+    - name: Download nomachine installer
+      ansible.builtin.get_url:
+        url: https://download.nomachine.com/download/8.10/Linux/nomachine_8.10.1_1_x86_64.rpm
+        dest: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+        mode: '0440'
 
-  - name: Change installer permission
-    ansible.builtin.file:
-      path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
-      mode: '0700'
+    - name: Change installer permission
+      ansible.builtin.file:
+        path: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+        mode: '0700'
 
-  - name: Show installer path
-    ansible.builtin.debug:
-      msg: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+    - name: Show installer path
+      ansible.builtin.debug:
+        msg: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
 
   # TODO reenable gpg_check and figure out how to make it work
-  - name: Install nomachine
-    ansible.builtin.package:
-      name: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
-      state: present
-      disable_gpg_check: true
-    become: true
+    - name: Install nomachine
+      ansible.builtin.package:
+        name: "{{ (user_install_dir, installer_name) | ansible.builtin.path_join }}"
+        state: present
+        disable_gpg_check: true
+      become: true
 
 - name: Ensure nx config path exists
   ansible.builtin.file:
