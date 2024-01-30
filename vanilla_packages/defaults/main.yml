@@ -74,7 +74,7 @@ flatpak_packages_centosstream9:
   - org.flameshot.Flameshot
   - org.onlyoffice.desktopeditors
   - org.jitsi.jitsi-meet
-  - net.nokyan.Resources
+  - net.nokyan.Resources  # TODO dark theme override for gnome version < 42 I guess: sudo flatpak override --env=GTK_THEME=Adwaita-dark net.nokyan.Resources
 
 flatpak_packages_fedora38:
   - com.teamspeak.TeamSpeak
