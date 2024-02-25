@@ -1,0 +1,187 @@
+- add update_cache=yes to package installs from package manager
+- use notify + handlers in case of conditional execution when task changed something
+- handlers run at the end of the play by default
+- force right away by 
+    - name: Restart nginx
+      meta: flush_handlers
+
+- Handlers run in difinition order - not in notifiy order
+  and run only ones even if multiple notifiers
+
+# TODO rewrite commands like this
+# according to https://docs.ansible.com/ansible/latest/collections/ansible/builtin/command_module.html
+- name: Run command using argv with mixed argument formats
+  ansible.builtin.command:
+    argv:
+      - /path/to/binary
+      - -v
+      - --debug
+      - --longopt
+      - value for longopt
+      - --other-longopt=value for other longopt
+      - positional
+
+    creates: /some/path  # task wont run if this path already exists
+    removes: /some/path  # if matching file exists this task will be run
+
+test if stat module works for just checking existence of files
+some facts get saved as top level varibales accessible by calling ansible_<fact>
+
+# INFO facts to json
+ansible vagrant3 -m setup --tree ~/ansible_output/ && jq '.' ~/ansible_output/vagrant3 > ~/ansible_output/facts.json
+ can get filter applied -> check setup module
+
+return values including "ansible_facts" as key will get their values created as variables in this environment
+variables not specifc to the host have their name ending in: "_info"
+
+ansible modules provide different kind of facts: package_facts, service_facts
+ansible_local variables to be palced in /etc/ansible/facts.d
+-> uses file name as key
+
+check for variables using is defined
+- name: Set nginx_state
+  when: ansible_facts.services.nginx.state is defined
+  set_fact:
+    nginx_state: "{{ ansible_facts.services.nginx.state }}"
+
+setup custom enviroenment variables for specific task, e.g. to run script module
+-> see https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html
+
+PasswordAuthentication set to "no" improves security greatly
+-> assumes to use kayes instead
+
+keys need to be copied to server first:
+- name: Install authorized_keys taken from file
+  authorized_key:
+    user: "{{ the_user }}"
+    state: present
+    key: "{{ lookup('file',the_pub_key) }}"
+    key_options: 'no-port-forwarding,from="93.184.216.34"'
+    exclusive: true
+
+Note that ed25519 public keys are short enough to type in a console if
+necessary.
+
+add user directly to inventory
+[mezzanine]
+web ansible_host=192.168.33.10 ansible_user=webmaster
+db ansible_host=192.168.33.11 ansible_user=dba
+
+in terms of VM recreation:
+leave host key checking enabled in SSH CONFIG + remove old hostkey
+ssh-keygen -R 192.168.33.10
+ssh-keyscan 192.168.33.10 >> ~/.ssh/known_hosts
+
+add "debugger: always" to top section in palybook to step through playbook by hitting [c]
+supports a bunch of other commands, e.g.:
+p task.args -> print curernt tasks arguments
+can also change current varibales value and rerun task using new value
+
+https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_debugger.html
+
+use assertions for debugging
+-> statemnts use jinja 2, not python
+assert:
+  that: "ports|length == 2"
+
+check status of files using stat module
+
+sanity checks for ansible-playbook:
+--syntax-check
+--list-hosts 
+--check (dry run) -> tells which task will change host but doesn't run
+-> might flase crash if later task depends on former one
+-- diff -> shows diff to any file changes that will be changed
+
+clean up roles and remove all unecessary files and dirs
+use unique variable names in roles
+
+long tasks list should include sub task files
+
+add file creation to nautilus:
+mkdir -p ~/Templates && touch ~/Templates/Untitled\ Document;
+xdg-user-dirs-update --set TEMPLATES ~/Templates;
+nautilus -q && nautilus &
+
+host: "{{ database_host | default('localhost') }}"
+evaluates variable if defined, else sets it to 'localhost'
+
+go through lookups + loop controls on chapter 10 again with practical tests
+
+cha 10 Lookups:
+use lookup to gather data from external sources
+lookups can evaluate jinja2 templates too
+- name: Output message from template
+  debug:
+  msg: "{{ lookup('template', 'message.j2') }}"
+- can also write custom lookup plugins
+- maybe this can be used to lookup external configs
+
+yeet vault encrypted files into group_vars/all/vault
+without extension to not confuse linters
+-> role specific enrypted files into roles
+
+safe password to file and load using:
+ANSIBLE_VAULT_PASSWORD_FILE environment variable or
+the --vault-password-file argument:
+
+add vault id list in asnible.CONFIG[defaults]
+vault_identity_list = dev@~/.vault_dev, prod@~/.vault_prod
+
+revesit chapter 10 complex playbooks
+ Nagios alerts
+
+limiting which tasks 
+The --step flag has Ansible prompt you before running each task
+--start-at-task taskname
+or use tags
+
+flow control:
+meta: flush_handlers, refresh_inventory, clear_facts, end_batch, end_host, end_play
+
+include vars can also run in a a task:
+- name: Include OS specific variables
+ include_vars: "{{ ansible_os_family }}.yml"
+
+
+chapter 12 -managing windows
+- install pkg: 
+  libkrb5-dev on debian systems
+  krb5-devel on redhat systems
+- install pip:
+  pip3 install pywinrm[kerberos]
+
+
+add umbrello to vanilla packages
+
+
+Chapter 17: Note about access keys
+mentions:
+The ANSIBLE_VAULT_PASSWORD_FILE is an executable that is used to decrypt yet
+another file that has the password. Bas uses GNU Privacy Guard (GPG), the open
+source variant of PGP:
+
+GPG ensures there is no sensitive data unencrypted at rest: in other words, there is no
+plain-text file with the vault password. GPG Agent removes the burden of typing the
+password all the time.
+
+setup dynamic inventory for machines
+maybe Vms separated
+colect system in on centralized place and request list from there
+cache list and only update if necessary
+
+wait for VM to be done installing:
+- name: Wait for EC2 instance to be ready
+  wait_for:
+  host: "{{ item.public_dns_name }}"
+  port: 22
+  search_regex: OpenSSH
+  delay: 60  # might not be necessary
+  loop: "{{ ec2.instances }}"
+  register: wait
+
+Using Callback plugins sent to log server
+cusomize formatting of output logs and so on
+ara seems promising to be send to a database
+
+log_palys and logentries plguins seam feasable for use case
