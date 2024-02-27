@@ -184,4 +184,65 @@ Using Callback plugins sent to log server
 cusomize formatting of output logs and so on
 ara seems promising to be send to a database
 
-log_palys and logentries plguins seam feasable for use case
+log_palys and logentries plugins seam feasable for use case
+
+speed up ansible:
+ssh multiplexing
+# TODO test these options - might be written wrong here
+ControlMaster=auto
+ControlPath="~/.ssh/sockets/%r@%h:%p"
+ControlPersist=60s
+
+[connection]
+pipelining = True
+
+might require disabling "requiretty" in sudoers
+
+templates/disable-requiretty.j2
+Defaults:{{ ansible_user }} !requiretty
+
+---
+- name: Do not require tty for ssh-ing user
+  hosts: vagrant
+  become: true
+
+  tasks:
+    - name: Set a sudoers file to disable tty
+      template:
+        src: disable-requiretty.j2
+        dest: /etc/sudoers.d/disable-requiretty
+        owner: root
+        group: root
+        mode: '0440'
+        validate: 'bash -c "cat /etc/sudoers /etc/sudoers.d/* %s | visudo -cf-"'
+
+checkout mitogen
+pip3 install --user mitogen
+
+[defaults]
+strategy_plugins = /path/to/strategy
+strategy = mitogen_linear
+
+disable gather_facts if playbook doesn't need it
+
+asnyc execution of independent tasks:
+- name: Clone Linus's git repo
+  git:
+    repo: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+    dest: /home/vagrant/linux
+  async: 3600 
+  poll: 0 
+  register: linux_clone
+
+- name: Install several packages
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - linux-image-extra-virtual
+      - software-properties-common
+      - python-pip
+  become: true
+
+martin fowler about CI
+https://martinfowler.com/articles/continuousIntegration.html

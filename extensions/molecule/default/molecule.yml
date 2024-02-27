@@ -1,0 +1,44 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+    # TODO figure out why its creating linked clones after molecule reset
+    provider_options:
+      linked_clone: false
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: Alma9
+    box: almalinux/9
+    memory: 4096
+    cpus: 4
+    groups:
+      - alma9
+  - name: ubuntu204
+    box: ubuntu/focal64
+    memory: 4096
+    cpus: 4
+    groups:
+      - ubuntu
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      Alma9:
+        ansible_user: vagrant
+        ansible_password: vagrant
+      ubuntu204:
+        ansible_user: vagrant
+        ansible_password: vagrant
+  config_options:
+    defaults:
+      stdout_callback: debug
+      callbacks_enabled: ansible.posix.profile_tasks
+      vault_password_file: "$HOME/Documents/vault.pw"
+verifier:
+  name: ansible

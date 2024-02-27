@@ -2,7 +2,7 @@
 Description=mount {{ item.mount }} share
 
 [Mount]
-What=//{{ file_server }}/{{ item.share }}
+What=//{{ server_host_name }}/{{ item.share }}
 Where=/{{ mnt_point }}/{{ item.mount }}
 Type={{ fs_type }}
 Options={{ smb_mount_options }}
