@@ -1,0 +1,9 @@
+---
+
+- name: Converge
+  hosts: all
+
+  tasks:
+    - name: Verify test
+      ansible.builtin.debug:
+        msg: "Verify successfull"
