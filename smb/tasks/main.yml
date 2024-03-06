@@ -64,7 +64,7 @@
   become: true
 
 - name: Enable auto-mount file
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     daemon_reload: true
     name: "{{ mnt_point }}-{{ item.mount }}.automount"
     state: started
@@ -72,15 +72,16 @@
   loop: "{{ target }}"
   become: true
 
-- name: Reboot the host and continue playbook
-  ansible.builtin.reboot:
-    msg: Reboot initiated by Ansible
-    pre_reboot_delay: 5
-    reboot_timeout: 300
-  become: true
+# TODO move to tests
+# - name: Reboot the host and continue playbook
+#   ansible.builtin.reboot:
+#     msg: Reboot initiated by Ansible
+#     pre_reboot_delay: 5
+#     reboot_timeout: 300
+#   become: true
 
-- name: Wait for the host to come back online
-  ansible.builtin.wait_for_connection:
-    timeout: 300
+# - name: Wait for the host to come back online
+#   ansible.builtin.wait_for_connection:
+#     timeout: 300
 
 ...

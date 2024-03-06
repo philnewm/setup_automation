@@ -5,7 +5,13 @@
   gather_facts: false
   # no_log: "{{ molecule_no_log }}"
   tasks:
-    # Developer must implement.
+    - name: Stop and remove VMs
+      delegate_to: localhost
+      ansible.builtin.command: "vagrant destroy -f"
+      register: result
+      changed_when: result.rc == 0
+      args:
+        chdir: "{{ hostvars[inventory_hostname].molecule_ephemeral_directory }}"
 
     # Mandatory configuration for Molecule to function.
 

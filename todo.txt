@@ -246,3 +246,9 @@ asnyc execution of independent tasks:
 
 martin fowler about CI
 https://martinfowler.com/articles/continuousIntegration.html
+
+site 588
+
+- name: Print All Variables
+  ansible.builtin.debug:
+    var: hostvars[inventory_hostname]
