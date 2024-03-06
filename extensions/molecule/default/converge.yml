@@ -1,9 +1,13 @@
 ---
+
 - name: Converge
   hosts: all
   vars_files:
     - ../../../secrets.yml
   roles:
     - role: smb
+      tasks_from: main.yml
       server_host_name: "fileserver"
       server_ip: "10.32.64.200"
+
+...

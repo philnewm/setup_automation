@@ -22,6 +22,8 @@ target:
   - { share: "library", mount: "library" }
   - { share: "ressources", mount: "ressources" }
 mnt_point: mnt
+dummy_file_path_server: "placeholder_path"
+dummy_file_path_local: "placeholder_path"
 fs_type: cifs
 permission: rw
 serverino: noserverino
