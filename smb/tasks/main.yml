@@ -2,6 +2,10 @@
 
 # tasks file for smb
 
+- name: Show distro name
+  ansible.builtin.debug:
+    var: ansible_distribution
+
 - name: Install required packages on redhat based distros
   when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
   become: true

@@ -13,7 +13,7 @@ dummy_file: setup_check.txt
 dummy_target: Documents
 # mount
 server_host_name: "placeholder"
-server_ip: "127.127.127.127"
+server_ip: "placeholder"
 hosts_entry: "{{ server_ip }} {{ server_host_name }}"
 target:
   - { share: "usb_backup", mount: "archive" }

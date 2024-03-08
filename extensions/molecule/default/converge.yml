@@ -4,10 +4,13 @@
   hosts: all
   vars_files:
     - ../../../secrets.yml
-  roles:
-    - role: smb
-      tasks_from: main.yml
-      server_host_name: "fileserver"
-      server_ip: "10.32.64.200"
+  tasks:
+    - name: Include smb role
+      ansible.builtin.import_role:
+        name: smb
+        tasks_from: main.yml
+      vars:
+        server_host_name: "fileserver"
+        server_ip: "10.32.64.200"
 
 ...
