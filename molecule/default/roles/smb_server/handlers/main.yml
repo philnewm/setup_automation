@@ -1,0 +1,10 @@
+---
+
+# handlers file for smb_server
+
+- name: Restart SMB
+  service:
+    name: smbd
+    state: restarted
+
+...

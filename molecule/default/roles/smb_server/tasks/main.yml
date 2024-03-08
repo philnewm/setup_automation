@@ -1,0 +1,56 @@
+---
+
+# tasks file for smb_server
+
+- name: Install required packages on redhat based distros
+  when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ install_packages }}"
+
+- name: Install required packages on debian based distros
+  when: "ansible_distribution in ['Ubuntu', 'Debian']"
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ install_packages }}"
+
+- name: Install required pip packages
+  ansible.builtin.pip:
+    name: passlib
+
+- name: Create Samba User Account
+  ansible.builtin.user:
+    name: "{{ smb_login }}"
+    password: "{{ smb_password | password_hash('sha512') }}"
+    create_home: true
+    state: present
+
+- name: Set SMB Password
+  ansible.builtin.command: "echo '{{ smb_password }}\n{{ smb_password }}' | sudo smbpasswd -a {{ smb_login }}"
+
+- name: create shares
+  ansible.builtin.file:
+    path: "/home/{{ smb_login }}/sambashares/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - usb_backup
+    - documents
+    - learning
+    - library
+    - ressources
+
+- name: Configure smb.conf
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    mode: "0644"
+  notify: Restart SMB
+
+...

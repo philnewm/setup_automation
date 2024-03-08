@@ -1,0 +1,8 @@
+---
+# vars file for smb_server
+
+install_packages:
+  - samba
+  - python3-pip
+
+...

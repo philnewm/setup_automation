@@ -30,6 +30,7 @@
     mode: "0644"
   become: true
 
+# TODO handle credential files in more safe way
 - name: Write credentials
   ansible.builtin.copy:
     content: |
