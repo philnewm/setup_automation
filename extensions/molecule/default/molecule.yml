@@ -11,25 +11,40 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
-  # - name: CentosStream9
-  #   box: centos/stream9
-  #   box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
-  #   memory: 2048
-  #   cpus: 2
-  #   groups:
-  #     - centosstream9
-  # - name: Alma9
-  #   box: almalinux/9
-  #   memory: 2048
-  #   cpus: 2
-  #   groups:
-  #     - alma9
-  # - name: ubuntu204
-  #   box: ubuntu/focal64
-  #   memory: 2048
-  #   cpus: 2
-  #   groups:
-  #     - ubuntu
+  - name: CentosStream9
+    box: centos/stream9
+    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.10"
+    groups:
+      - client
+  - name: Alma9
+    box: almalinux/9
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.20"
+    groups:
+      - client
+  - name: ubuntu204
+    box: ubuntu/focal64
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.30"
+    groups:
+      - client
   - name: smbserver
     box: ubuntu/focal64
     memory: 2048
@@ -39,8 +54,6 @@ platforms:
         network_name: private_network
         type: "static"
         ip: "192.168.56.200"
-        # guest: 139
-        # host: 1139
     groups:
       - server
 provisioner:

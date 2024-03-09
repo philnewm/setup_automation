@@ -2,15 +2,11 @@
 
 # tasks file for smb
 
-- name: Show distro name
-  ansible.builtin.debug:
-    var: ansible_distribution
-
 - name: Install required packages on redhat based distros
   when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
   become: true
   ansible.builtin.dnf:
-    name: "{{ install_packages }}"
+    name: "{{ install_dnf_packages }}"
     state: present
     update_cache: true
 
@@ -18,9 +14,10 @@
   when: "ansible_distribution in ['Ubuntu', 'Debian']"
   become: true
   ansible.builtin.apt:
-    name: "{{ install_packages }}"
+    name: "{{ install_deb_packages }}"
     state: present
     update_cache: true
+  notify: Reboot Host
 
 - name: Add fileserver host to system/vm host
   ansible.builtin.lineinfile:
@@ -44,7 +41,7 @@
 
 - name: Create mount target
   ansible.builtin.file:
-    path: "{{ (mnt_point, item.mount) | ansible.builtin.path_join }}"
+    path: "/{{ (mnt_point, item.mount) | ansible.builtin.path_join }}"
     state: directory
     owner: root
     group: root

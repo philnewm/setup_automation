@@ -2,6 +2,7 @@
 
 # tasks file for smb_server
 # TODO streamline paths
+# TODO streamline distro checks
 
 - name: Install required packages on redhat based distros
   when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
@@ -25,11 +26,12 @@
   ansible.builtin.pip:
     name: passlib
 
-- name: Create Samba User Account
+- name: Create user Account
   ansible.builtin.user:
     name: "{{ smb_login }}"
     password: "{{ smb_password | password_hash('sha512') }}"
     create_home: true
+    update_password: on_create
     state: present
 
 - name: shell - create samba users
@@ -55,7 +57,13 @@
     - library
     - ressources
 
+- name: Get information about the file
+  ansible.builtin.stat:
+    path: "/home/{{ smb_login }}/sambashares/documents/test.txt"
+  register: file_info
+
 - name: Create test file
+  when: not file_info.stat.exists
   ansible.builtin.file:
     path: "/home/{{ smb_login }}/sambashares/documents/test.txt"
     state: touch

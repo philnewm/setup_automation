@@ -1,9 +1,10 @@
 ---
 
 # handlers file for smb
-- name: Clean up after test
-  ansible.builtin.file:
-    path: "{{ (user_home_path, dummy_target, dummy_file) | ansible.builtin.path_join }}"
-    state: absent
+- name: Reboot Host
+  ansible.builtin.reboot:
+    msg: Reboot initiated by Ansible
+    reboot_timeout: 60
+  become: true
 
 ...

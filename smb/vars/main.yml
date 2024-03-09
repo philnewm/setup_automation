@@ -1,6 +1,10 @@
 ---
 
-install_packages:
+install_dnf_packages:
   - cifs-utils
+
+install_deb_packages:
+  - cifs-utils
+  - linux-generic
 
 ...
