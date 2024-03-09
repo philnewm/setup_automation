@@ -1,6 +1,7 @@
 ---
 
 # tasks file for smb_server
+# TODO streamline paths
 
 - name: Install required packages on redhat based distros
   when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
@@ -31,8 +32,19 @@
     create_home: true
     state: present
 
-- name: Set SMB Password
-  ansible.builtin.command: "echo '{{ smb_password }}\n{{ smb_password }}' | sudo smbpasswd -a {{ smb_login }}"
+# - name: Set SMB Password
+#   ansible.builtin.command: "echo '{{ smb_password }}\n{{ smb_password }}' | sudo smbpasswd -a {{ smb_login }}"
+
+- name: shell - create samba users
+  ansible.builtin.shell: >
+    set -e -o pipefail
+    && (pdbedit --user={{ smb_login }} 2>&1 > /dev/null)
+    || (echo '{{ smb_password }}'; echo '{{ smb_password }}')
+    | smbpasswd -s -a {{ smb_login }}
+  args:
+    executable: /bin/bash
+  register: samba_create_users
+  changed_when: "'Added user' in samba_create_users.stdout"
 
 - name: create shares
   ansible.builtin.file:
@@ -45,6 +57,12 @@
     - learning
     - library
     - ressources
+
+- name: Create test file
+  ansible.builtin.file:
+    path: "/home/{{ smb_login }}/sambashares/documents/test.txt"
+    state: touch
+    mode: "0755"
 
 - name: Configure smb.conf
   ansible.builtin.template:
