@@ -32,9 +32,6 @@
     create_home: true
     state: present
 
-# - name: Set SMB Password
-#   ansible.builtin.command: "echo '{{ smb_password }}\n{{ smb_password }}' | sudo smbpasswd -a {{ smb_login }}"
-
 - name: shell - create samba users
   ansible.builtin.shell: >
     set -e -o pipefail
