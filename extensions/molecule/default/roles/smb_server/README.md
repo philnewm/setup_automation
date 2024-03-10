@@ -12,13 +12,12 @@ This role requires the samba package to be installed.
 Role Variables
 --------------
 
-defaults:
-smb_server_config_path: provides the smb config file path, default: "/etc/samba/smb.conf"
+- defaults.yml
+  - smb_server_config_path: provides the smb config file path, default: "/etc/samba/smb.conf"
 
-vars:
-smb_server_install_rpm_packages: install necessary packages for rhel based distros using the dnf package manager
-
-smb_server_install_deb_packages: install necessary packages for debian based distros using the apt package manager
+- vars.yml
+  - smb_server_install_rpm_packages: install necessary packages for rhel based distros using the dnf package manager
+  - smb_server_install_deb_packages: install necessary packages for debian based distros using the apt package manager
 
 Dependencies
 ------------
@@ -28,8 +27,9 @@ This role doesn't depend on any additional ansible-galaxy roles
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+This example shows the necessary file for the smb user credentials (secrets.yml)
 
+```yaml
 - name: Converge
   hosts: smbserver
   vars_files:
@@ -40,13 +40,9 @@ Including an example of how to use your role (for instance, with variables passe
       ansible.builtin.import_role:
         name: smb_server
         tasks_from: main.yml
+```
 
 License
 -------
 
 MIT
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
