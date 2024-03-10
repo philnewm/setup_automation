@@ -2,7 +2,7 @@ Basic SMB Server for testing
 =========
 
 This basic SMB server is only intended for testing smb mount setups on the testing clients.
-I only creates a single user based on y provided secrets file.
+The role only creates a single smb user based on the provided secrets file.
 
 Requirements
 ------------
