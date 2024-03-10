@@ -1,9 +1,9 @@
 ---
 
-install_dnf_packages:
+smb_install_dnf_packages:
   - cifs-utils
 
-install_deb_packages:
+smb_install_deb_packages:
   - cifs-utils
   - linux-generic
 

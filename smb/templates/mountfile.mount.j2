@@ -2,11 +2,11 @@
 Description=mount {{ item.mount }} share
 
 [Mount]
-What=//{{ server_host_name }}/{{ item.share }}
-Where=/{{ mnt_point }}/{{ item.mount }}
-Type={{ fs_type }}
+What=//{{ smb_server_host_name }}/{{ item.share }}
+Where=/{{ smb_mnt_point }}/{{ item.mount }}
+Type={{ smb_fs_type }}
 Options={{ smb_mount_options }}
-DirectoryMode={{ dir_mode }}
+DirectoryMode={{ smb_dir_mode }}
 
 [Install]
-WantedBy={{ run_lvl }}
+WantedBy={{ smb_run_lvl }}

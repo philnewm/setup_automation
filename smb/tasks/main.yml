@@ -3,29 +3,29 @@
 # tasks file for smb
 
 - name: Install required packages on redhat based distros
-  when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
+  when: ansible_distribution in rhel_based_distros
   become: true
   ansible.builtin.dnf:
-    name: "{{ install_dnf_packages }}"
+    name: "{{ smb_install_dnf_packages }}"
     state: present
     update_cache: true
 
 - name: Install required packages on debian based distros
-  when: "ansible_distribution in ['Ubuntu', 'Debian']"
+  when: ansible_distribution in debian_based_distros
   become: true
   ansible.builtin.apt:
-    name: "{{ install_deb_packages }}"
+    name: "{{ smb_install_deb_packages }}"
     state: present
     update_cache: true
   notify: Reboot Host
 
 - name: Add fileserver host to system/vm host
+  become: true
   ansible.builtin.lineinfile:
-    path: "{{ hosts_file_path }}"
-    line: "{{ hosts_entry }}"
+    path: "{{ smb_hosts_file_path }}"
+    line: "{{ smb_hosts_entry }}"
     state: present
     mode: "0644"
-  become: true
 
 # TODO handle credential files in more safe way
 - name: Write credentials
@@ -33,45 +33,45 @@
     content: |
       username={{ smb_login }}
       password={{ smb_password }}
-    dest: "{{ (user_home_path, smb_credentials_file) | ansible.builtin.path_join }}"
+    dest: "{{ (smb_user_home_path, smb_credentials_file) | ansible.builtin.path_join }}"
     owner: root
     group: root
     mode: "0600"
   become: true
 
-- name: Create mount target
+- name: Create mount mount_targets
   ansible.builtin.file:
-    path: "/{{ (mnt_point, item.mount) | ansible.builtin.path_join }}"
+    path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
     state: directory
     owner: root
     group: root
     mode: "0755"
-  loop: "{{ target }}"
+  loop: "{{ mount_targets }}"
   become: true
 
 - name: Copy mount template to remote host
   ansible.builtin.template:
     src: mountfile.mount.j2
-    dest: "{{ (systemd_mount_file_path, mnt_point + '-' + item.mount + mount_file_ext) | ansible.builtin.path_join }}"
+    dest: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_mount_file_ext) | ansible.builtin.path_join }}"
     mode: preserve
-  loop: "{{ target }}"
+  loop: "{{ mount_targets }}"
   become: true
 
 - name: Copy automount template to remote host
   ansible.builtin.template:
     src: mountfile.automount.j2
-    dest: "{{ (systemd_mount_file_path, mnt_point + '-' + item.mount + auto_mount_file_ext) | ansible.builtin.path_join }}"
+    dest: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_auto_mount_file_ext) | ansible.builtin.path_join }}"
     mode: preserve
-  loop: "{{ target }}"
+  loop: "{{ mount_targets }}"
   become: true
 
 - name: Enable auto-mount file
   ansible.builtin.systemd_service:
     daemon_reload: true
-    name: "{{ mnt_point }}-{{ item.mount }}.automount"
+    name: "{{ smb_mnt_point }}-{{ item.mount }}.automount"
     state: started
     enabled: true
-  loop: "{{ target }}"
+  loop: "{{ mount_targets }}"
   become: true
 
 ...

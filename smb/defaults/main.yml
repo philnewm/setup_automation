@@ -1,36 +1,27 @@
 ---
 # defaults file for smb
 
-user_home_path: "{{ ansible_env.HOME }}"
-hosts_file_path: /etc/hosts
+smb_user_home_path: "{{ ansible_env.HOME }}"
+smb_hosts_file_path: /etc/hosts
 smb_credentials_file: .smb
-systemd_mount_file_path: /etc/systemd/system
-mount_file_ext: .mount
-auto_mount_file_ext: .automount
-dummy_path: library/dummy_data
-dummy_file: setup_check.txt
-dummy_target: Documents
+smb_systemd_mount_file_path: /etc/systemd/system
+smb_mount_file_ext: .mount
+smb_auto_mount_file_ext: .automount
 # mount
-server_host_name: "placeholder"
-server_ip: "placeholder"
-hosts_entry: "{{ server_ip }} {{ server_host_name }}"
-target:
-  - { share: "usb_backup", mount: "archive" }
-  - { share: "documents", mount: "documents" }
-  - { share: "learning", mount: "learning" }
-  - { share: "library", mount: "library" }
-  - { share: "ressources", mount: "ressources" }
-mnt_point: mnt
-dummy_file_path_mount: "placeholder_path"
-dummy_file_path_local: "placeholder_path"
-fs_type: cifs
-permission: rw
-serverino: noserverino
-charset: utf8
-user_id: 1000
-grp_id: 1000
-smb_mount_options: credentials={{ ansible_user_dir }}/.smb,{{ permission }},uid={{ user_id }},gid={{ grp_id }},iocharset={{ charset }},_netdev,{{ serverino }}
-run_lvl: multi-user.target
-dir_mode: "0700"
+smb_server_host_name: "placeholder"
+smb_server_ip: "placeholder"
+smb_hosts_entry: "{{ smb_server_ip }} {{ smb_server_host_name }}"
+smb_mnt_point: mnt
+smb_dummy_file_path_mount: "placeholder_path"
+smb_dummy_file_path_local: "placeholder_path"
+smb_fs_type: cifs
+smb_permission: rw
+smb_serverino: noserverino
+smb_charset: utf8
+smb_user_id: 1000
+smb_grp_id: 1000
+smb_mount_options: credentials={{ ansible_env.HOME }}/.smb,{{ smb_permission }},uid={{ smb_user_id }},gid={{ smb_grp_id }},iocharset={{ smb_charset }},_netdev,{{ smb_serverino }}
+smb_run_lvl: multi-user.target
+smb_dir_mode: "0700"
 # auto-mount
-timeout_in_sec: 60
+smb_timeout_in_sec: 60

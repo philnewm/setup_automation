@@ -21,7 +21,7 @@
         name: smb
         tasks_from: main.yml
       vars:
-        server_host_name: "fileserver"
-        server_ip: "192.168.56.200"
+        smb_server_host_name: "fileserver"
+        smb_server_ip: "192.168.56.200"
 
 ...
