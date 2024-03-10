@@ -2,25 +2,23 @@
 
 # tasks file for smb_server
 # TODO streamline paths
-# TODO streamline distro checks
+# TODO implement present and absent version of this role -> use main as switch
 
 - name: Install required packages on redhat based distros
-  when: "ansible_distribution in ['RedHat', 'CentOS', 'AlmaLinux']"
-  become: true
+  when: ansible_distribution in rhel_based_distros
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
     update_cache: true
-  loop: "{{ install_packages }}"
+  loop: "{{ smb_server_install_rpm_packages }}"
 
 - name: Install required packages on debian based distros
-  when: "ansible_distribution in ['Ubuntu', 'Debian']"
-  become: true
+  when: ansible_distribution in debian_based_distros
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
     update_cache: true
-  loop: "{{ install_packages }}"
+  loop: "{{ smb_server_install_deb_packages }}"
 
 - name: Install required pip packages
   ansible.builtin.pip:
@@ -35,6 +33,7 @@
     state: present
 
 - name: shell - create samba users
+  become: true
   ansible.builtin.shell: >
     set -e -o pipefail
     && (pdbedit --user={{ smb_login }} 2>&1 > /dev/null)
@@ -47,32 +46,27 @@
 
 - name: create shares
   ansible.builtin.file:
-    path: "/home/{{ smb_login }}/sambashares/{{ item }}"
+    path: "/home/{{ smb_login }}/sambashares/{{ item.mount }}"
     state: directory
     mode: "0755"
-  loop:
-    - usb_backup
-    - documents
-    - learning
-    - library
-    - ressources
+  loop: "{{ mount_targets }}"
 
 - name: Get information about the file
   ansible.builtin.stat:
-    path: "/home/{{ smb_login }}/sambashares/documents/test.txt"
+    path: "/home/{{ smb_login }}/sambashares/{{ mount_targets[0].mount }}/test.txt"
   register: file_info
 
 - name: Create test file
   when: not file_info.stat.exists
   ansible.builtin.file:
-    path: "/home/{{ smb_login }}/sambashares/documents/test.txt"
+    path: "/home/{{ smb_login }}/sambashares/{{ mount_targets[0].mount }}/test.txt"
     state: touch
     mode: "0755"
 
 - name: Configure smb.conf
   ansible.builtin.template:
     src: smb.conf.j2
-    dest: /etc/samba/smb.conf
+    dest: "{{ smb_server_config_path }}"
     mode: "0644"
   notify: Restart SMB
 

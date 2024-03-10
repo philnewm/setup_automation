@@ -44,11 +44,11 @@ check for variables using is defined
   set_fact:
     nginx_state: "{{ ansible_facts.services.nginx.state }}"
 
-setup custom enviroenment variables for specific task, e.g. to run script module
+setup custom environment variables for specific task, e.g. to run script module
 -> see https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html
 
 PasswordAuthentication set to "no" improves security greatly
--> assumes to use kayes instead
+-> assumes to use keys instead
 
 keys need to be copied to server first:
 - name: Install authorized_keys taken from file

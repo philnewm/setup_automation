@@ -3,7 +3,7 @@
 # handlers file for smb_server
 
 - name: Restart SMB
-  service:
+  ansible.builtin.service:
     name: smbd
     state: restarted
 

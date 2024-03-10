@@ -60,12 +60,25 @@ provisioner:
   name: ansible
   inventory:
     host_vars:
+      CentosStream9:
+        ansible_user: vagrant
+        ansible_password: vagrant
       Alma9:
         ansible_user: vagrant
         ansible_password: vagrant
       ubuntu204:
         ansible_user: vagrant
         ansible_password: vagrant
+    group_vars:
+      all:
+        debian_based_distros: ["Debian", "Ubuntu"]
+        rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
+        mount_targets:
+          - { share: "documents", mount: "documents" }
+          - { share: "learning", mount: "learning" }
+          - { share: "library", mount: "library" }
+          - { share: "ressources", mount: "ressources" }
+          - { share: "usb_backup", mount: "archive" }
   config_options:
     defaults:
       stdout_callback: debug
