@@ -18,6 +18,12 @@
       ansible.builtin.wait_for_connection:
         timeout: 300
 
+    # TODO test all mounts points exist
+    # TODO test allmount points are able to mount
+    # TODO test read file
+    # TODO test write file
+    # TODO test execute file
+
     - name: Copy test file to host
       ansible.builtin.copy:
         remote_src: true
