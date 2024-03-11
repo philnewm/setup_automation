@@ -49,21 +49,37 @@
   loop: "{{ mount_targets }}"
   become: true
 
-- name: Copy mount template to remote host
-  ansible.builtin.template:
-    src: mountfile.mount.j2
-    dest: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_mount_file_ext) | ansible.builtin.path_join }}"
-    mode: preserve
-  loop: "{{ mount_targets }}"
-  become: true
+- name: Generate INI-formatted mount file
+  ansible.builtin.blockinfile:
+  # TODO move path combinations to defaults.yml
+    path: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_mount_file_ext) | ansible.builtin.path_join }}"
+    block: |
+      {% for section, options in mount_file.items() %}
+      [{{ section }}]
+      {% for key, value in options.items() %}
+      {{ key }}={{ value }}
+      {% endfor %}
 
-- name: Copy automount template to remote host
-  ansible.builtin.template:
-    src: mountfile.automount.j2
-    dest: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_auto_mount_file_ext) | ansible.builtin.path_join }}"
-    mode: preserve
+      {% endfor %}
+    mode: "0644"
+    create: true
   loop: "{{ mount_targets }}"
-  become: true
+
+# - name: Copy mount template to remote host
+#   ansible.builtin.template:
+#     src: mountfile.mount.j2
+#     dest: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_mount_file_ext) | ansible.builtin.path_join }}"
+#     mode: preserve
+#   loop: "{{ mount_targets }}"
+#   become: true
+
+# - name: Copy automount template to remote host
+#   ansible.builtin.template:
+#     src: mountfile.automount.j2
+#     dest: "{{ (smb_systemd_mount_file_path, smb_mnt_point + '-' + item.mount + smb_auto_mount_file_ext) | ansible.builtin.path_join }}"
+#     mode: preserve
+#   loop: "{{ mount_targets }}"
+#   become: true
 
 - name: Enable auto-mount file
   ansible.builtin.systemd_service:

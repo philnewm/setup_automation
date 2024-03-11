@@ -4,8 +4,8 @@ mount_file:
   Mount:
     What: "//{{ smb_server_host_name }}/{{ item.share }}"
     Where: "/{{ smb_mnt_point }}/{{ item.mount }}"
-    Type: "{{ smb_fs_type }}"
-    Options: "{{ smb_mount_options }}"
+    Type: "cifs"
+    Options: "credentials={{ ansible_env.HOME }}/.smb,rw,uid=1000,gid=1000,iocharset=utf8,_netdev,noserverino"
     DirectoryMode: "{{ smb_dir_mode }}"
   Install:
-    WantedBy: "{{ smb_run_lvl }}"
+    WantedBy: multi-user.target

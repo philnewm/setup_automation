@@ -12,10 +12,7 @@ smb_server_host_name: "placeholder"
 smb_server_ip: "placeholder"
 smb_hosts_entry: "{{ smb_server_ip }} {{ smb_server_host_name }}"
 smb_mnt_point: mnt
-smb_dummy_file_path_mount: "placeholder_path"
-smb_dummy_file_path_local: "placeholder_path"
 smb_fs_type: cifs
-smb_permission: rw
 smb_serverino: noserverino
 smb_charset: utf8
 smb_user_id: 1000
@@ -25,3 +22,7 @@ smb_run_lvl: multi-user.target
 smb_dir_mode: "0700"
 # auto-mount
 smb_timeout_in_sec: 60
+
+vars_file:
+  - mount_file_cfg.yml
+  - automount_file_cfg.yml
