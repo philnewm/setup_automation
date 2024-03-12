@@ -6,7 +6,7 @@ mount_file:
     Where: "/{{ smb_mnt_point }}/{{ item.mount }}"
     Type: "cifs"
     Options: "credentials={{ ansible_env.HOME }}/{{ smb_credentials_file }},rw,uid=1000,gid=1000,iocharset=utf8,_netdev,noserverino"
-    # INFO mounts probably can't execute -> write test to amke sure of this
+    # INFO mounts probably can't execute -> write test to make sure of this
     DirectoryMode: "0644"
   Install:
     WantedBy: multi-user.target

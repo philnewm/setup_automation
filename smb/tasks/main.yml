@@ -27,20 +27,71 @@
     state: present
     mode: "0644"
 
-# TODO handle credential files in more safe way
+# TODO research kerberus for this kinda logins
 - name: Write credentials
   become: true
+  no_log: true
   ansible.builtin.copy:
     content: |
       username={{ smb_login }}
       password={{ smb_password }}
-    dest: "{{ (ansible_env.HOME, smb_credentials_file) | ansible.builtin.path_join }}"
+    dest: "{{ ansible_env.HOME }}/{{ smb_credentials_file }}"
     owner: root
     group: root
     mode: "0600"
 
-- name: create mount file operations
-  ansible.builtin.include_tasks: mount_files.yml
+- name: Create mount targets
+  become: true
   loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
+    state: directory
+    # INFO on mount username changes until timeout triggers
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: Generate INI-formatted mount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.blockinfile:
+    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.mount"
+    block: |
+      # TODO research parser from yaml to ini
+      {% for section, options in mount_file.items() %}
+      [{{ section }}]
+      {% for key, value in options.items() %}
+      {{ key }}={{ value }}
+      {% endfor %}
+
+      {% endfor %}
+    mode: "0644"
+    create: true
+
+- name: Generate INI-formatted automount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.blockinfile:
+    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    block: |
+      # TODO research parser from yaml to ini
+      {% for section, options in smb_automount_file.items() %}
+      [{{ section }}]
+      {% for key, value in options.items() %}
+      {{ key }}={{ value }}
+      {% endfor %}
+
+      {% endfor %}
+    mode: "0644"
+    create: true
+
+- name: Enable auto-mount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    name: "{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    state: started
+    enabled: true
 
 ...
