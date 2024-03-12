@@ -1,9 +1,0 @@
-[Unit]
-Description=automount {{ item.share }} share
-
-[Automount]
-Where=/{{ smb_mnt_point }}/{{ item.mount }}
-TimeoutIdleSec={{ smb_timeout_in_sec }}
-
-[Install]
-WantedBy={{ smb_run_lvl }}
