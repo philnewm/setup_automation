@@ -3,6 +3,7 @@
 smb_install_dnf_packages:
   - cifs-utils
 
+#TODO change to smb_install_apt_packages
 smb_install_deb_packages:
   - cifs-utils
   - linux-generic

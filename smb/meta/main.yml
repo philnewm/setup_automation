@@ -1,5 +1,5 @@
 galaxy_info:
-  author: philnewm
+  author: Phil Newm
   description: Mount smb shares based on systemd mount files on startup
 
   license: MIT
@@ -7,10 +7,14 @@ galaxy_info:
   min_ansible_version: 2.1
 
   platforms:
-  - name: Fedora
-    versions:
-    - 38
-
-  galaxy_tags: []
+    - name: CentOS
+      versions:
+        - Stream9
+    - name: AlmaLinux
+      versions:
+        - 9
+    - name: Ubuntu
+      versions:
+        - 20.04
 
 dependencies: []

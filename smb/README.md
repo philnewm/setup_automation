@@ -1,38 +1,60 @@
-Role Name
+Basic SMB Server for testing
 =========
 
-A brief description of the role goes here.
+This creates the required systemd mount files to mount smb shares on boot.
+The role only creates a single smb user based on the provided secrets.yml file.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role requires the `cifs` package to be installed.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- defaults/main/common.yml
+  - smb_state: Defines if the roles features should be present or absent on the system, default: "present"
+  - smb_hosts_file_path: Location of the hosts file on the system, default: /etc/hosts
+  - smb_credentials_file: Name of the smb credentials file, default: .smb
+  - smb_mount_file_path: Location to write the systemd mount files to, default: /etc/systemd/system
+  - smb_server_host_name: Servers hostname , default: "placeholder"
+  - smb_server_ip: Servers IP address, default: "placeholder"
+  - smb_hosts_entry: The combined line of `smb_server_ip` and `smb_server_ip` which gets written to the hosts file in `smb_hosts_file_path`, not supposed to be changed
+  - smb_mnt_point: The top level directory to create the mount points in, default: mnt
+- defaults/main/mount_file_cfg.yml
+  - mount_file: Defines the systemd mount file as yaml formatted dictionary based on the variables defined in `defaults/main/common.yml`, adjust according to your needs based on the [systemd mount file docs](https://www.freedesktop.org/software/systemd/man/latest/systemd.mount.html)
+- defaults/main/mount_file_cfg.yml
+  - Defines the systemd automount file as yaml formatted dictionary based on the variables defined in `defaults/main/common.yml`, adjust according to your needs based on the [systemd automount file docs](https://www.freedesktop.org/software/systemd/man/latest/systemd.automount.html)
+
+- vars.yml
+  - smb_server_install_dnf_packages: install necessary packages for rhel based distros using the dnf package manager
+  - #TODO change to smb_install_apt_packages
+  - smb_server_install_deb_packages: install necessary packages for debian based distros using the apt package manager
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role doesn't depend on any additional ansible-galaxy roles
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+This example shows the necessary file for the smb user credentials (secrets.yml)
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- name: Converge
+  hosts: smbserver
+  vars_files:
+    - ../../../secrets.yml
+  become: true
+  tasks:
+    - name: Initialize SMB server
+      ansible.builtin.import_role:
+        name: smb_server
+        tasks_from: main.yml
+```
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT
