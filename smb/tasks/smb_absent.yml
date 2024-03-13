@@ -1,0 +1,75 @@
+---
+
+- name: Install required packages on redhat based distros
+  when: ansible_distribution in rhel_based_distros
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ smb_install_dnf_packages }}"
+    state: present
+    update_cache: true
+
+- name: Install required packages on debian based distros
+  when: ansible_distribution in debian_based_distros
+  become: true
+  ansible.builtin.apt:
+    name: "{{ smb_install_apt_packages }}"
+    state: present
+    update_cache: true
+  notify: Reboot Host
+
+- name: Add fileserver host to system/vm host
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ smb_hosts_file_path }}"
+    line: "{{ smb_hosts_entry }}"
+    state: present
+    mode: "0644"
+
+# TODO research kerberus for this kinda logins
+- name: Write credentials
+  become: true
+  no_log: true
+  ansible.builtin.copy:
+    content: |
+      username={{ smb_login }}
+      password={{ smb_password }}
+    dest: "{{ ansible_env.HOME }}/{{ smb_credentials_file }}"
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Create mount targets
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
+    state: directory
+    # INFO on mount username changes until timeout triggers
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: Remove INI-formatted mount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.mount"
+    state: "absent"
+
+- name: Remove INI-formatted automount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    state: "absent"
+
+- name: Enable auto-mount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    name: "{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    state: started
+    enabled: true
+
+...

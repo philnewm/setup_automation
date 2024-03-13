@@ -2,96 +2,14 @@
 
 # tasks file for smb
 
-- name: Install required packages on redhat based distros
-  when: ansible_distribution in rhel_based_distros
-  become: true
-  ansible.builtin.dnf:
-    name: "{{ smb_install_dnf_packages }}"
-    state: present
-    update_cache: true
+- name: Run smb mount setup
+  when: state == "present"
+  ansible.builtin.import_tasks:
+    file: smb_present.yml
 
-- name: Install required packages on debian based distros
-  when: ansible_distribution in debian_based_distros
-  become: true
-  ansible.builtin.apt:
-    name: "{{ smb_install_apt_packages }}"
-    state: present
-    update_cache: true
-  notify: Reboot Host
-
-- name: Add fileserver host to system/vm host
-  become: true
-  ansible.builtin.lineinfile:
-    path: "{{ smb_hosts_file_path }}"
-    line: "{{ smb_hosts_entry }}"
-    state: present
-    mode: "0644"
-
-# TODO research kerberus for this kinda logins
-- name: Write credentials
-  become: true
-  no_log: true
-  ansible.builtin.copy:
-    content: |
-      username={{ smb_login }}
-      password={{ smb_password }}
-    dest: "{{ ansible_env.HOME }}/{{ smb_credentials_file }}"
-    owner: root
-    group: root
-    mode: "0600"
-
-- name: Create mount targets
-  become: true
-  loop: "{{ mount_targets }}"
-  ansible.builtin.file:
-    path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
-    state: directory
-    # INFO on mount username changes until timeout triggers
-    owner: "root"
-    group: "root"
-    mode: "0755"
-
-- name: Generate INI-formatted mount file
-  become: true
-  loop: "{{ mount_targets }}"
-  ansible.builtin.blockinfile:
-    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.mount"
-    block: |
-      # TODO research parser from yaml to ini
-      {% for section, options in mount_file.items() %}
-      [{{ section }}]
-      {% for key, value in options.items() %}
-      {{ key }}={{ value }}
-      {% endfor %}
-
-      {% endfor %}
-    mode: "0644"
-    create: true
-
-- name: Generate INI-formatted automount file
-  become: true
-  loop: "{{ mount_targets }}"
-  ansible.builtin.blockinfile:
-    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.automount"
-    block: |
-      # TODO research parser from yaml to ini
-      {% for section, options in smb_automount_file.items() %}
-      [{{ section }}]
-      {% for key, value in options.items() %}
-      {{ key }}={{ value }}
-      {% endfor %}
-
-      {% endfor %}
-    mode: "0644"
-    create: true
-
-- name: Enable auto-mount file
-  become: true
-  loop: "{{ mount_targets }}"
-  ansible.builtin.systemd_service:
-    daemon_reload: true
-    name: "{{ smb_mnt_point }}-{{ item.mount }}.automount"
-    state: started
-    enabled: true
+- name: Remove smb mount setup
+  when: state == "absent"
+  ansible.builtin.import_tasks:
+    file: smb_absent.yml
 
 ...
