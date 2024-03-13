@@ -10,7 +10,7 @@
     name: "{{ item }}"
     state: present
     update_cache: true
-  loop: "{{ smb_server_install_rpm_packages }}"
+  loop: "{{ smb_server_install_dnf_packages }}"
 
 - name: Install required packages on debian based distros
   when: ansible_distribution in debian_based_distros
@@ -18,7 +18,7 @@
     name: "{{ item }}"
     state: present
     update_cache: true
-  loop: "{{ smb_server_install_deb_packages }}"
+  loop: "{{ smb_server_install_apt_packages }}"
 
 - name: Install required pip packages
   ansible.builtin.pip:

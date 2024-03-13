@@ -14,7 +14,7 @@
   when: ansible_distribution in debian_based_distros
   become: true
   ansible.builtin.apt:
-    name: "{{ smb_install_deb_packages }}"
+    name: "{{ smb_install_apt_packages }}"
     state: present
     update_cache: true
   notify: Reboot Host
