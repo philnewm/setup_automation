@@ -2,14 +2,8 @@
 
 # tasks file for smb
 
-- name: Run smb mount setup
-  when: smb_state == "present"
-  ansible.builtin.import_tasks:
-    file: smb_present.yml
-
-- name: Remove smb mount setup
-  when: smb_state == "absent"
-  ansible.builtin.import_tasks:
-    file: smb_absent.yml
+- name: "Desired state is {{ smb_state }}"
+  ansible.builtin.include_tasks:
+    file: "{{ smb_state }}.yml"
 
 ...

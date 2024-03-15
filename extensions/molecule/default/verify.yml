@@ -1,6 +1,6 @@
 ---
 
-- name: Converge
+- name: Verify
   hosts: client
 
   vars:
@@ -8,21 +8,83 @@
     dummy_file_path_local: "/tmp/test.txt"
 
   tasks:
-    - name: Reboot the host and continue playbook
-      ansible.builtin.reboot:
-        msg: Reboot initiated by Ansible
-        reboot_timeout: 60
-      become: true
 
-    - name: Wait for the host to come back online
-      ansible.builtin.wait_for_connection:
-        timeout: 300
+    - name: Get cifs package status
+      when: ansible_distribution in rhel_based_distros
+      become: true
+      ansible.builtin.dnf:
+        name: "cifs-utils"
+        state: present
+      check_mode: true
+      register: dnf_status
+
+    - name: Test cifs package is installed via dnf
+      when: ansible_distribution in rhel_based_distros
+      ansible.builtin.assert:
+        that:
+          - not dnf_status.changed
+
+    - name: Get cifs package status
+      when: ansible_distribution in debian_based_distros
+      become: true
+      ansible.builtin.apt:
+        name: "cifs-utils"
+        state: present
+      check_mode: true
+      register: apt_status
+
+    - name: Test cifs package is installed via apt
+      when: ansible_distribution in debian_based_distros
+      ansible.builtin.assert:
+        that:
+          - not apt_status.changed
+
+    - name: Get credentials file stats
+      ansible.builtin.stat:
+        path: "{{ ansible_env.HOME }}/.smb"
+      register: cred_file_info
+
+    - name: Test credentials file stats
+      ansible.builtin.assert:
+        that:
+          - cred_file_info.stat.exists
+          - cred_file_info.stat.gr_name == "root"
+          - cred_file_info.stat.pw_name == "root"
+          - cred_file_info.stat.mode == "0600"
+        success_msg: "Successfully tested credential file stats"
+        fail_msg: "Failed testing credential file stats"
+
+    - name: Get mount point stats
+      loop: "{{ mount_targets }}"
+      ansible.builtin.stat:
+        path: "/mnt/{{ item.mount }}"
+      register: mnt_file_info
+
+    # - name: Show varibale
+    #   ansible.builtin.debug:
+    #     var: mnt_file_info
+
+    - name: Test mount point stats
+      loop: "{{ mnt_file_info.results }}"
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+        quiet: true
 
     # TODO test all mounts points exist
     # TODO test allmount points are able to mount
     # TODO test read file
     # TODO test write file
     # TODO test execute file
+
+    - name: Crash execution
+      ansible.builtin.fail:
+
+    - name: Reboot the host and continue playbook
+      ansible.builtin.reboot:
+        msg: Reboot initiated by Ansible
+        reboot_timeout: 60
+      become: true
 
     - name: Copy test file to host
       ansible.builtin.copy:
@@ -47,3 +109,12 @@
       ansible.builtin.file:
         path: "{{ dummy_file_path_local }}"
         state: absent
+
+    # - name: Roll back changes
+    #   ansible.builtin.include_role:
+    #     name: smb
+    #     tasks_from: main.yml
+    #   vars:
+    #     smb_state: absent
+    #     smb_server_host_name: "fileserver"
+    #     smb_server_ip: "192.168.56.200"
