@@ -3,6 +3,7 @@ Basic SMB Server for testing
 
 This creates the required systemd mount files to mount smb shares on boot.
 The role only creates a single smb user based on the provided secrets.yml file.
+This role has a state variable called `smb_state`. It controlls if the features of this role should be setup or removed.
 
 Requirements
 ------------
