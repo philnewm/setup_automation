@@ -37,15 +37,6 @@
     group: root
     mode: "0600"
 
-# - name: Stat mount targets
-#   ansible.builtin.stat:
-#     path: /mnt/documents
-#   register: result
-
-# - name: Show mount targets
-#   ansible.builtin.debug:
-#     var: result
-
 - name: Create mount targets
   become: true
   loop: "{{ mount_targets }}"
