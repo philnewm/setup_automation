@@ -47,7 +47,7 @@
     # INFO on mount username changes until timeout triggers
     owner: "root"
     group: "root"
-    mode: "0755"
+    mode: "0644"
 
 - name: Generate INI-formatted mount file
   become: true

@@ -1,7 +1,6 @@
 ---
 
 # tasks file for smb_server
-# TODO streamline paths
 # TODO implement present and absent version of this role -> use main as switch
 
 - name: Install required packages on redhat based distros
@@ -44,11 +43,13 @@
   register: samba_create_users
   changed_when: "'Added user' in samba_create_users.stdout"
 
-- name: create shares
+- name: Create shares
   ansible.builtin.file:
-    path: "/home/{{ smb_login }}/sambashares/{{ item.mount }}"
+    path: "/home/{{ smb_login }}/sambashares/{{ item.share }}"
     state: directory
-    mode: "0755"
+    owner: "{{ smb_login }}"
+    group: "{{ smb_login }}"
+    mode: "0644"
   loop: "{{ mount_targets }}"
 
 - name: Get information about the file

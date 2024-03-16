@@ -32,14 +32,6 @@
     path: "{{ ansible_env.HOME }}/{{ smb_credentials_file }}"
     state: "absent"
 
-- name: Remove fileserver host from system/vm host file
-  become: true
-  ansible.builtin.lineinfile:
-    path: "{{ smb_hosts_file_path }}"
-    regexp: "{{ smb_hosts_entry }}"
-    state: absent
-    mode: "0644"
-
 - name: Remove required packages on debian based distros
   when: ansible_distribution in debian_based_distros
   become: true

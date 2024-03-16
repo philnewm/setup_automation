@@ -1,11 +1,11 @@
 ---
 
 - name: Verify
-  hosts: client
+  hosts: Alma9
 
   vars:
-    dummy_file_path_mount: "/mnt/documents/test.txt"
-    dummy_file_path_local: "/tmp/test.txt"
+    dummy_file_name: "hello_word.sh"
+    dummy_path_local: "/tmp/{{ dummy_file_name }}"
 
   tasks:
 
@@ -42,15 +42,15 @@
     - name: Get credentials file stats
       ansible.builtin.stat:
         path: "{{ ansible_env.HOME }}/.smb"
-      register: cred_file_info
+      register: cred_file_stats
 
     - name: Test credentials file stats
       ansible.builtin.assert:
         that:
-          - cred_file_info.stat.exists
-          - cred_file_info.stat.gr_name == "root"
-          - cred_file_info.stat.pw_name == "root"
-          - cred_file_info.stat.mode == "0600"
+          - cred_file_stats.stat.exists
+          - cred_file_stats.stat.gr_name == "root"
+          - cred_file_stats.stat.pw_name == "root"
+          - cred_file_stats.stat.mode == "0600"
         success_msg: "Successfully tested credential file stats"
         fail_msg: "Failed testing credential file stats"
 
@@ -58,27 +58,47 @@
       loop: "{{ mount_targets }}"
       ansible.builtin.stat:
         path: "/mnt/{{ item.mount }}"
-      register: mnt_file_info
+      register: mnt_point_stats
 
-    # - name: Show varibale
-    #   ansible.builtin.debug:
-    #     var: mnt_file_info
-
+    # TODO reduce output verbosity
     - name: Test mount point stats
-      loop: "{{ mnt_file_info.results }}"
+      loop: "{{ mnt_point_stats.results }}"
+      loop_control:
+        label: "Path: {{ item.stat.path }}"
       ansible.builtin.assert:
         that:
           - item.stat.exists
-        quiet: true
+          - item.stat.gr_name in ["root", ansible_env.USER]
+          - item.stat.pw_name in ["root", ansible_env.USER]
+          - item.stat.mode == "0755"
+        success_msg: "Successfully tested mount point {{ item.stat.path }}"
+        fail_msg: "Failed testing mount point {{ item.stat.path }}"
 
-    # TODO test all mounts points exist
-    # TODO test allmount points are able to mount
-    # TODO test read file
-    # TODO test write file
-    # TODO test execute file
+    - name: Get mount file stats
+      loop: "{{ mount_targets }}"
+      ansible.builtin.stat:
+        path: "/etc/systemd/system/mnt-{{ item.mount }}.mount"
+      register: mnt_file_stats
 
-    - name: Crash execution
-      ansible.builtin.fail:
+    - name: Get mount file stats
+      loop: "{{ mount_targets }}"
+      ansible.builtin.stat:
+        path: "/etc/systemd/system/mnt-{{ item.mount }}.mount"
+      register: mnt_file_stats
+
+    # TODO reduce output verbosity
+    - name: Test mount file stats
+      loop: "{{ mnt_file_stats.results }}"
+      loop_control:
+        label: "Path: {{ item.stat.path }}"
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+          - item.stat.gr_name == "root"
+          - item.stat.pw_name == "root"
+          - item.stat.mode == "0644"
+        success_msg: "Successfully tested mount file {{ item.stat.path }}"
+        fail_msg: "Failed testing mount file {{ item.stat.path }}"
 
     - name: Reboot the host and continue playbook
       ansible.builtin.reboot:
@@ -86,28 +106,54 @@
         reboot_timeout: 60
       become: true
 
+    # TODO fails right now -> fix
+    - name: Write bash script to server
+      loop: "{{ mount_targets }}"
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+
+          echo 'Hello, world!'
+        dest: "/mnt/{{ item.mount }}/hello_world.sh"
+        mode: "0755"
+
+    - name: Execute bash script from server
+      loop: "{{ mount_targets }}"
+      ansible.builtin.command:
+        cmd: "/mnt/{{ item.mount }}/hello_world.sh"
+      changed_when: false
+      register: cmd_result
+
+    - name: Show command cmd_result
+      ansible.builtin.debug:
+        var: cmd_result
+
+    - name: Fail successfully
+      ansible.builtin.fail:
+
     - name: Copy test file to host
+      loop: "{{ mount_targets }}"
       ansible.builtin.copy:
         remote_src: true
-        src: "{{ dummy_file_path_mount }}"
-        dest: "{{ dummy_file_path_local }}"
+        src: "/mnt/{{ item.mount }}/{{ dummy_file_name }}"
+        dest: "{{ dummy_path_local }}"
         mode: "0600"
 
-    - name: Gather file information
+    - name: Get dummy file stats
       ansible.builtin.stat:
-        path: "{{ dummy_file_path_local }}"
-      register: file_info
+        path: "{{ dummy_path_local }}"
+      register: dummy_file_stats
 
     - name: Assert file exists
       ansible.builtin.assert:
         that:
-          - "file_info.stat.exists"
-        fail_msg: "File '{{ dummy_file_path_local }}' does not exist!"
-        success_msg: "File '{{ dummy_file_path_local }}' got copied from server successfully!"
+          - "dummy_file_stats.stat.exists"
+        fail_msg: "File '{{ dummy_path_local }}' does not exist!"
+        success_msg: "File '{{ dummy_path_local }}' got copied from server successfully!"
 
     - name: Remove test file
       ansible.builtin.file:
-        path: "{{ dummy_file_path_local }}"
+        path: "{{ dummy_path_local }}"
         state: absent
 
     # - name: Roll back changes
