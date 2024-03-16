@@ -54,8 +54,8 @@
     path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
     state: directory
     # INFO on mount username changes until timeout triggers
-    owner: "{{ ansible_env.USER }}"
-    group: "{{ ansible_env.USER }}"
+    owner: "root"
+    group: "root"
     mode: "0644"
 
 - name: Generate INI-formatted mount file
