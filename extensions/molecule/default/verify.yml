@@ -1,10 +1,10 @@
 ---
 
 - name: Verify
-  hosts: Alma9
+  hosts: client
 
   vars:
-    dummy_file_name: "hello_word.sh"
+    dummy_file_name: "hello_world.sh"
     dummy_path_local: "/tmp/{{ dummy_file_name }}"
 
   tasks:
@@ -106,7 +106,6 @@
         reboot_timeout: 60
       become: true
 
-    # TODO fails right now -> fix
     - name: Write bash script to server
       loop: "{{ mount_targets }}"
       ansible.builtin.copy:
@@ -114,24 +113,25 @@
           #!/bin/bash
 
           echo 'Hello, world!'
-        dest: "/mnt/{{ item.mount }}/hello_world.sh"
+        dest: "/mnt/{{ item.mount }}/{{ dummy_file_name }}"
         mode: "0755"
 
-    - name: Execute bash script from server
+    - name: Execute bash script from server -> should fail
       loop: "{{ mount_targets }}"
       ansible.builtin.command:
-        cmd: "/mnt/{{ item.mount }}/hello_world.sh"
+        cmd: "./{{ dummy_file_name }}"
+        chdir: "/mnt/{{ item.mount }}"
       changed_when: false
       register: cmd_result
+      failed_when: cmd_result.rc != 13
 
-    - name: Show command cmd_result
-      ansible.builtin.debug:
-        var: cmd_result
+    - name: Execute bash script from server -> works
+      loop: "{{ mount_targets }}"
+      ansible.builtin.command:
+        cmd: "sh /mnt/{{ item.mount }}/{{ dummy_file_name }}"
+      changed_when: false
 
-    - name: Fail successfully
-      ansible.builtin.fail:
-
-    - name: Copy test file to host
+    - name: Copy dummy file to host
       loop: "{{ mount_targets }}"
       ansible.builtin.copy:
         remote_src: true

@@ -49,20 +49,8 @@
     state: directory
     owner: "{{ smb_login }}"
     group: "{{ smb_login }}"
-    mode: "0644"
+    mode: "0744"  # TODO research why 0644 doesn't work here
   loop: "{{ mount_targets }}"
-
-- name: Get information about the file
-  ansible.builtin.stat:
-    path: "/home/{{ smb_login }}/sambashares/{{ mount_targets[0].mount }}/test.txt"
-  register: file_info
-
-- name: Create test file
-  when: not file_info.stat.exists
-  ansible.builtin.file:
-    path: "/home/{{ smb_login }}/sambashares/{{ mount_targets[0].mount }}/test.txt"
-    state: touch
-    mode: "0755"
 
 - name: Configure smb.conf
   ansible.builtin.template:

@@ -38,6 +38,15 @@
     group: root
     mode: "0600"
 
+# - name: Stat mount targets
+#   ansible.builtin.stat:
+#     path: /mnt/documents
+#   register: result
+
+# - name: Show mount targets
+#   ansible.builtin.debug:
+#     var: result
+
 - name: Create mount targets
   become: true
   loop: "{{ mount_targets }}"
@@ -45,8 +54,8 @@
     path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
     state: directory
     # INFO on mount username changes until timeout triggers
-    owner: "root"
-    group: "root"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
     mode: "0644"
 
 - name: Generate INI-formatted mount file
