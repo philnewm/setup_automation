@@ -1,5 +1,4 @@
 ---
-
 - name: Install required packages on redhat based distros
   when: ansible_distribution in rhel_based_distros
   become: true
@@ -54,9 +53,11 @@
     path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
     state: directory
     # INFO on mount username changes until timeout triggers
+    # INFO mode needs to be 775 to pass idepotency check
+    # TODO check what changes permissions on mount
     owner: "root"
     group: "root"
-    mode: "0644"
+    mode: "0755"
 
 - name: Generate INI-formatted mount file
   become: true
@@ -100,5 +101,3 @@
     name: "{{ smb_mnt_point }}-{{ item.mount }}.automount"
     state: started
     enabled: true
-
-...
