@@ -5,7 +5,7 @@ driver:
   name: vagrant
   provider:
   # TODO change provider to libvirt
-    name: virtualbox
+    name: libvirt
 lint: |
   set -e
   yamllint .
@@ -13,49 +13,47 @@ lint: |
 platforms:
   - name: CentosStream9
     box: centos/stream9
-    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
+    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box  # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
     memory: 2048
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
-        type: "static"
-        ip: "192.168.56.10"
+        ip: "192.168.100.10"
+        # bridge: "virbr0"
+        # dev: "enp39s0"
     groups:
       - client
-  - name: Alma9
-    box: almalinux/9
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.20"
-    groups:
-      - client
-  - name: ubuntu204
-    box: ubuntu/focal64
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.30"
-    groups:
-      - client
-  - name: smbserver
-    box: ubuntu/focal64
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.200"
-    groups:
-      - server
+    config_options:
+      ssh.remote_user: 'vagrant'
+  # - name: Alma9
+  #   box: almalinux/9
+  #   memory: 2048
+  #   cpus: 2
+  #   groups:
+  #     - client
+  # - name: ubuntu204
+  #   box: generic/ubuntu2204
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.100.30"
+  #   groups:
+  #     - client
+  # - name: smbserver
+  #   box: generic/ubuntu2204
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.100.200"
+  #   groups:
+  #     - server
 provisioner:
   name: ansible
   inventory:

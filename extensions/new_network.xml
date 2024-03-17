@@ -1,0 +1,18 @@
+<network>
+  <name>new_network</name>
+  <uuid>dd81de10-c425-400d-b41a-c63ff7d0c1cb</uuid>
+  <forward dev="virbr0" mode="nat">
+    <nat>
+      <port start="1024" end="65535"/>
+    </nat>
+    <interface dev="virbr0"/>
+  </forward>
+  <bridge name="virbr1" stp="on" delay="0"/>
+  <mac address="52:54:00:1f:f0:94"/>
+  <domain name="network"/>
+  <ip address="192.168.56.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="192.168.56.64" end="192.168.56.240"/>
+    </dhcp>
+  </ip>
+</network>
