@@ -18,7 +18,7 @@
   tasks:
     - name: Include smb role present
       ansible.builtin.include_role:
-        name: smb
+        name: smb_mount
         tasks_from: main.yml
       vars:
         smb_state: present

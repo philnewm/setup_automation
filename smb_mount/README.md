@@ -1,4 +1,4 @@
-Basic SMB Server for testing
+SMB mount setup based on systemd mount files
 =========
 
 This creates the required systemd mount files to mount smb shares on boot.
