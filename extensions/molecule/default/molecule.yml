@@ -19,41 +19,43 @@ platforms:
     interfaces:
       - auto_config: true
         network_name: private_network
+        type: "static"
         ip: "192.168.100.10"
-        # bridge: "virbr0"
-        # dev: "enp39s0"
     groups:
       - client
-    config_options:
-      ssh.remote_user: 'vagrant'
-  # - name: Alma9
-  #   box: almalinux/9
-  #   memory: 2048
-  #   cpus: 2
-  #   groups:
-  #     - client
-  # - name: ubuntu204
-  #   box: generic/ubuntu2204
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.100.30"
-  #   groups:
-  #     - client
-  # - name: smbserver
-  #   box: generic/ubuntu2204
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.100.200"
-  #   groups:
-  #     - server
+  - name: Alma9
+    box: almalinux/9
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.100.20"
+    groups:
+      - client
+  - name: ubuntu204
+    box: generic/ubuntu2204
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.100.30"
+    groups:
+      - client
+  - name: smbserver
+    box: generic/ubuntu2204
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.100.200"
+    groups:
+      - server
 provisioner:
   name: ansible
   inventory:

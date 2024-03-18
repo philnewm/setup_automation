@@ -5,7 +5,6 @@
 
   vars:
     dummy_file_name: "hello_world.sh"
-    dummy_path_local: "/tmp/{{ dummy_file_name }}"
 
   tasks:
 
@@ -131,36 +130,50 @@
         cmd: "sh /mnt/{{ item.mount }}/{{ dummy_file_name }}"
       changed_when: false
 
+    - name: "Ensure presence of {{ item.mount }}"
+      loop: "{{ mount_targets }}"
+      ansible.builtin.file:
+        path: "/tmp/{{ item.mount }}"
+        state: directory
+        mode: "0700"
+
     - name: Copy dummy file to host
       loop: "{{ mount_targets }}"
       ansible.builtin.copy:
         remote_src: true
         src: "/mnt/{{ item.mount }}/{{ dummy_file_name }}"
-        dest: "{{ dummy_path_local }}"
+        dest: "/tmp/{{ item.mount }}/{{ dummy_file_name }}"
         mode: "0600"
 
     - name: Get dummy file stats
+      loop: "{{ mount_targets }}"
       ansible.builtin.stat:
-        path: "{{ dummy_path_local }}"
+        path: "/tmp/{{ item.mount }}/{{ dummy_file_name }}"
       register: dummy_file_stats
 
     - name: Assert file exists
+      loop: "{{ dummy_file_stats.results }}"
+      loop_control:
+        label: "Path: {{ item.stat.path }}"
       ansible.builtin.assert:
         that:
-          - "dummy_file_stats.stat.exists"
-        fail_msg: "File '{{ dummy_path_local }}' does not exist!"
-        success_msg: "File '{{ dummy_path_local }}' got copied from server successfully!"
+          - item.stat.exists
+        fail_msg: "File '{{ item.stat.path }}' does not exist!"
+        success_msg: "File '{{ item.stat.path }}' got copied from server successfully!"
 
     - name: Remove test file
+      loop: "{{ dummy_file_stats.results }}"
+      loop_control:
+        label: "Path: {{ item.stat.path }}"
       ansible.builtin.file:
-        path: "{{ dummy_path_local }}"
+        path: "{{ item.stat.path }}"
         state: absent
 
-    # - name: Roll back changes
-    #   ansible.builtin.include_role:
-    #     name: smb
-    #     tasks_from: main.yml
-    #   vars:
-    #     smb_state: absent
-    #     smb_server_host_name: "fileserver"
-    #     smb_server_ip: "192.168.56.200"
+    - name: Roll back changes
+      ansible.builtin.include_role:
+        name: smb
+        tasks_from: main.yml
+      vars:
+        smb_state: absent
+        smb_server_host_name: "fileserver"
+        smb_server_ip: "192.168.100.200"

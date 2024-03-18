@@ -19,11 +19,18 @@
   ansible.builtin.systemd_service:
     daemon_reload: true
 
+- name: Unmount a mounted volume
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.posix.mount:
+    path: "/mnt/{{ item.mount}}"
+    state: unmounted
+
 - name: Remove mount targets
   become: true
   loop: "{{ mount_targets }}"
   ansible.builtin.file:
-    path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
+    path: "/mnt/{{ item.mount}}"
     state: "absent"
 
 - name: Remove credentials file
