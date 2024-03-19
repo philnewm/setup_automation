@@ -5,9 +5,10 @@ driver:
   name: vagrant
   provider:
     name: libvirt
+    type: libvirt
 lint: |
   set -e
-  yamllint .
+  yamllint
   ansible-lint
 platforms:
   - name: CentosStream9
