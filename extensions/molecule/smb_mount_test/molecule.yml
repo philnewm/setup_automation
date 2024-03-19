@@ -4,7 +4,6 @@ dependency:
 driver:
   name: vagrant
   provider:
-  # TODO change provider to libvirt
     name: libvirt
 lint: |
   set -e

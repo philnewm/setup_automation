@@ -7,6 +7,8 @@ source ~/.venv/ansible_env/bin/activate
 
 # pre-rquirements ubuntu
 sudo apt install python3-pip libssl-dev -y
+sudo apt install docker.io
+export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
 
 # vagrant
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -26,3 +28,8 @@ ansible-galaxy collection install ansible.posix
 
 # libvirt
 sudo apt install qemu-kvm libvirt-daemon-system -y
+pip install molecule-libvirt
+
+# docker
+pip install docker
+
