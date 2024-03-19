@@ -8,6 +8,7 @@ source ~/.venv/ansible_env/bin/activate
 # pre-rquirements ubuntu
 sudo apt install python3-pip libssl-dev -y
 sudo apt install docker.io
+sudo chmod 666 /var/run/docker.sock
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
 
 # vagrant
