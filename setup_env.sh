@@ -4,6 +4,7 @@ sudo apt update
 sudo apt install python3.10-venv -y
 python3 -m venv ~/.venv/ansible_env/
 source ~/.venv/ansible_env/bin/activate
+sudo apt install virtualbox -y
 
 # pre-rquirements ubuntu
 sudo apt install python3-pip libssl-dev -y
