@@ -11,6 +11,7 @@ sudo apt install python3-pip libssl-dev -y
 sudo apt install docker.io
 sudo chmod 666 /var/run/docker.sock
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+export TMPDIR=/mnt/c/tmp
 
 # vagrant
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
