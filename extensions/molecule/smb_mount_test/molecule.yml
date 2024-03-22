@@ -5,8 +5,14 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-    # name: libvirt
-    # type: libvirt
+    type: virtualbox
+    config_options:
+      defaults:
+        remote_user: vagrant
+    ssh_connection:
+      ssh_args: -o StrictHostKeyChecking=no -o User=vagrant
+      pipelining: true
+      timeout: 300
 lint: |
   set -e
   yamllint
@@ -18,61 +24,75 @@ platforms:
       # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box  # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
     memory: 2048
     cpus: 2
-    boot_timeout: 3600
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.10"  # "192.168.100.10"
+        ip: "192.168.149.10"  # "192.168.100.10"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
       - client
   - name: Alma9
     box: almalinux/9
     memory: 2048
     cpus: 2
-    boot_timeout: 3600
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.20"  # "192.168.100.20"
+        ip: "192.168.149.20"  # "192.168.100.20"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
       - client
   - name: ubuntu204
     box: ubuntu/focal64  # generic/ubuntu2204
     memory: 2048
     cpus: 2
-    boot_timeout: 3600
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.30"  # "192.168.100.30"
+        ip: "192.168.149.30"  # "192.168.100.30"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
       - client
   - name: smbserver
     box: generic/ubuntu2204
     memory: 2048
     cpus: 2
-    boot_timeout: 3600
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.200"  # "192.168.100.200"
+        ip: "192.168.149.200"  # "192.168.100.200"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
       - server
 provisioner:
   name: ansible
+  connection_options:
+    ansible_user: vagrant
+    ansible_password: vagrant
   inventory:
     host_vars:
       CentosStream9:
+        ansible_ssh_host: 192.168.149.10
         ansible_user: vagrant
         ansible_password: vagrant
       Alma9:
+        ansible_ssh_host: 192.168.149.20
         ansible_user: vagrant
         ansible_password: vagrant
       ubuntu204:
+        ansible_ssh_host: 192.168.149.30
+        ansible_user: vagrant
+        ansible_password: vagrant
+      smbserver:
+        ansible_ssh_host: 192.168.149.200
         ansible_user: vagrant
         ansible_password: vagrant
     group_vars:
