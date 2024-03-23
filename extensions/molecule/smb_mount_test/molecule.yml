@@ -28,7 +28,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.149.10"  # "192.168.100.10"
+        ip: "192.168.56.10"  # "192.168.100.10"
     provider_raw_config_args:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
@@ -41,7 +41,7 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.149.20"  # "192.168.100.20"
+        ip: "192.168.56.20"  # "192.168.100.20"
     provider_raw_config_args:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
@@ -54,20 +54,20 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.149.30"  # "192.168.100.30"
+        ip: "192.168.56.30"  # "192.168.100.30"
     provider_raw_config_args:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
       - client
   - name: smbserver
-    box: generic/ubuntu2204
+    box: ubuntu/focal64
     memory: 2048
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.149.200"  # "192.168.100.200"
+        ip: "192.168.56.200"  # "192.168.100.200"
     provider_raw_config_args:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected', '--paravirtprovider', 'hyperv' ]"
     groups:
@@ -80,19 +80,19 @@ provisioner:
   inventory:
     host_vars:
       CentosStream9:
-        ansible_ssh_host: 192.168.149.10
+        ansible_ssh_host: 192.56.149.10
         ansible_user: vagrant
         ansible_password: vagrant
       Alma9:
-        ansible_ssh_host: 192.168.149.20
+        ansible_ssh_host: 192.56.149.20
         ansible_user: vagrant
         ansible_password: vagrant
       ubuntu204:
-        ansible_ssh_host: 192.168.149.30
+        ansible_ssh_host: 192.56.149.30
         ansible_user: vagrant
         ansible_password: vagrant
       smbserver:
-        ansible_ssh_host: 192.168.149.200
+        ansible_ssh_host: 192.56.149.200
         ansible_user: vagrant
         ansible_password: vagrant
     group_vars:
