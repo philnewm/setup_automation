@@ -26,6 +26,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install vagrant -y
 vagrant plugin install virtualbox_WSL2
 
+# vault pass word file
 mkdir ~/Documents
 nano ~/Documents/vault.pw
 
