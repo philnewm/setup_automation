@@ -1,6 +1,6 @@
 #!/bin/bash
 
-repo_path="~/setup_automation"
+repo_path="$HOME/setup_automation"
 vscode_settings="$setup_automation_path/.vscode/settings.json"
 
 # ubuntu22.04
