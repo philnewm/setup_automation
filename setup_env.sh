@@ -4,8 +4,8 @@ repo_path="~/setup_automation"
 vscode_settings="$setup_automation_path/.vscode/settings.json"
 
 # ubuntu22.04
-sudo apt update && sudo apt upgrade
-sudo apt install sshpass
+sudo apt update && sudo apt upgrade -y
+sudo apt install sshpass -y
 sudo apt install python3-pip libssl-dev -y
 sudo apt install python3.10-venv -y
 python3 -m venv ~/.venv/ansible_env/
