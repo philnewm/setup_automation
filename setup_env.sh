@@ -1,7 +1,7 @@
 #!/bin/bash
 
 repo_path="$HOME/setup_automation"
-vscode_settings="$setup_automation_path/.vscode/settings.json"
+vscode_settings="$repo_path/.vscode/settings.json"
 
 # ubuntu22.04
 sudo apt update && sudo apt upgrade -y
@@ -37,7 +37,7 @@ ansible-galaxy collection install ansible.posix
 
 # vscode workspace settings:
 mkdir -p "$repo_path/.vscode"
-jq -C -n \
+jq -n \
     --arg interpreterPath "~/.venv/ansible_env/bin/python" \
     --arg ansibleLintPath "~/.venv/ansible_env/bin/ansible-lint" \
     --arg ansibleConfigPath "~/.venv/ansible_env/bin/ansible-config" \
