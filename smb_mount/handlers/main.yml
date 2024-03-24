@@ -5,7 +5,7 @@
   ansible.builtin.reboot:
     msg: Reboot initiated by Ansible
     # INFO increased from 60 due to windows env rebooting ubuntu too slow
-    reboot_timeout: 120
+    reboot_timeout: 180
   become: true
 
 ...
