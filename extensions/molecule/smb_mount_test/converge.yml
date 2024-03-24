@@ -11,7 +11,7 @@
         name: smb_server
         tasks_from: main.yml
 
-- name: Converge smb client present
+- name: Converge smb mount present
   hosts: client
   vars_files:
     - ../../../secrets.yml

@@ -94,6 +94,7 @@ provisioner:
         ansible_password: vagrant
     group_vars:
       all:
+        ansible_timeout: 120
         debian_based_distros: ["Debian", "Ubuntu"]
         rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
         mount_targets:
