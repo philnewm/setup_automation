@@ -54,3 +54,6 @@ jq -n \
 # vault pass word file
 mkdir ~/Documents
 nano ~/Documents/vault.pw
+
+# TODO add ansible vault
+ansible-vault ~/setup_automation/.secrets.yml
