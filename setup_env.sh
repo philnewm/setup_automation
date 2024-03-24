@@ -36,6 +36,7 @@ python3 -m pip install "molecule-plugins[vagrant]"
 ansible-galaxy collection install ansible.posix
 
 # vscode workspace settings:
+mkdir -p "$repo_path/.vscode"
 jq -C -n \
     --arg interpreterPath "~/.venv/ansible_env/bin/python" \
     --arg ansibleLintPath "~/.venv/ansible_env/bin/ansible-lint" \
