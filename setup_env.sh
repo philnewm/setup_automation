@@ -6,6 +6,7 @@ vscode_settings="$repo_path/.vscode/settings.json"
 # ubuntu22.04
 sudo apt update && sudo apt upgrade -y
 sudo apt install sshpass -y
+sudo apt install jq -y
 sudo apt install python3-pip libssl-dev -y
 sudo apt install python3.10-venv -y
 python3 -m venv ~/.venv/ansible_env/
