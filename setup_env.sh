@@ -35,8 +35,6 @@ python3 -m pip install "molecule-plugins[vagrant]"
 # ansible packages
 ansible-galaxy collection install ansible.posix
 
-git clone -b main git@github.com:philnewm/setup_automation.git "$repo_path"
-
 # vscode workspace settings:
 jq -C -n \
     --arg interpreterPath "~/.venv/ansible_env/bin/python" \
