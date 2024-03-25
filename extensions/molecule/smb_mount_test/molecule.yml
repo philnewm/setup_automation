@@ -5,14 +5,6 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-    # type: virtualbox
-    # config_options:
-    #   defaults:
-    #     remote_user: vagrant
-    # ssh_connection:
-    #   ssh_args: -o StrictHostKeyChecking=no -o User=vagrant
-    #   pipelining: true
-    #   timeout: 300
 lint: |
   set -e
   yamllint
@@ -21,17 +13,16 @@ platforms:
   - name: CentosStream9
     box: centos/stream9
     box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
-      # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box  # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
+      # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
     memory: 2048
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.10"  # "192.168.100.10"
+        ip: "192.168.56.10"
     provider_raw_config_args:
     - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
-    # '--paravirtprovider', 'hyperv' ]"
     groups:
       - client
   - name: Alma9
@@ -42,26 +33,24 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.20"  # "192.168.100.20"
+        ip: "192.168.56.20"
     provider_raw_config_args:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
-      # '--paravirtprovider', 'hyperv' ]"
     groups:
       - client
-  - name: ubuntu204
-    box: ubuntu/focal64  # generic/ubuntu2204
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.30"  # "192.168.100.30"
-    provider_raw_config_args:
-      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
-      # , '--paravirtprovider', 'hyperv' ]"
-    groups:
-      - client
+  # - name: ubuntu204
+  #   box: ubuntu/focal64
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.30"
+  #   provider_raw_config_args:
+  #     - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+  #   groups:
+  #     - client
   - name: smbserver
     box: ubuntu/focal64
     memory: 2048
@@ -70,10 +59,9 @@ platforms:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.200"  # "192.168.100.200"
+        ip: "192.168.56.200"
     provider_raw_config_args:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
-      # , '--paravirtprovider', 'hyperv' ]"
     groups:
       - server
 provisioner:
@@ -86,15 +74,15 @@ provisioner:
       Alma9:
         ansible_user: vagrant
         ansible_password: vagrant
-      ubuntu204:
-        ansible_user: vagrant
-        ansible_password: vagrant
+      # ubuntu204:
+      #   ansible_user: vagrant
+      #   ansible_password: vagrant
       smbserver:
         ansible_user: vagrant
         ansible_password: vagrant
     group_vars:
       all:
-        ansible_timeout: 120
+        ansible_timeout: 180
         debian_based_distros: ["Debian", "Ubuntu"]
         rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
         mount_targets:
@@ -105,9 +93,16 @@ provisioner:
           - { share: "usb_backup", mount: "archive" }
   config_options:
     defaults:
+      gathering: smart
+      fact_caching_timeout: 3600
+      fact_caching: jsonfile
+      fact_caching_connection: /tmp/ansible_fact_cache
       stdout_callback: debug
       callbacks_enabled: ansible.posix.profile_tasks
       vault_password_file: "$HOME/Documents/vault.pw"
+    connection:
+      # WARNING disable ""requiretty" in hosts sudoers file on case of errors 
+      pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"
 verifier:

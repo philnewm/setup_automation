@@ -28,8 +28,8 @@ vagrant plugin install virtualbox_WSL2
 source ~/.venv/ansible_env/bin/activate
 
 # required tools
+python3 -m pip install docker
 python3 -m pip install molecule ansible-core
-# python3 -m pip install --upgrade setuptools
 python3 -m pip install molecule ansible-lint
 python3 -m pip install "molecule-plugins[vagrant]"
 

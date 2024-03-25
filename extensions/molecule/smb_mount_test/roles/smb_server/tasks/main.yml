@@ -1,7 +1,6 @@
 ---
 
 # tasks file for smb_server
-# TODO implement present and absent version of this role -> use main as switch
 
 - name: Install required packages on redhat based distros
   when: ansible_distribution in rhel_based_distros
@@ -21,7 +20,8 @@
 
 - name: Install required pip packages
   ansible.builtin.pip:
-    name: passlib
+    name: "{{ item }}"
+  loop: "{{ smb_server_install_pip_packages }}"
 
 - name: Create user Account
   ansible.builtin.user:

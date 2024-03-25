@@ -43,7 +43,7 @@
   when: ansible_distribution in debian_based_distros
   become: true
   ansible.builtin.apt:
-    name: "{{ smb_install_apt_packages }}"
+    name: "{{ smb_mount_install_apt_packages }}"
     state: absent
   notify: Reboot Host
 
@@ -51,7 +51,7 @@
   when: ansible_distribution in rhel_based_distros
   become: true
   ansible.builtin.dnf:
-    name: "{{ smb_install_dnf_packages }}"
+    name: "{{ smb_mount_install_dnf_packages }}"
     state: absent
 
 ...
