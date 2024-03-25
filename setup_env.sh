@@ -56,3 +56,8 @@ mkdir ~/Documents
 nano ~/Documents/vault.pw
 
 ansible-vault create ~/setup_automation/.secrets.yml
+
+code
+code --install-extension vscoss.vscode-ansible
+code --install-extension ms-python.python
+code --install-extension njpwerner.autodocstring
