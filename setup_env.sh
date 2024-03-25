@@ -55,7 +55,7 @@ jq -n \
 mkdir ~/Documents
 nano ~/Documents/vault.pw
 
-ansible-vault create ~/setup_automation/.secrets.yml
+ansible-vault create ~/setup_automation/secrets.yml
 
 code --version
 code --install-extension redhat.ansible
