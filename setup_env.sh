@@ -9,7 +9,6 @@ sudo apt install sshpass -y
 sudo apt install jq -y
 sudo apt install python3-pip libssl-dev -y
 sudo apt install python3.10-venv -y
-python3 -m venv ~/.venv/ansible_env/
 
 # pre-rquirements ubuntu
 # append those two lines into ~/.bashrc
@@ -25,6 +24,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install vagrant -y
 vagrant plugin install virtualbox_WSL2
 
+python3 -m venv ~/.venv/ansible_env/
 source ~/.venv/ansible_env/bin/activate
 
 # required tools
