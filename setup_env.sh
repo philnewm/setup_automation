@@ -61,3 +61,4 @@ code
 code --install-extension vscoss.vscode-ansible
 code --install-extension ms-python.python
 code --install-extension njpwerner.autodocstring
+code --reuse-window
