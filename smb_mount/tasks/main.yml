@@ -2,8 +2,8 @@
 
 # tasks file for smb
 
-- name: "Desired state is {{ smb_state }}"
+- name: "Desired state is {{ smb_mount_state }}"
   ansible.builtin.include_tasks:
-    file: "{{ smb_state }}.yml"
+    file: "{{ smb_mount_state }}.yml"
 
 ...

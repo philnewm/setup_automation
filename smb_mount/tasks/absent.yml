@@ -4,14 +4,14 @@
   become: true
   loop: "{{ mount_targets }}"
   ansible.builtin.file:
-    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.mount"
+    path: "{{ smb_mount_file_path }}/{{ smb_mount_mnt_point }}-{{ item.mount }}.mount"
     state: "absent"
 
 - name: Remove INI-formatted automount file
   become: true
   loop: "{{ mount_targets }}"
   ansible.builtin.file:
-    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    path: "{{ smb_mount_file_path }}/{{ smb_mount_mnt_point }}-{{ item.mount }}.automount"
     state: "absent"
 
 - name: Reload systemd service
@@ -36,7 +36,7 @@
 - name: Remove credentials file
   become: true
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/{{ smb_credentials_file }}"
+    path: "{{ ansible_env.HOME }}/{{ smb_mount_credentials_file }}"
     state: "absent"
 
 - name: Remove required packages on debian based distros

@@ -19,8 +19,8 @@
 - name: Add fileserver host to system/vm host file
   become: true
   ansible.builtin.lineinfile:
-    path: "{{ smb_hosts_file_path }}"
-    line: "{{ smb_hosts_entry }}"
+    path: "{{ smb_mount_hosts_file_path }}"
+    line: "{{ smb_mount_hosts_entry }}"
     state: present
     mode: "0644"
 
@@ -32,7 +32,7 @@
     content: |
       username={{ smb_login }}
       password={{ smb_password }}
-    dest: "{{ ansible_env.HOME }}/{{ smb_credentials_file }}"
+    dest: "{{ ansible_env.HOME }}/{{ smb_mount_credentials_file }}"
     owner: root
     group: root
     mode: "0600"
@@ -41,7 +41,7 @@
   become: true
   loop: "{{ mount_targets }}"
   ansible.builtin.file:
-    path: "/{{ (smb_mnt_point, item.mount) | ansible.builtin.path_join }}"
+    path: "/{{ (smb_mount_mnt_point, item.mount) | ansible.builtin.path_join }}"
     state: directory
     # INFO on mount username changes until timeout triggers
     # INFO mode needs to be 775 to pass idepotency check
@@ -54,7 +54,7 @@
   become: true
   loop: "{{ mount_targets }}"
   ansible.builtin.blockinfile:
-    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.mount"
+    path: "{{ smb_mount_file_path }}/{{ smb_mount_mnt_point }}-{{ item.mount }}.mount"
     block: |
       # TODO research parser from yaml to ini
       {% for section, options in mount_file.items() %}
@@ -71,7 +71,7 @@
   become: true
   loop: "{{ mount_targets }}"
   ansible.builtin.blockinfile:
-    path: "{{ smb_mount_file_path }}/{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    path: "{{ smb_mount_file_path }}/{{ smb_mount_mnt_point }}-{{ item.mount }}.automount"
     block: |
       # TODO research parser from yaml to ini
       {% for section, options in smb_automount_file.items() %}
@@ -89,6 +89,6 @@
   loop: "{{ mount_targets }}"
   ansible.builtin.systemd_service:
     daemon_reload: true
-    name: "{{ smb_mnt_point }}-{{ item.mount }}.automount"
+    name: "{{ smb_mount_mnt_point }}-{{ item.mount }}.automount"
     state: started
     enabled: true

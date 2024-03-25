@@ -175,6 +175,6 @@
         name: smb_mount
         tasks_from: main.yml
       vars:
-        smb_state: absent
-        smb_server_host_name: "fileserver"
-        smb_server_ip: "192.168.100.200"
+        smb_mount_state: absent
+        smb_mount_server_host_name: "fileserver"
+        smb_mount_server_ip: "192.168.100.200"
