@@ -45,6 +45,13 @@
   ansible.builtin.apt:
     name: "{{ smb_mount_install_apt_packages }}"
     state: absent
+
+- name: Remove required packages on debian based distros
+  when: ansible_distribution in debian_based_distros
+  become: true
+  ansible.builtin.apt:
+    name: "{{ smb_mount_ubuntu_packages }}"
+    state: absent
   notify: Reboot Host
 
 - name: Remove required packages on redhat based distros

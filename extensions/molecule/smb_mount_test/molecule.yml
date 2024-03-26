@@ -5,6 +5,7 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
+    type: virtualbox
 lint: |
   set -e
   yamllint
@@ -38,21 +39,21 @@ platforms:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
     groups:
       - client
-  # - name: ubuntu204
-  #   box: ubuntu/focal64
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.56.30"
-  #   provider_raw_config_args:
-  #     - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
-  #   groups:
-  #     - client
+  - name: debian12
+    box: generic/debian12
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.30"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+    groups:
+      - client
   - name: smbserver
-    box: ubuntu/focal64
+    box: generic/debian12
     memory: 2048
     cpus: 2
     interfaces:
@@ -107,3 +108,6 @@ provisioner:
       ANSIBLE_FORCE_COLOR: "true"
 verifier:
   name: ansible
+  options:
+    report:
+      type: junit

@@ -11,6 +11,7 @@ smb_server_install_dnf_packages:
 smb_server_install_apt_packages:
   - samba
   - python3-pip
+  - python3-virtualenv
 
 smb_server_install_pip_packages:
   - packaging
