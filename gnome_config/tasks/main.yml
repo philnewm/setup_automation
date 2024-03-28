@@ -1,5 +1,7 @@
 ---
 # tasks file for gnome_config
+# TODO check first if gnome is installed -> install if not
+# TODO 
 
 - name: Install required packages
   ansible.builtin.package:

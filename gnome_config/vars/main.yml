@@ -3,6 +3,7 @@
 
 install_packages:
   - pip
+  - gnome-themes-extra  # includes Adwaita-dark
   - gnome-tweaks
   - gnome-extensions-app
   - 
