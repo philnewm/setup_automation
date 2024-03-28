@@ -1,7 +1,9 @@
 ---
 # tasks file for gnome_config
 # TODO check first if gnome is installed -> install if not
-# TODO 
+# TODO decide: one role per gnome app or one role for all gnome-apps
+# gnome apps: gnome shell, gnome terminal, gedit, nautilus
+# additional apps without own config: gnome-tweaks, gnome-extensions, dconf-editor
 
 - name: Install required packages
   ansible.builtin.package:
