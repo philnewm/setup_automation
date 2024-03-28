@@ -4,6 +4,7 @@
 # TODO decide: one role per gnome app or one role for all gnome-apps
 # gnome apps: gnome shell, gnome terminal, gedit, nautilus
 # additional apps without own config: gnome-tweaks, gnome-extensions, dconf-editor
+# check values using dconf module
 
 - name: Install required packages
   ansible.builtin.package:
@@ -63,5 +64,3 @@
     key: "{{ item.key }}"
     value: "{{ item.value }}"
   with_dict: "{{ gnome_tweaks_settings }}"
-
-...
