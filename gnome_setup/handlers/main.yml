@@ -1,0 +1,10 @@
+---
+
+# handlers file for gnome_setup
+
+- name: Reboot Machine
+  become: true
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by ansible"
+
+...

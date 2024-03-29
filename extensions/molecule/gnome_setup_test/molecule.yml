@@ -1,11 +1,15 @@
 ---
 dependency:
-  name: galaxy    
+  name: galaxy
 driver:
   name: vagrant
   provider:
     name: virtualbox
     type: virtualbox
+    customize:
+      graphics_controller: "vmsvga"
+      graphics_memory: 256
+      accelerate3d: true
 lint: |
   set -e
   yamllint
@@ -13,7 +17,8 @@ lint: |
 platforms:
   - name: CentosStream9
     box: centos/stream9
-    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
+    box_url:
+      https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
       # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
     memory: 2048
     cpus: 2
@@ -23,7 +28,10 @@ platforms:
         type: "static"
         ip: "192.168.56.10"
     provider_raw_config_args:
-    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize [ 'modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
     groups:
       - client
   - name: Alma9
@@ -36,7 +44,26 @@ platforms:
         type: "static"
         ip: "192.168.56.20"
     provider_raw_config_args:
-      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize [ 'modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
+    groups:
+      - client
+  - name: ubuntu2204
+    box: generic/ubuntu2204
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.30"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize [ 'modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
     groups:
       - client
   - name: debian12
@@ -49,7 +76,10 @@ platforms:
         type: "static"
         ip: "192.168.56.30"
     provider_raw_config_args:
-      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize [ 'modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
     groups:
       - client
 provisioner:
@@ -86,7 +116,7 @@ provisioner:
       callbacks_enabled: ansible.posix.profile_tasks
       vault_password_file: "$HOME/Documents/vault.pw"
     connection:
-      # WARNING disable "requiretty" in hosts sudoers file on case of errors 
+      # WARNING disable "requiretty" in hosts sudoers file on case of errors
       pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"

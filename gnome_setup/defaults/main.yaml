@@ -7,6 +7,7 @@ install_optional_packages:
 
 gnome_initial_settings:
   "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
+  "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
   "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
   "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de+nodeadkeys')]"
   "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
@@ -21,7 +22,7 @@ gnome_tweaks_settings:
   "/org/gnome/tweaks/show-extensions-notice": "false"
   # INFO can't be set without graphical session as it seems
   # INFO error: Cannot autolaunch D-Bus without X11 $DISPLAY
-  "/org/gnome/desktop/wm/preferences/button-layout": "'appmenu:minimize,maximize,close'"  # seems to work ob ubuntu 22.04
+  "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"  # seems to work ob ubuntu 22.04
 
 text_editor_settings:
   "/org/gnome/TextEditor/highlight-current-line": "true"
