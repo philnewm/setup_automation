@@ -6,7 +6,6 @@ install_packages:
   - gnome-themes-extra  # includes Adwaita-dark
   - gnome-tweaks
   - gnome-extensions-app
-  - 
 
 pip_packages:
   - psutil

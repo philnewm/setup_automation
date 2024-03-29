@@ -1,0 +1,14 @@
+---
+
+- name: Verify
+  hosts: client
+
+  tasks:
+
+    #TODO check gnome is installed
+    #TODO check basic OS UI settings
+    #TODO check gnome settings usnign dconf module
+    #TODO research additional gnome specific checks
+
+    - name: Roll back changes
+    # TODO impleemnt absent version of this role
