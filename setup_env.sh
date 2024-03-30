@@ -35,6 +35,7 @@ python3 -m pip install "molecule-plugins[vagrant]"
 
 # ansible packages
 ansible-galaxy collection install ansible.posix
+ansible-galaxy collection install community.general
 
 # vscode workspace settings:
 mkdir -p "$repo_path/.vscode"
