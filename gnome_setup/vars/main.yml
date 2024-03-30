@@ -2,12 +2,7 @@
 # vars file for gnome_config
 
 prerequired_packages:
-  - gnome-themes-extra  # includes Adwaita-dark
-  # - pip
-
-gnome_config_apps:
-  - gnome-tweaks
-  - gnome-extensions-app
+  - pip
 
 pip_packages:
   - psutil

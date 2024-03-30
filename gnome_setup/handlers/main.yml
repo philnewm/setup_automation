@@ -2,7 +2,7 @@
 
 # handlers file for gnome_setup
 
-- name: Reboot Machine
+- name: Reboot Host
   become: true
   ansible.builtin.reboot:
     msg: "Reboot initiated by Ansible"

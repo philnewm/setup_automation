@@ -9,7 +9,5 @@
         tasks_from: main.yml
       vars:
         gnome_setup_state: present
-        smb_mount_server_host_name: "fileserver"
-        smb_mount_server_ip: "192.168.56.200"
 
 ...

@@ -8,59 +8,105 @@
 # additional apps without own config: gnome-tweaks, gnome-extensions, dconf-editor
 # check values using dconf module
 
-- name: Install Gnome desktop on redhat beased distros
+# gnome-itinial-setup, gnome-remote-desktop, gnome-screenshot, gnome-shell-extension-background-logo, 
+
+# - name: Update packages on rhel based distros
+#   when: ansible_distribution in rhel_based_distros
+#   become: true
+#   ansible.builtin.dnf:
+#     name: "*"
+#     state: latest
+
+# - name: Update packages on debian based distros
+#   when: ansible_distribution in debian_based_distros
+#   become: true
+#   ansible.builtin.apt:
+#     update_cache: true
+#     upgrade: true
+
+- name: Gnome base setup on rhel based distros
   when: ansible_distribution in rhel_based_distros
   become: true
-  ansible.builtin.dnf:
-    name: "@GNOME"
-    state: present
+  block:
+    - name: Install Gnome desktop on rhel based distros
+      ansible.builtin.dnf:
+        name: "gnome-session-xsession"
+        state: present
 
-- name: Update and upgrade packages
+    - name: Remove obsolete Gnome packages from rhel based distros
+      loop: "{{ rhel_obsolete_packages }}"
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: absent
+
+    - name: Install additional Gnome packages on rhel based distros
+      loop: "{{ rhel_additional_packages }}"
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+
+    - name: Install Gnome extensions on rhel based distros
+      loop: "{{ rhel_gnome_extensions }}"
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+
+- name: Get Gnome version
+  ansible.builtin.command:
+    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+  register: gnome_major_version
+ 
+- name: Gnome base setup on debian based distros
   when: ansible_distribution in debian_based_distros
   become: true
-  ansible.builtin.apt:
-    update_cache: true
-    upgrade: true
+  block:
+    - name: Install Gnome desktop on debian based distros
+      ansible.builtin.apt:
+        name: "gnome-session"
+        state: present
+    
+    - name: Remove obsolete Gnome packages from debian based distros
+      loop: "{{ debian_obsolete_packages }}"
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: absent
 
-# TODO fix since "gnome/stable" throws error: No package matching 'gnome/stable' is available
-- name: Install Gnome desktop on Debian based distros
-  when: ansible_distribution in debian_based_distros
+    - name: Install additional Gnome packages on debian based distros
+      loop: "{{ debian_additional_packages }}"
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+
+    - name: Install Gnome extensions on debian based distros
+      loop: "{{ debian_gnome_extensions }}"
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+
+- name: Ensure default target is graphical
   become: true
-  ansible.builtin.apt:
-    name: "gnome/stable"
+  ansible.builtin.command:
+    cmd: systemctl set-default graphical.target
+  register: result
+  changed_when: result.rc == 0
+  notify: Reboot Host
+
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ prerequired_packages }}"
+    state: present
+  become: true
+
+- name: Install pip packages
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
     state: present
 
-# TODO doesn't seem to set as expected
-- name: Set default target to graphical.target
-  become: true
-  ansible.builtin.systemd:
-    name: graphical.target
-    state: started
-    enabled: yes
-  notify: Reboot Machine
-
-# - name: Install required packages
-#   ansible.builtin.package:
-#     name: "{{ install_packages }}"
-#     state: present
-#   become: true
-
-# - name: Install pip packages
-#   ansible.builtin.pip:
-#     name: "{{ pip_packages }}"
-#     state: present
-
-# - name: Install additional packages
-#   ansible.builtin.package:
-#     name: "{{ install_optional_packages }}"
-#     state: present
-#   become: true
-
-# - name: Configure gnome-settings
-#   community.general.dconf:
-#     key: "{{ item.key }}"
-#     value: "{{ item.value }}"
-#   with_dict: "{{ gnome_initial_settings }}"
+- name: Configure gnome-settings
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ gnome_40_initial_settings }}"
 
 # # INFO partly broken visible columns show no effect
 # - name: Configure nautilus
@@ -91,9 +137,3 @@
 #     key: "{{ item.key }}"
 #     value: "{{ item.value }}"
 #   with_dict: "{{ terminal_legacy_settings }}"
-
-# - name: Configure gnome-tweaks
-#   community.general.dconf:
-#     key: "{{ item.key }}"
-#     value: "{{ item.value }}"
-#   with_dict: "{{ gnome_tweaks_settings }}"
