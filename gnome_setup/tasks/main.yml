@@ -22,6 +22,7 @@
     update_cache: true
     upgrade: true
 
+# TODO fix since "gnome/stable" throws error: No package matching 'gnome/stable' is available
 - name: Install Gnome desktop on Debian based distros
   when: ansible_distribution in debian_based_distros
   become: true
@@ -29,6 +30,7 @@
     name: "gnome/stable"
     state: present
 
+# TODO doesn't seem to set as expected
 - name: Set default target to graphical.target
   become: true
   ansible.builtin.systemd:

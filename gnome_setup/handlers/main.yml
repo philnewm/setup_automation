@@ -5,6 +5,6 @@
 - name: Reboot Machine
   become: true
   ansible.builtin.reboot:
-    msg: "Reboot initiated by ansible"
+    msg: "Reboot initiated by Ansible"
 
 ...
