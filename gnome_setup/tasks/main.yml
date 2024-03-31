@@ -8,8 +8,6 @@
 # additional apps without own config: gnome-tweaks, gnome-extensions, dconf-editor
 # check values using dconf module
 
-# gnome-itinial-setup, gnome-remote-desktop, gnome-screenshot, gnome-shell-extension-background-logo, 
-
 # - name: Update packages on rhel based distros
 #   when: ansible_distribution in rhel_based_distros
 #   become: true
@@ -51,10 +49,15 @@
         name: "{{ item }}"
         state: present
 
+# TODO reasearch more convienet soultion to handle varibale
 - name: Get Gnome version
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
   register: gnome_major_version
+
+- name: Format Gnome version
+  ansible.builtin.set_fact:
+    gnome_major_version: "v{{ gnome_major_version.stdout }}"
  
 - name: Gnome base setup on debian based distros
   when: ansible_distribution in debian_based_distros
@@ -106,9 +109,9 @@
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
-  with_dict: "{{ gnome_40_initial_settings }}"
+  with_dict: "{{ gnome_initial_settings[gnome_major_version] }}"
 
-# # INFO partly broken visible columns show no effect
+# INFO partly broken visible columns show no effect
 # - name: Configure nautilus
 #   community.general.dconf:
 #     key: "{{ item.key }}"
