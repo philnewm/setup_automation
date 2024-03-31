@@ -3,6 +3,7 @@
 
 prerequired_packages:
   - pip
+  - python3-virtualenv
 
 pip_packages:
   - psutil

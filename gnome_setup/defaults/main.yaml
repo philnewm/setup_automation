@@ -11,6 +11,8 @@ debian_obsolete_packages:
   - gnome-tour
   - gnome-shell-extension-background-logo
   - gnome-remote-desktop
+  - gnome-software-plugin-snap
+  - gnome-startup-applications
 
 rhel_additional_packages:
   - gnome-themes-extra  # includes Adwaita-dark
@@ -36,7 +38,7 @@ debian_additional_packages:
   - gnome-photos
   - gnome-font-viewer
   - gnome-extensions-app
-  - gnome-control-center-filesystem
+  - gnome-control-center
   - gnome-characters
   - gnome-devel-docs
   - gnome-disk-utility
@@ -47,12 +49,30 @@ rhel_gnome_extensions:
   - gnome-shell-extension-systemMonitor
   - gnome-shell-extension-user-theme
 
+debian_gnome_extensions:
+  - gnome-shell-extension-appindicator
+  - gnome-shell-extension-gpaste
+
 install_optional_packages:
   - NetworkManager-openvpn
   - NetworkManager-openvpn-gnome
 
 gnome_initial_settings:
   v40:
+    "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
+    "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
+    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de')]"
+    "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
+    "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
+    "/org/gnome/mutter/attach-modal-dialogs": "false"
+    "/org/gnome/mutter/center-new-windows": "false"
+    "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
+    "/org/gnome/desktop/interface/clock-show-weekday": "true"
+    "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
+    "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
+    "/org/gnome/tweaks/show-extensions-notice": "false"
+    "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
+  v42:
     # "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
@@ -66,9 +86,21 @@ gnome_initial_settings:
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
     "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
     "/org/gnome/tweaks/show-extensions-notice": "false"
-    # INFO can't be set without graphical session as it seems
-    # INFO error: Cannot autolaunch D-Bus without X11 $DISPLAY
-    "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"  # seems to work ob ubuntu 22.04
+    "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
+  v43:
+    "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
+    "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
+    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de')]"
+    "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
+    "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
+    "/org/gnome/mutter/attach-modal-dialogs": "false"
+    "/org/gnome/mutter/center-new-windows": "false"
+    "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
+    "/org/gnome/desktop/interface/clock-show-weekday": "true"
+    "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
+    "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
+    "/org/gnome/tweaks/show-extensions-notice": "false"
+    "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
 
 text_editor_settings:
   "/org/gnome/TextEditor/highlight-current-line": "true"

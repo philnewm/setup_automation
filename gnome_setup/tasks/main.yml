@@ -48,26 +48,22 @@
       ansible.builtin.dnf:
         name: "{{ item }}"
         state: present
-
-# TODO reasearch more convienet soultion to handle varibale
-- name: Get Gnome version
-  ansible.builtin.shell:
-    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
-  register: gnome_major_version
-
-- name: Format Gnome version
-  ansible.builtin.set_fact:
-    gnome_major_version: "v{{ gnome_major_version.stdout }}"
  
 - name: Gnome base setup on debian based distros
   when: ansible_distribution in debian_based_distros
   become: true
   block:
+    - name: Update repos
+      ansible.builtin.command:
+        cmd: "apt update --fix-missing"
+      register: result
+      changed_when: result.rc == 0
+
     - name: Install Gnome desktop on debian based distros
       ansible.builtin.apt:
         name: "gnome-session"
         state: present
-    
+
     - name: Remove obsolete Gnome packages from debian based distros
       loop: "{{ debian_obsolete_packages }}"
       ansible.builtin.apt:
@@ -86,6 +82,16 @@
         name: "{{ item }}"
         state: present
 
+# TODO reasearch more convienet soultion to handle variable
+- name: Get Gnome version
+  ansible.builtin.shell:
+    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+  register: gnome_major_version
+
+- name: Format Gnome version
+  ansible.builtin.set_fact:
+    gnome_major_version: "v{{ gnome_major_version.stdout }}"
+
 - name: Ensure default target is graphical
   become: true
   ansible.builtin.command:
@@ -100,9 +106,15 @@
     state: present
   become: true
 
+- name: Create virtual environment
+  ansible.builtin.command: 
+    cmd: "python3 -m virtualenv ~/.venvs/gnome"
+    creates: "~/.venvs/gnome"
+
 - name: Install pip packages
   ansible.builtin.pip:
     name: "{{ pip_packages }}"
+    virtualenv: "~/.venvs/gnome"
     state: present
 
 - name: Configure gnome-settings
