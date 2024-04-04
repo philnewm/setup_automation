@@ -8,80 +8,39 @@
 # additional apps without own config: gnome-tweaks, gnome-extensions, dconf-editor
 # check values using dconf module
 
-# - name: Update packages on rhel based distros
-#   when: ansible_distribution in rhel_based_distros
-#   become: true
-#   ansible.builtin.dnf:
-#     name: "*"
-#     state: latest
-
-# - name: Update packages on debian based distros
-#   when: ansible_distribution in debian_based_distros
-#   become: true
-#   ansible.builtin.apt:
-#     update_cache: true
-#     upgrade: true
-
-- name: Gnome base setup on rhel based distros
-  when: ansible_distribution in rhel_based_distros
-  become: true
-  block:
-    - name: Install Gnome desktop on rhel based distros
-      ansible.builtin.dnf:
-        name: "gnome-session-xsession"
-        state: present
-
-    - name: Remove obsolete Gnome packages from rhel based distros
-      loop: "{{ rhel_obsolete_packages }}"
-      ansible.builtin.dnf:
-        name: "{{ item }}"
-        state: absent
-
-    - name: Install additional Gnome packages on rhel based distros
-      loop: "{{ rhel_additional_packages }}"
-      ansible.builtin.dnf:
-        name: "{{ item }}"
-        state: present
-
-    - name: Install Gnome extensions on rhel based distros
-      loop: "{{ rhel_gnome_extensions }}"
-      ansible.builtin.dnf:
-        name: "{{ item }}"
-        state: present
- 
-- name: Gnome base setup on debian based distros
+- name: Update repos on debian based distros
   when: ansible_distribution in debian_based_distros
   become: true
-  block:
-    - name: Update repos
-      ansible.builtin.command:
-        cmd: "apt update --fix-missing"
-      register: result
-      changed_when: result.rc == 0
+  ansible.builtin.command:
+    cmd: "apt update --fix-missing"
+  register: result
+  changed_when: result.rc == 0
 
-    - name: Install Gnome desktop on debian based distros
-      ansible.builtin.apt:
-        name: "gnome-session"
-        state: present
+- name: Install Gnome desktop
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ gnome_package[ansible_distribution] }}"
+    state: present
 
-    - name: Remove obsolete Gnome packages from debian based distros
-      loop: "{{ debian_obsolete_packages }}"
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: absent
+- name: Remove obsolete Gnome packages
+  become: true
+  loop: "{{ obsolete_packages }}"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: absent
 
-    - name: Install additional Gnome packages on debian based distros
-      loop: "{{ debian_additional_packages }}"
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: present
+- name: Install additional Gnome packages
+  loop: "{{ additional_packages[ansible_distribution] }}"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
 
-    - name: Install Gnome extensions on debian based distros
-      loop: "{{ debian_gnome_extensions }}"
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: present
-
+- name: Install Gnome extensions
+  loop: "{{ gnome_extensions[ansible_distribution] }}"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+ 
 # TODO reasearch more convinient soultion to handle variable
 - name: Get Gnome version
   ansible.builtin.shell:

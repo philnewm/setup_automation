@@ -5,56 +5,56 @@
 # one for additional packages, one for extensions
 # TODO check for lsist to combine: obsolete_packages may just need one list, additional apckages also seems pretty much dientical between rhel and debian
 
-rhel_obsolete_packages:
-  - gnome-tour
-  - gnome-shell-extension-background-logo
-  - gnome-remote-desktop
+gnome_package:
+  "Debian": "gnome-session"
+  "Ubuntu": "gnome-session"
+  "CentOS": "gnome-session-xsession"
+  "RedHat": "gnome-session-xsession"
+  "AlmaLinux": "gnome-session-xsession"
 
-debian_obsolete_packages:
+obsolete_packages:
   - gnome-tour
   - gnome-shell-extension-background-logo
   - gnome-remote-desktop
   - gnome-software-plugin-snap
   - gnome-startup-applications
 
-rhel_additional_packages:
-  - gnome-themes-extra # includes Adwaita-dark
-  - gnome-terminal
-  - gnome-software
-  - gnome-tweaks
-  - gnome-user-docs
-  - gnome-photos
-  - gnome-font-viewer
-  - gnome-extensions-app
-  - gnome-control-center-filesystem
-  - gnome-characters
-  - gnome-devel-docs
-  - gnome-disk-utility
-  - baobab
+additional_packages:
+    - gnome-themes-extra # includes Adwaita-dark
+    - gnome-terminal
+    - gnome-software
+    - gnome-tweaks
+    - gnome-user-docs
+    - gnome-photos
+    - gnome-font-viewer
+    - gnome-extensions-app
+    - gnome-control-center
+    # - gnome-control-center-filesystem
+    - gnome-characters
+    - gnome-devel-docs
+    - gnome-disk-utility
+    - baobab
 
-debian_additional_packages:
-  - gnome-themes-extra # includes Adwaita-dark
-  - gnome-terminal
-  - gnome-software
-  - gnome-tweaks
-  - gnome-user-docs
-  - gnome-photos
-  - gnome-font-viewer
-  - gnome-extensions-app
-  - gnome-control-center # difference between deb and rhel
-  - gnome-characters
-  - gnome-devel-docs
-  - gnome-disk-utility
-  - baobab
-
-rhel_gnome_extensions:
-  - gnome-shell-extension-drive-menu
-  - gnome-shell-extension-systemMonitor
-  - gnome-shell-extension-user-theme
-
-debian_gnome_extensions:
-  - gnome-shell-extension-appindicator
-  - gnome-shell-extension-gpaste
+gnome_extensions:
+  "Redhat":
+    - gnome-shell-extension-drive-menu
+    - gnome-shell-extension-systemMonitor
+    - gnome-shell-extension-user-theme
+  "CentOS":
+    - gnome-shell-extension-drive-menu
+    - gnome-shell-extension-systemMonitor
+    - gnome-shell-extension-user-theme
+  "ALmaLinux":
+    - gnome-shell-extension-drive-menu
+    - gnome-shell-extension-systemMonitor
+    - gnome-shell-extension-user-theme
+  "Debian":
+    - gnome-shell-extension-appindicator
+    - gnome-shell-extension-gpaste
+  "Ubuntu":
+    - gnome-shell-extension-appindicator
+    - gnome-shell-extension-gpaste
+    - gnome-shell-extension-ubuntu-dock
 
 install_optional_packages:
   - NetworkManager-openvpn
