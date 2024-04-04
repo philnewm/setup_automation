@@ -1,6 +1,9 @@
 ---
-
 # defaults file
+
+# TODO create one dictionary including per distro lists
+# one for additional packages, one for extensions
+# TODO check for lsist to combine: obsolete_packages may just need one list, additional apckages also seems pretty much dientical between rhel and debian
 
 rhel_obsolete_packages:
   - gnome-tour
@@ -15,7 +18,7 @@ debian_obsolete_packages:
   - gnome-startup-applications
 
 rhel_additional_packages:
-  - gnome-themes-extra  # includes Adwaita-dark
+  - gnome-themes-extra # includes Adwaita-dark
   - gnome-terminal
   - gnome-software
   - gnome-tweaks
@@ -30,7 +33,7 @@ rhel_additional_packages:
   - baobab
 
 debian_additional_packages:
-  - gnome-themes-extra  # includes Adwaita-dark
+  - gnome-themes-extra # includes Adwaita-dark
   - gnome-terminal
   - gnome-software
   - gnome-tweaks
@@ -38,7 +41,7 @@ debian_additional_packages:
   - gnome-photos
   - gnome-font-viewer
   - gnome-extensions-app
-  - gnome-control-center
+  - gnome-control-center # difference between deb and rhel
   - gnome-characters
   - gnome-devel-docs
   - gnome-disk-utility
@@ -166,5 +169,3 @@ terminal_profile_settings:
   "scrollbar-policy": "'never'"
   "use-theme-colors": "false"
   "use-transparent-background": "true"
-
-...
