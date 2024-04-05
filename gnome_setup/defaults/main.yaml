@@ -19,7 +19,57 @@ obsolete_packages:
   - gnome-software-plugin-snap
   - gnome-startup-applications
 
+# TODO check if that might work using "ansible_os_family" too
 additional_packages:
+  "Redhat":
+    - gnome-themes-extra # includes Adwaita-dark
+    - gnome-terminal
+    - gnome-software
+    - gnome-tweaks
+    - gnome-user-docs
+    - gnome-photos
+    - gnome-font-viewer
+    - gnome-extensions-app
+    - gnome-control-center-filesystem
+    - gnome-characters
+    - gnome-devel-docs
+    - gnome-disk-utility
+    - baobab
+    - NetworkManager-openvpn
+    - NetworkManager-openvpn-gnome
+  "CentOS":
+    - gnome-themes-extra # includes Adwaita-dark
+    - gnome-terminal
+    - gnome-software
+    - gnome-tweaks
+    - gnome-user-docs
+    - gnome-photos
+    - gnome-font-viewer
+    - gnome-extensions-app
+    - gnome-control-center-filesystem
+    - gnome-characters
+    - gnome-devel-docs
+    - gnome-disk-utility
+    - baobab
+    # - NetworkManager-openvpn
+    # - NetworkManager-openvpn-gnome
+  "AlmaLinux":
+    - gnome-themes-extra # includes Adwaita-dark
+    - gnome-terminal
+    - gnome-software
+    - gnome-tweaks
+    - gnome-user-docs
+    - gnome-photos
+    - gnome-font-viewer
+    - gnome-extensions-app
+    - gnome-control-center-filesystem
+    - gnome-characters
+    - gnome-devel-docs
+    - gnome-disk-utility
+    - baobab
+    # - NetworkManager-openvpn
+    # - NetworkManager-openvpn-gnome
+  "Debian":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
     - gnome-software
@@ -29,13 +79,30 @@ additional_packages:
     - gnome-font-viewer
     - gnome-extensions-app
     - gnome-control-center
-    # - gnome-control-center-filesystem  # TODO test this on rhel systems
     - gnome-characters
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    - NetworkManager-openvpn
-    - NetworkManager-openvpn-gnome
+    # - network-manager-openvpn
+    # - network-manager-openvpn-gnome
+    # - network-manager-gnome
+  "Ubuntu":
+    - gnome-themes-extra # includes Adwaita-dark
+    - gnome-terminal
+    - gnome-software
+    - gnome-tweaks
+    - gnome-user-docs
+    - gnome-photos
+    - gnome-font-viewer
+    - gnome-extensions-app
+    - gnome-control-center
+    - gnome-characters
+    - gnome-devel-docs
+    - gnome-disk-utility
+    - baobab
+    # - network-manager-openvpn
+    # - network-manager-openvpn-gnome
+    # - network-manager-gnome
 
 gnome_extensions:
   "Redhat":
@@ -46,7 +113,7 @@ gnome_extensions:
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
-  "ALmaLinux":
+  "AlmaLinux":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
@@ -59,7 +126,7 @@ gnome_extensions:
     - gnome-shell-extension-ubuntu-dock
 
 gnome_initial_settings:
-  v40:
+  "v40":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
     "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de')]"
@@ -73,7 +140,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
     "/org/gnome/tweaks/show-extensions-notice": "false"
     "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
-  v42:
+  "v42":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
     "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de')]"
@@ -87,7 +154,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/interface/clock-show-weekday": "true"
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
     "/org/gnome/tweaks/show-extensions-notice": "false"
-  v43:
+  "v43":
     "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"

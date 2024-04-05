@@ -14,7 +14,7 @@
   ansible.builtin.command:
     cmd: "apt update --fix-missing"
   register: result
-  changed_when: result.rc == 0
+  changed_when: "'Fix not found' not in result.stdout"
 
 - name: Install Gnome desktop
   become: true
@@ -30,7 +30,7 @@
     state: absent
 
 - name: Install additional Gnome packages
-  loop: "{{ additional_packages }}"
+  loop: "{{ additional_packages[ansible_distribution] }}"
   become: true
   ansible.builtin.package:
     name: "{{ item }}"
@@ -43,15 +43,10 @@
     name: "{{ item }}"
     state: present
  
-# TODO reasearch more convinient soultion to handle variable
 - name: Get Gnome version
   ansible.builtin.shell:
     cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
   register: gnome_major_version
-
-- name: Format Gnome version
-  ansible.builtin.set_fact:
-    gnome_major_version: "v{{ gnome_major_version.stdout }}"
 
 - name: Ensure default target is graphical
   become: true
@@ -67,25 +62,23 @@
     state: present
   become: true
  
-- name: Ignore PEP 668
-  when: ansible_distribution == "Debian"
-  become: true
-  ansible.builtin.file:
-    path: /usr/lib/python3.11/EXTERNALLY-MANAGED
-    state: absent
+# - name: Ignore PEP 668
+#   when: ansible_distribution == "Debian"
+#   become: true
+#   ansible.builtin.file:
+#     path: /usr/lib/python3.11/EXTERNALLY-MANAGED
+#     state: absent
 
-- name: Install pip packages
-  ansible.builtin.pip:
-    name: "{{ pip_packages }}"
-    state: present
+# - name: Install pip packages
+#   ansible.builtin.pip:
+#     name: "{{ pip_packages }}"
+#     state: present
 
 - name: Configure gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
-  with_dict: "{{ gnome_initial_settings[gnome_major_version] }}"
-  environment: 
-    VIRTUAL_ENV: "{{ ansible_python_interpreter }}"
+  with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
 
 # INFO partly broken visible columns show no effect
 # - name: Configure nautilus

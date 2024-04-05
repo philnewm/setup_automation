@@ -15,41 +15,41 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  # - name: CentosStream9
-  #   box: centos/stream9
-  #   box_url:
-  #     https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
-  #     # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.56.10"
-  #   provider_raw_config_args:
-  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-  #     - "customize ['modifyvm', :id, '--vram', '256']"
-  #     - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
-  #   groups:
-  #     - client
-  # - name: Alma9
-  #   box: almalinux/9
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.56.20"
-  #   provider_raw_config_args:
-  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-  #     - "customize ['modifyvm', :id, '--vram', '256']"
-  #     - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
-  #   groups:
-  #     - client
+  - name: CentosStream9
+    box: centos/stream9
+    box_url:
+      https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
+      # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.10"
+    provider_raw_config_args:
+      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
+    groups:
+      - client
+  - name: Alma9
+    box: almalinux/9
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.20"
+    provider_raw_config_args:
+      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
+    groups:
+      - client
   - name: ubuntu2204
     box: generic/ubuntu2204
     memory: 2048
