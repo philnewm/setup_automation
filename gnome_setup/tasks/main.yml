@@ -18,26 +18,28 @@
 
 - name: Install Gnome desktop
   become: true
-  ansible.builtin.dnf:
+  ansible.builtin.package:
     name: "{{ gnome_package[ansible_distribution] }}"
     state: present
 
 - name: Remove obsolete Gnome packages
   become: true
   loop: "{{ obsolete_packages }}"
-  ansible.builtin.dnf:
+  ansible.builtin.package:
     name: "{{ item }}"
     state: absent
 
 - name: Install additional Gnome packages
-  loop: "{{ additional_packages[ansible_distribution] }}"
-  ansible.builtin.dnf:
+  loop: "{{ additional_packages }}"
+  become: true
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
 
 - name: Install Gnome extensions
   loop: "{{ gnome_extensions[ansible_distribution] }}"
-  ansible.builtin.dnf:
+  become: true
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
  
@@ -59,7 +61,7 @@
   changed_when: result.rc == 0
   notify: Reboot Host
 
-- name: Install required packages
+- name: Install required packages for dconf module
   ansible.builtin.package:
     name: "{{ prerequired_packages }}"
     state: present

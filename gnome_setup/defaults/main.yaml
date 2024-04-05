@@ -29,11 +29,13 @@ additional_packages:
     - gnome-font-viewer
     - gnome-extensions-app
     - gnome-control-center
-    # - gnome-control-center-filesystem
+    # - gnome-control-center-filesystem  # TODO test this on rhel systems
     - gnome-characters
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
+    - NetworkManager-openvpn
+    - NetworkManager-openvpn-gnome
 
 gnome_extensions:
   "Redhat":
@@ -55,10 +57,6 @@ gnome_extensions:
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
     - gnome-shell-extension-ubuntu-dock
-
-install_optional_packages:
-  - NetworkManager-openvpn
-  - NetworkManager-openvpn-gnome
 
 gnome_initial_settings:
   v40:
@@ -109,6 +107,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/privacy/remove-old-temp-files": "true"
     "/org/gnome/desktop/privacy/remove-old-trash-files": "true"
 
+# TODO move to setup roles for specific app
 text_editor_settings:
   "/org/gnome/TextEditor/highlight-current-line": "true"
   "/org/gnome/TextEditor/right-margin-position": "uint32 80"
