@@ -23,7 +23,7 @@ wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/sha
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt-get update && sudo apt-get install vagrant -y
 vagrant plugin install virtualbox_WSL2
-vagrant plugin install vagrant-vbguest
+# vagrant plugin install vagrant-vbguest  # disabled for now since it caused rhel VMs to crach on create
 
 
 python3 -m venv ~/.venv/ansible_env/
