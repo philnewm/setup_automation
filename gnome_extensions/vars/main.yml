@@ -2,17 +2,4 @@
 
 # vars file for gnome_extensions
 
-rpm_fusion_repos:
-  - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-
-install_packages:
-  - pip
-  - gnome-extensions-app
-  - lm_sensors
-  - gettext
-
-pip_packages:
-  - psutil
-
 ...

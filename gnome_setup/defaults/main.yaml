@@ -4,6 +4,8 @@
 # INFO some dictionary splits for each ditro may seem redundant
 # INFO this is intentional to enable deaktivation on a per distro basis if neccessary to not break the whole testing setup
 
+install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
+
 gnome_package:
   "Debian": "gnome-session-common"
   "Ubuntu": "gnome-session-common"
@@ -42,8 +44,10 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    - NetworkManager-openvpn
-    - NetworkManager-openvpn-gnome
+    - lm_sensors
+    - gettext
+    # - NetworkManager-openvpn
+    # - NetworkManager-openvpn-gnome
   "CentOS":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
@@ -58,6 +62,8 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
+    - lm_sensors
+    - gettext
     # - NetworkManager-openvpn
     # - NetworkManager-openvpn-gnome
   "AlmaLinux":
@@ -74,6 +80,8 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
+    - lm_sensors
+    - gettext
     # - NetworkManager-openvpn
     # - NetworkManager-openvpn-gnome
   "Rocky":
@@ -133,18 +141,50 @@ gnome_extensions:
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
+    - gnome-shell-extension-dash-to-panel
+    - gnome-shell-extension-appindicator
+    - gnome-shell-extension-drive-menu
+    # - gnome-shell-extension-no-overview
+    # - gnome-shell-extension-just-perfection
+    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-pop-shell
   "CentOS":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
+    - gnome-shell-extension-dash-to-panel
+    - gnome-shell-extension-appindicator
+    - gnome-shell-extension-drive-menu
+    # - gnome-shell-extension-no-overview
+    # - gnome-shell-extension-just-perfection
+    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-pop-shell
   "AlmaLinux":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
+    - gnome-shell-extension-dash-to-panel
+    - gnome-shell-extension-appindicator
+    - gnome-shell-extension-drive-menu
+    # - gnome-shell-extension-no-overview
+    # - gnome-shell-extension-just-perfection
+    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-pop-shell
   "Rocky":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
+    - gnome-shell-extension-dash-to-panel
+    - gnome-shell-extension-appindicator
+    - gnome-shell-extension-drive-menu
+    # - gnome-shell-extension-no-overview
+    # - gnome-shell-extension-just-perfection
+    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-pop-shell
   "Debian":
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
@@ -222,9 +262,11 @@ additional_repos:
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
   "AlamLinux":
+    - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
   "Rocky":
+    - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
   "Debian":

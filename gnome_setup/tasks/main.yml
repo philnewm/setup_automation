@@ -1,6 +1,5 @@
 ---
 # tasks file for gnome_config
-# TODO check first if gnome is installed -> install if not
 # TODO gnome default install highly distro dependent
 # evry distro needs their specific install method for gnome and GUI ingeneral
 # TODO decide: one role per gnome app or one role for all gnome-apps
@@ -20,6 +19,18 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: absent
+
+- name: Install additional repos
+  when: ansible_os_family == "RedHat"
+  become: true
+  loop: "{{ additional_repos[ansible_distribution] }}"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+
+- name: Set user install dir
+  ansible.builtin.set_fact:
+    user_install_dir: "{{ install_dir }}"
 
 - name: Install additional Gnome packages
   when: ansible_os_family == "RedHat"

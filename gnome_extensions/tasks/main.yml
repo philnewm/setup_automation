@@ -2,37 +2,6 @@
 
 # tasks file for gnome_extensions
 
-# INFO only neccessary for CentOS Distros
-- name: Install EPEL repository
-  when: ansible_os_family == "RedHat"
-  become: true
-  loop: "{{ additional_repos[ansible_distribution] }}"
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    disable_gpg_check: true
-
-- name: Set user install dir
-  ansible.builtin.set_fact:
-    user_install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
-
-- name: Install required packages
-  ansible.builtin.package:
-    name: "{{ install_packages }}"
-    state: present
-  become: true
-
-- name: Install pip packages
-  ansible.builtin.pip:
-    name: "{{ pip_packages }}"
-    state: present
-
-- name: "Install repo extension for {{ ansible_distribution }}"
-  ansible.builtin.package:
-    name: "{{ item.value }}"
-    state: present
-  with_dict: "{{ gnome_40_extensions }}"
-  become: true
-
 # INFO needs update right after install
 - name: "Clone extensions from github"
   ansible.builtin.git:
