@@ -4,11 +4,11 @@ repo_path="$HOME/setup_automation"
 vscode_settings="$repo_path/.vscode/settings.json"
 
 # ubuntu22.04
-sudo apt update && sudo apt upgrade -y
-sudo apt install sshpass -y
-sudo apt install jq -y
-sudo apt install python3-pip libssl-dev -y
-sudo apt install python3.10-venv -y
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install sshpass -y
+sudo apt-get install jq -y
+sudo apt-get install python3-pip libssl-dev -y
+sudo apt-get install python3.10-venv -y
 
 # pre-rquirements ubuntu
 # append those two lines into ~/.bashrc
@@ -21,8 +21,10 @@ source ~/.bashrc
 # vagrant
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install vagrant -y
+sudo apt-get update && sudo apt-get install vagrant -y
 vagrant plugin install virtualbox_WSL2
+vagrant plugin install vagrant-vbguest
+
 
 python3 -m venv ~/.venv/ansible_env/
 source ~/.venv/ansible_env/bin/activate
