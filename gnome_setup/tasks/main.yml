@@ -5,29 +5,29 @@
 # evry distro needs their specific install method for gnome and GUI ingeneral
 # TODO decide: one role per gnome app or one role for all gnome-apps
 # gnome apps: gnome shell, gnome terminal, gedit, nautilus, system-monitor, disk-usage-analyzer, disks, gnome-calendar
-# additional apps without own config: gnome-tweaks, gnome-extensions, dconf-editor
 # check values using dconf module
-
-- name: Update repos on debian based distros
-  when: ansible_distribution in debian_based_distros
-  become: true
-  ansible.builtin.command:
-    cmd: "apt update --fix-missing"
-  register: result
-  changed_when: "'Fix not found' not in result.stdout"
 
 - name: Install Gnome desktop
   become: true
   ansible.builtin.package:
     name: "{{ gnome_package[ansible_distribution] }}"
     state: present
+    update_cache: true
 
 - name: Remove obsolete Gnome packages
   become: true
-  loop: "{{ obsolete_packages }}"
+  loop: "{{ obsolete_packages[ansible_os_family] }}"
   ansible.builtin.package:
     name: "{{ item }}"
     state: absent
+
+- name: Install additional Gnome packages
+  when: ansible_os_family == "RedHat"
+  loop: "{{ additional_packages[ansible_distribution] }}"
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
 
 - name: Install additional Gnome packages
   loop: "{{ additional_packages[ansible_distribution] }}"
@@ -47,13 +47,14 @@
   ansible.builtin.shell:
     cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
   register: gnome_major_version
+  changed_when: false
 
-- name: Ensure default target is graphical
+- name: Set default target to graphical
   become: true
-  ansible.builtin.command:
-    cmd: systemctl set-default graphical.target
-  register: result
-  changed_when: result.rc == 0
+  ansible.builtin.file:
+    src: /usr/lib/systemd/system/graphical.target
+    dest: /etc/systemd/system/default.target
+    state: link
   notify: Reboot Host
 
 - name: Install required packages for dconf module
@@ -62,18 +63,6 @@
     state: present
   become: true
  
-# - name: Ignore PEP 668
-#   when: ansible_distribution == "Debian"
-#   become: true
-#   ansible.builtin.file:
-#     path: /usr/lib/python3.11/EXTERNALLY-MANAGED
-#     state: absent
-
-# - name: Install pip packages
-#   ansible.builtin.pip:
-#     name: "{{ pip_packages }}"
-#     state: present
-
 - name: Configure gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"
