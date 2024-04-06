@@ -157,6 +157,7 @@ gnome_initial_settings:
   "40":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
+    # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
@@ -174,7 +175,7 @@ gnome_initial_settings:
   "42":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
-    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
+    # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
@@ -193,7 +194,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
-    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
+    # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
