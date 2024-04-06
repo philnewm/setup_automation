@@ -4,18 +4,12 @@
 
 # INFO only neccessary for CentOS Distros
 - name: Install EPEL repository
-  ansible.builtin.dnf:
-    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
-    disable_gpg_check: true
-  when: ansible_distribution == "CentOS"
+  when: ansible_os_family == "RedHat"
   become: true
-
-- name: Enable RPM Fusion repositories
+  loop: "{{ additional_repos[ansible_distribution] }}"
   ansible.builtin.dnf:
     name: "{{ item }}"
     disable_gpg_check: true
-  loop: "{{ rpm_fusion_repos }}"
-  become: true
 
 - name: Set user install dir
   ansible.builtin.set_fact:

@@ -153,14 +153,12 @@ gnome_extensions:
     - gnome-shell-extension-gpaste
     - gnome-shell-extension-ubuntu-dock
 
-# TODO make keyboard layout actually change - doesn#t so far even tho commands get executed
 gnome_initial_settings:
   "40":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
-    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
-    "/org/gnome/desktop/input-sources/mru-sources": "[('xkb', 'de'), ('xkb', 'us')]"
+    "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
     "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
     "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
@@ -171,12 +169,14 @@ gnome_initial_settings:
     "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
     "/org/gnome/tweaks/show-extensions-notice": "false"
     "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
+    "/org/gnome/software/download-updates": "false"
+    "/org/gnome/software/first-run": "false"
   "42":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
     "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
-    "/org/gnome/desktop/input-sources/mru-sources": "[('xkb', 'de'), ('xkb', 'us')]"
+    "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
     "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
     "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
@@ -187,13 +187,15 @@ gnome_initial_settings:
     "/org/gnome/desktop/interface/clock-show-weekday": "true"
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
     "/org/gnome/tweaks/show-extensions-notice": "false"
+    "/org/gnome/software/download-updates": "false"
+    "/org/gnome/software/first-run": "false"
   "43":
     "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
     "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
-    "/org/gnome/desktop/input-sources/mru-sources": "[('xkb', 'de'), ('xkb', 'us')]"
+    "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
     "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
     "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
@@ -204,10 +206,28 @@ gnome_initial_settings:
     "/org/gnome/desktop/interface/clock-show-weekday": "true"
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
     "/org/gnome/tweaks/show-extensions-notice": "false"
+    "/org/gnome/software/download-updates": "false"
+    "/org/gnome/software/first-run": "false"
     "/org/gnome/desktop/privacy/old-files-age": "30"
     "/org/gnome/desktop/privacy/recent-files-max-age": "30"
     "/org/gnome/desktop/privacy/remove-old-temp-files": "true"
     "/org/gnome/desktop/privacy/remove-old-trash-files": "true"
+
+
+### gnome extensions ###
+additional_repos:
+  "CentOS":
+    - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+  "AlamLinux":
+    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+  "Rocky":
+    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+  "Debian":
+  "Ubuntu":
 
 # TODO move to setup roles for specific app
 text_editor_settings:

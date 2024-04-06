@@ -69,6 +69,12 @@
     value: "{{ item.value }}"
   with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
 
+# TODO move to dictionary and figure how how to make it work with the other values in on task
+- name: Set keyboard layouts
+  ansible.builtin.dconf:
+    key: /org/gnome/desktop/input-sources/sources
+    value: "[('xkb', 'de'), ('xkb', 'us')]"
+
 # INFO partly broken visible columns show no effect
 # - name: Configure nautilus
 #   community.general.dconf:
