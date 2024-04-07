@@ -139,10 +139,5 @@ provisioner:
       pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"
-scenario:
-  name: gnome_setup_test
-  reset_sequence:
-    - reset
-    - cleanup
 verifier:
   name: ansible
