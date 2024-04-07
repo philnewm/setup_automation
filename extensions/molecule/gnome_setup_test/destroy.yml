@@ -7,11 +7,12 @@
   tasks:
     - name: Stop and remove VMs
       delegate_to: localhost
-      ansible.builtin.command: "vagrant destroy -f"
-      register: result
-      changed_when: result.rc == 0
+      ansible.builtin.command:
+        cmd: "vagrant destroy -f"
       args:
         chdir: "{{ hostvars[inventory_hostname].molecule_ephemeral_directory }}"
+      register: result
+      changed_when: result.rc == 0
 
     # Mandatory configuration for Molecule to function.
 
