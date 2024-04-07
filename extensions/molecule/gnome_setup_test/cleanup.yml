@@ -10,6 +10,8 @@
       delegate_to: localhost
       loop: "{{ hostvars[inventory_hostname].molecule_yml.platforms }}"
       ansible.builtin.command:
+        # TODO check if "vagrant snapshot push" is faster
+        # https://developer.hashicorp.com/vagrant/docs/cli/snapshot
         cmd: "vagrant snapshot restore {{ item.name }} initial"
       args:
         chdir: "{{ hostvars[inventory_hostname].molecule_ephemeral_directory }}"

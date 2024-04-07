@@ -46,6 +46,8 @@
           args:
             chdir: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
           register: result
+          loop_control:
+            label: "{{ item.name }}"
           changed_when: result.rc == 0
 
         - name: Convert instance config dict to a list

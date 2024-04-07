@@ -4,7 +4,7 @@
 # INFO some dictionary splits for each ditro may seem redundant
 # INFO this is intentional to enable deaktivation on a per distro basis if neccessary to not break the whole testing setup
 
-install_dir: "{{ (ansible_env.HOME, install_dir) | ansible.builtin.path_join }}"
+user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
 gnome_package:
   "Debian": "gnome-session-common"
@@ -30,24 +30,6 @@ obsolete_packages:
     - gnome-startup-applications
 
 additional_packages:
-  "Redhat":
-    - gnome-themes-extra # includes Adwaita-dark
-    - gnome-terminal
-    - gnome-software
-    - gnome-tweaks
-    - gnome-user-docs
-    - gnome-photos
-    - gnome-font-viewer
-    - gnome-extensions-app
-    - gnome-control-center-filesystem
-    - gnome-characters
-    - gnome-devel-docs
-    - gnome-disk-utility
-    - baobab
-    - lm_sensors
-    - gettext
-    # - NetworkManager-openvpn
-    # - NetworkManager-openvpn-gnome
   "CentOS":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
@@ -137,18 +119,6 @@ additional_packages:
     # - network-manager-gnome
 
 gnome_extensions:
-  "Redhat":
-    - gnome-shell-extension-drive-menu
-    - gnome-shell-extension-systemMonitor
-    - gnome-shell-extension-user-theme
-    - gnome-shell-extension-dash-to-panel
-    - gnome-shell-extension-appindicator
-    - gnome-shell-extension-drive-menu
-    # - gnome-shell-extension-no-overview
-    # - gnome-shell-extension-just-perfection
-    - gnome-shell-extension-system-monitor-applet
-    - gnome-shell-extension-sound-output-device-chooser
-    - gnome-shell-extension-pop-shell
   "CentOS":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
@@ -160,31 +130,28 @@ gnome_extensions:
     # - gnome-shell-extension-just-perfection
     - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
-    - gnome-shell-extension-pop-shell
   "AlmaLinux":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
-    - gnome-shell-extension-dash-to-panel
+    # - gnome-shell-extension-dash-to-panel
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-drive-menu
     # - gnome-shell-extension-no-overview
     # - gnome-shell-extension-just-perfection
     - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
-    - gnome-shell-extension-pop-shell
   "Rocky":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-user-theme
-    - gnome-shell-extension-dash-to-panel
+    # - gnome-shell-extension-dash-to-panel
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-drive-menu
     # - gnome-shell-extension-no-overview
     # - gnome-shell-extension-just-perfection
     - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
-    - gnome-shell-extension-pop-shell
   "Debian":
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
@@ -261,7 +228,7 @@ additional_repos:
     - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  "AlamLinux":
+  "AlmaLinux":
     - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"

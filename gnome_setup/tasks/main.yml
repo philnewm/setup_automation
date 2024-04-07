@@ -27,12 +27,9 @@
   ansible.builtin.dnf:
     name: "{{ item }}"
     disable_gpg_check: true
+    update_cache: true
 
-- name: Set user install dir
-  ansible.builtin.set_fact:
-    user_install_dir: "{{ install_dir }}"
-
-- name: Install additional Gnome packages
+- name: Install additional Gnome packages for rhel based distros
   when: ansible_os_family == "RedHat"
   loop: "{{ additional_packages[ansible_distribution] }}"
   become: true
@@ -40,7 +37,8 @@
     name: "{{ item }}"
     state: present
 
-- name: Install additional Gnome packages
+- name: Install additional Gnome packages for Debian based distros
+  when: ansible_os_family == "Debian"
   loop: "{{ additional_packages[ansible_distribution] }}"
   become: true
   ansible.builtin.package:
