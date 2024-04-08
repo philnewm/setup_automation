@@ -127,7 +127,7 @@ gnome_extensions:
     - gnome-shell-extension-drive-menu
     # - gnome-shell-extension-no-overview
     # - gnome-shell-extension-just-perfection
-    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
   "AlmaLinux":
     - gnome-shell-extension-drive-menu
@@ -137,7 +137,7 @@ gnome_extensions:
     - gnome-shell-extension-drive-menu
     # - gnome-shell-extension-no-overview
     # - gnome-shell-extension-just-perfection
-    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
   "Rocky":
     - gnome-shell-extension-drive-menu
@@ -147,7 +147,7 @@ gnome_extensions:
     - gnome-shell-extension-drive-menu
     # - gnome-shell-extension-no-overview
     # - gnome-shell-extension-just-perfection
-    - gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
   "Debian":
     - gnome-shell-extension-appindicator
@@ -235,6 +235,22 @@ additional_repos:
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
   "Debian":
   "Ubuntu":
+
+github_repo_extensions:
+  - name: "Tiling-Assistant"
+    repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
+    branch: "v32"
+    installer: "build.sh"
+    install_cmd: "./build.sh -i"
+    download_dir: "Tiling-Assistant/"
+    install_dir: "Tiling-Assistant/scripts/"
+  - name: "Dash-To-Panel"
+    repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
+    branch: "gnome-40"
+    installer: ""
+    install_cmd: "make install"
+    download_dir: "dash-to-panel/"
+    install_dir: "dash-to-panel/"
 
 # TODO move to setup roles for specific app
 text_editor_settings:

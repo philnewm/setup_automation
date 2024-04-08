@@ -6,94 +6,122 @@
 # gnome apps: gnome shell, gnome terminal, gedit, nautilus, system-monitor, disk-usage-analyzer, disks, gnome-calendar
 # check values using dconf module
 
-- name: Install Gnome desktop
-  become: true
-  ansible.builtin.package:
-    name: "{{ gnome_package[ansible_distribution] }}"
-    state: present
-    update_cache: true
+# - name: Install required packages
+#   ansible.builtin.package:
+#     name: "{{ required_packages }}"
+#     state: present
+#   become: true
 
-- name: Remove obsolete Gnome packages
-  become: true
-  loop: "{{ obsolete_packages[ansible_os_family] }}"
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: absent
+# - name: Install Gnome desktop
+#   become: true
+#   ansible.builtin.package:
+#     name: "{{ gnome_package[ansible_distribution] }}"
+#     state: present
+#     update_cache: true
 
-- name: Install additional repos
-  when: ansible_os_family == "RedHat"
-  become: true
-  loop: "{{ additional_repos[ansible_distribution] }}"
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    disable_gpg_check: true
-    update_cache: true
+# - name: Remove obsolete Gnome packages
+#   become: true
+#   loop: "{{ obsolete_packages[ansible_os_family] }}"
+#   ansible.builtin.package:
+#     name: "{{ item }}"
+#     state: absent
 
-- name: Install additional Gnome packages for rhel based distros
-  when: ansible_os_family == "RedHat"
-  loop: "{{ additional_packages[ansible_distribution] }}"
-  become: true
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
+# - name: Install additional repos
+#   when: ansible_os_family == "RedHat"
+#   become: true
+#   loop: "{{ additional_repos[ansible_distribution] }}"
+#   ansible.builtin.dnf:
+#     name: "{{ item }}"
+#     disable_gpg_check: true
+#     update_cache: true
 
-- name: Install additional Gnome packages for Debian based distros
-  when: ansible_os_family == "Debian"
-  loop: "{{ additional_packages[ansible_distribution] }}"
-  become: true
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
+# - name: Install additional Gnome packages for rhel based distros
+#   when: ansible_os_family == "RedHat"
+#   loop: "{{ additional_packages[ansible_distribution] }}"
+#   become: true
+#   ansible.builtin.package:
+#     name: "{{ item }}"
+#     state: present
 
-- name: Install Gnome extensions
-  loop: "{{ gnome_extensions[ansible_distribution] }}"
-  become: true
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
- 
-- name: Get Gnome version
-  ansible.builtin.shell:
-    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
-  register: gnome_major_version
-  changed_when: false
+# - name: Install additional Gnome packages for Debian based distros
+#   when: ansible_os_family == "Debian"
+#   loop: "{{ additional_packages[ansible_distribution] }}"
+#   become: true
+#   ansible.builtin.package:
+#     name: "{{ item }}"
+#     state: present
 
-- name: Set default target to graphical
-  become: true
+# - name: Install Gnome extensions
+#   loop: "{{ gnome_extensions[ansible_distribution] }}"
+#   become: true
+#   ansible.builtin.package:
+#     name: "{{ item }}"
+#     state: present
+
+- name: "Clone extensions from github"
+  ansible.builtin.git:
+    repo: "{{ item.repo_url }}"
+    dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
+    single_branch: true
+    version: "{{ item.branch }}"
+    depth: 1
+  loop: "{{ github_repo_extensions }}"
+
+- name: Update installer permissions
   ansible.builtin.file:
-    src: /usr/lib/systemd/system/graphical.target
-    dest: /etc/systemd/system/default.target
-    state: link
-  notify: Reboot Host
+    path: "{{ (user_install_dir, item.install_dir, item.installer) | ansible.builtin.path_join }}"
+    mode: "0755"
+  loop: "{{ github_repo_extensions }}"
 
-- name: Install required packages for dconf module
-  ansible.builtin.package:
-    name: "{{ prerequired_packages }}"
-    state: present
-  become: true
+- name: "Install extensions from github"
+  ansible.builtin.command: "{{ item.install_cmd }}"
+  args:
+    chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"
+  register: install_result
+  changed_when: install_result.rc == 0
+  loop: "{{ github_repo_extensions }}"
+
+# - name: Get Gnome version
+#   ansible.builtin.shell:
+#     cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+#   register: gnome_major_version
+#   changed_when: false
+
+# - name: Set default target to graphical
+#   become: true
+#   ansible.builtin.file:
+#     src: /usr/lib/systemd/system/graphical.target
+#     dest: /etc/systemd/system/default.target
+#     state: link
+#   notify: Reboot Host
  
-- name: Configure gnome-settings
-  community.general.dconf:
-    key: "{{ item.key }}"
-    value: "{{ item.value }}"
-  with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
+# - name: Configure gnome-settings
+#   community.general.dconf:
+#     key: "{{ item.key }}"
+#     value: "{{ item.value }}"
+#   with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
 
-# TODO move to dictionary and figure how how to make it work with the other values in on task
-- name: Set keyboard layouts
-  ansible.builtin.dconf:
-    key: "/org/gnome/desktop/input-sources/sources"
-    value: "[('xkb', 'de'), ('xkb', 'us')]"
+# # TODO move to dictionary and figure how how to make it work with the other values in on task
+# - name: Set keyboard layouts
+#   ansible.builtin.dconf:
+#     key: "/org/gnome/desktop/input-sources/sources"
+#     value: "[('xkb', 'de'), ('xkb', 'us')]"
 
-- name: Get installed extensions
-  ansible.builtin.command:
-    cmd: "gnome-extensions list"
-  register: extensions_list
-  changed_when: false
+# - name: Find installed GNOME extensions
+#   ansible.builtin.find:
+#     paths: /usr/share/gnome-shell/extensions
+#     file_type: directory
+#   register: gnome_extensions
 
-- name: Enable installed extensions
-  ansible.builtin.dconf:
-    key: "/org/gnome/shell/enabled-extensions"
-    value: "{{ extensions_list.stdout_lines | to_json }}"
+# - name: Find installed GNOME extensions
+#   ansible.builtin.command:
+#     cmd: "ls /usr/share/gnome-shell/extensions"
+#   register: gnome_extensions_list
+
+# - name: Enable installed extensions
+#   ansible.builtin.dconf:
+#     key: "/org/gnome/shell/enabled-extensions"
+#     value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
 
 # INFO partly broken visible columns show no effect
 # - name: Configure nautilus

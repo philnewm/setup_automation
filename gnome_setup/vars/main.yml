@@ -1,7 +1,9 @@
 ---
 # vars file for gnome_config
 
-prerequired_packages:
+required_packages:
   - python3-psutil
+  - git
+  - make
 
 ...

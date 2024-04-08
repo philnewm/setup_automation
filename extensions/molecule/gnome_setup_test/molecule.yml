@@ -124,6 +124,7 @@ provisioner:
           - { share: "library", mount: "library" }
           - { share: "ressources", mount: "ressources" }
           - { share: "usb_backup", mount: "archive" }
+        install_name: install 
   config_options:
     defaults:
       gathering: smart
@@ -133,7 +134,6 @@ provisioner:
       stdout_callback: debug
       callbacks_enabled: ansible.posix.profile_tasks
       vault_password_file: "$HOME/Documents/vault.pw"
-      install_name: install
     connection:
       # WARNING disable "requiretty" in hosts sudoers file on case of errors
       pipelining: true
