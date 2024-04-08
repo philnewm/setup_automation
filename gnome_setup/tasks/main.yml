@@ -81,8 +81,19 @@
 # TODO move to dictionary and figure how how to make it work with the other values in on task
 - name: Set keyboard layouts
   ansible.builtin.dconf:
-    key: /org/gnome/desktop/input-sources/sources
+    key: "/org/gnome/desktop/input-sources/sources"
     value: "[('xkb', 'de'), ('xkb', 'us')]"
+
+- name: Get installed extensions
+  ansible.builtin.command:
+    cmd: "gnome-extensions list"
+  register: extensions_list
+  changed_when: false
+
+- name: Enable installed extensions
+  ansible.builtin.dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "{{ extensions_list.stdout_lines | to_json }}"
 
 # INFO partly broken visible columns show no effect
 # - name: Configure nautilus

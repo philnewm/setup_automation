@@ -2,11 +2,6 @@
 # vars file for gnome_config
 
 prerequired_packages:
-  # - pip
-  # - python3-virtualenv
   - python3-psutil
-
-pip_packages:
-  - psutil
 
 ...

@@ -139,5 +139,8 @@ provisioner:
       pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"
+scenario:
+  destroy_sequence:
+    - destroy
 verifier:
   name: ansible
