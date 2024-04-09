@@ -244,7 +244,7 @@ github_repo_extensions:
     install_cmd: "./build.sh -i"
     download_dir: "Tiling-Assistant/"
     install_dir: "Tiling-Assistant/scripts/"
-  - name: "Dash-To-Panel"
+  - name: "dash-to-panel@jderose9.github.com"
     repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
     branch: "gnome-40"
     installer: ""

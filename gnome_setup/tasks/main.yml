@@ -51,12 +51,18 @@
 #     name: "{{ item }}"
 #     state: present
 
-# - name: Install Gnome extensions
-#   loop: "{{ gnome_extensions[ansible_distribution] }}"
-#   become: true
-#   ansible.builtin.package:
-#     name: "{{ item }}"
-#     state: present
+- name: Install Gnome extensions
+  loop: "{{ gnome_extensions[ansible_distribution] }}"
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+
+- name: Find installed GNOME extensions
+  ansible.builtin.shell:
+    cmd: "ls /usr/share/gnome-shell/extensions && ls ~/.local/share/gnome-shell/extensions/"
+  register: gnome_extensions_list
+  changed_when: false
 
 - name: "Clone extensions from github"
   ansible.builtin.git:
@@ -65,13 +71,16 @@
     single_branch: true
     version: "{{ item.branch }}"
     depth: 1
+  register: result
   loop: "{{ github_repo_extensions }}"
+  when: item.name not in gnome_extensions_list.stdout_lines
 
 - name: Update installer permissions
   ansible.builtin.file:
     path: "{{ (user_install_dir, item.install_dir, item.installer) | ansible.builtin.path_join }}"
     mode: "0755"
   loop: "{{ github_repo_extensions }}"
+  when: item.name not in gnome_extensions_list.stdout_lines
 
 - name: "Install extensions from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
@@ -80,6 +89,14 @@
   register: install_result
   changed_when: install_result.rc == 0
   loop: "{{ github_repo_extensions }}"
+  when: item.name not in gnome_extensions_list.stdout_lines
+
+- name: Update installer permissions
+  ansible.builtin.file:
+    path: "{{ (user_install_dir, item.install_dir, item.installer) | ansible.builtin.path_join }}"
+    mode: "0755"
+  loop: "{{ github_repo_extensions }}"
+  when: item.name not in gnome_extensions_list.stdout_lines
 
 # - name: Get Gnome version
 #   ansible.builtin.shell:
@@ -101,27 +118,20 @@
 #     value: "{{ item.value }}"
 #   with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
 
-# # TODO move to dictionary and figure how how to make it work with the other values in on task
+# # # TODO move to dictionary and figure how how to make it work with the other values in on task
 # - name: Set keyboard layouts
 #   ansible.builtin.dconf:
 #     key: "/org/gnome/desktop/input-sources/sources"
 #     value: "[('xkb', 'de'), ('xkb', 'us')]"
 
-# - name: Find installed GNOME extensions
-#   ansible.builtin.find:
-#     paths: /usr/share/gnome-shell/extensions
-#     file_type: directory
-#   register: gnome_extensions
+# - name: Show extensions list
+#   ansible.builtin.debug:
+#     msg: "{{ gnome_extensions_list.stdout_lines | to_json }}"
 
-# - name: Find installed GNOME extensions
-#   ansible.builtin.command:
-#     cmd: "ls /usr/share/gnome-shell/extensions"
-#   register: gnome_extensions_list
-
-# - name: Enable installed extensions
-#   ansible.builtin.dconf:
-#     key: "/org/gnome/shell/enabled-extensions"
-#     value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
+- name: Enable installed extensions
+  ansible.builtin.dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
 
 # INFO partly broken visible columns show no effect
 # - name: Configure nautilus
