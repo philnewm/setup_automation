@@ -124,29 +124,18 @@ gnome_extensions:
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-dash-to-panel
     - gnome-shell-extension-appindicator
-    - gnome-shell-extension-drive-menu
-    # - gnome-shell-extension-no-overview
-    # - gnome-shell-extension-just-perfection
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
   "AlmaLinux":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
-    # - gnome-shell-extension-dash-to-panel
     - gnome-shell-extension-appindicator
-    - gnome-shell-extension-drive-menu
-    # - gnome-shell-extension-no-overview
-    # - gnome-shell-extension-just-perfection
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
   "Rocky":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
-    # - gnome-shell-extension-dash-to-panel
     - gnome-shell-extension-appindicator
-    - gnome-shell-extension-drive-menu
-    # - gnome-shell-extension-no-overview
-    # - gnome-shell-extension-just-perfection
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
   "Debian":
@@ -237,7 +226,7 @@ additional_repos:
   "Ubuntu":
 
 github_repo_extensions:
-  - name: "Tiling-Assistant"
+  - name: "tiling-assistant@leleat-on-github"
     repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
     branch: "v32"
     installer: "build.sh"
