@@ -222,8 +222,6 @@ additional_repos:
     - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  "Debian":
-  "Ubuntu":
 
 github_repo_extensions:
   - name: "tiling-assistant@leleat-on-github"

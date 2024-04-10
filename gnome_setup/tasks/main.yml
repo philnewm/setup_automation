@@ -12,6 +12,15 @@
     state: present
   become: true
 
+- name: Install additional repos
+  when: ansible_os_family == "RedHat"
+  become: true
+  loop: "{{ additional_repos[ansible_distribution] }}"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    update_cache: true
+
 - name: Install Gnome desktop
   become: true
   ansible.builtin.package:
@@ -25,15 +34,6 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: absent
-
-- name: Install additional repos
-  when: ansible_os_family == "RedHat"
-  become: true
-  loop: "{{ additional_repos[ansible_distribution] }}"
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    disable_gpg_check: true
-    update_cache: true
 
 - name: Install additional Gnome packages for rhel based distros
   when: ansible_os_family == "RedHat"
@@ -57,6 +57,7 @@
     name: "{{ gnome_extensions[ansible_distribution] }}"
     state: present
 
+# TODO check if debian based distros have different path
 - name: Find user installed GNOME extensions
   ansible.builtin.shell:
     cmd: "ls ~/.local/share/gnome-shell/extensions/"
@@ -64,6 +65,7 @@
   changed_when: false
   failed_when: user_gnome_extensions_list.rc not in [0, 2]
 
+# TODO exclude CentOS from dash to panel
 - name: Install extensions from github
   loop: "{{ github_repo_extensions }}"
   when: item.name not in user_gnome_extensions_list.stdout_lines

@@ -15,6 +15,8 @@
     mode: "0755"
   when: git_result.changed
 
+# TODO debian + Ubuntu fail to run build.sh
+# (gnome-extensions pack:28363): GLib-GIO-CRITICAL **: 08:49:07.771: g_subprocess_wait: assertion 'G_IS_SUBPROCESS (subprocess)' failed
 - name: "Install extensions from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
   args:
