@@ -126,25 +126,28 @@ gnome_extensions:
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-no-overview
   "AlmaLinux":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-no-overview
   "Rocky":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-systemMonitor
     - gnome-shell-extension-sound-output-device-chooser
+    - gnome-shell-extension-no-overview
   "Debian":
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
+    - gnome-shell-extension-no-overview
   "Ubuntu":
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
-    # - gnome-shell-extension-ubuntu-dock
 
 gnome_initial_settings:
   "40":
@@ -158,6 +161,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
     "/org/gnome/mutter/attach-modal-dialogs": "false"
     "/org/gnome/mutter/center-new-windows": "false"
+    "/org/gnome/mutter/edge-tiling": "false"
     "/org/gnome/desktop/interface/clock-show-weekday": "true"
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
     "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
@@ -226,16 +230,25 @@ additional_repos:
 github_repo_extensions:
 # TODO check if disabling gnome default side snapping is needed 
   - name: "tiling-assistant@leleat-on-github"
+    exclude_distro: []
+    dependencies:
+      - zip
+      - gettext
     repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
     branch:
       "40": "v32"
       "42": "v36"
-      "43": "v43"
+      "43": "v46"
     installer: "build.sh"
     install_cmd: "./build.sh -i"
     download_dir: "Tiling-Assistant/"
     install_dir: "Tiling-Assistant/scripts/"
   - name: "dash-to-panel@jderose9.github.com"
+    exclude_distro: 
+      - CentOS
+    dependencies:
+      - make
+      - gettext
     repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
     branch:
       "40": "gnome-40"

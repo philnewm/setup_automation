@@ -1,5 +1,11 @@
 ---
 
+- name: Install extension dependencies
+  ansible.builtin.package:
+    name: "{{ item.dependencies }}"
+    state: present
+  become: true
+
 - name: "Clone extensions from github"
   ansible.builtin.git:
     repo: "{{ item.repo_url }}"
@@ -22,5 +28,7 @@
   register: install_result
   changed_when: install_result.rc == 0
   when: git_result.changed
+
+# TODO remove downloaded repos
 
 ...
