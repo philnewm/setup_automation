@@ -230,7 +230,8 @@ additional_repos:
 github_repo_extensions:
 # TODO check if disabling gnome default side snapping is needed 
   - name: "tiling-assistant@leleat-on-github"
-    exclude_distro: []
+    exclude_distro:
+      - 
     dependencies:
       - zip
       - gettext

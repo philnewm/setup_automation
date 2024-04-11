@@ -10,34 +10,34 @@
 # - name: Gather package facts
 #   ansible.builtin.package_facts:
 
-# - name: Install dependencies
-#   ansible.builtin.package:
-#     name: "{{ dependencies }}"
-#     state: present
-#   become: true
+- name: Install dependencies
+  ansible.builtin.package:
+    name: "{{ dependencies }}"
+    state: present
+  become: true
 
-# - name: Install additional repos
-#   when: ansible_os_family == "RedHat"
-#   become: true
-#   loop: "{{ additional_repos[ansible_distribution] }}"
-#   ansible.builtin.dnf:
-#     name: "{{ item }}"
-#     disable_gpg_check: true
-#     update_cache: true
+- name: Install additional repos
+  when: ansible_os_family == "RedHat"
+  become: true
+  loop: "{{ additional_repos[ansible_distribution] }}"
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    update_cache: true
 
-# - name: Install Gnome desktop
-#   become: true
-#   ansible.builtin.package:
-#     name: "{{ gnome_package[ansible_distribution] }}"
-#     state: present
-#     update_cache: true
+- name: Install Gnome desktop
+  become: true
+  ansible.builtin.package:
+    name: "{{ gnome_package[ansible_distribution] }}"
+    state: present
+    update_cache: true
 
-# - name: Remove obsolete Gnome packages
-#   become: true
-#   loop: "{{ obsolete_packages[ansible_os_family] }}"
-#   ansible.builtin.package:
-#     name: "{{ item }}"
-#     state: absent
+- name: Remove obsolete Gnome packages
+  become: true
+  loop: "{{ obsolete_packages[ansible_os_family] }}"
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: absent
 
 - name: Get Gnome version
   ansible.builtin.shell:
@@ -45,27 +45,27 @@
   register: gnome_major_version
   changed_when: false
 
-# - name: Install additional Gnome packages for rhel based distros
-#   when: ansible_os_family == "RedHat"
-#   loop: "{{ additional_packages[ansible_distribution] }}"
-#   become: true
-#   ansible.builtin.package:
-#     name: "{{ item }}"
-#     state: present
+- name: Install additional Gnome packages for rhel based distros
+  when: ansible_os_family == "RedHat"
+  loop: "{{ additional_packages[ansible_distribution] }}"
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
 
-# - name: Install additional Gnome packages for Debian based distros
-#   when: ansible_os_family == "Debian"
-#   loop: "{{ additional_packages[ansible_distribution] }}"
-#   become: true
-#   ansible.builtin.package:
-#     name: "{{ item }}"
-#     state: present
+- name: Install additional Gnome packages for Debian based distros
+  when: ansible_os_family == "Debian"
+  loop: "{{ additional_packages[ansible_distribution] }}"
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
 
-# - name: Install Gnome extensions
-#   become: true
-#   ansible.builtin.package:
-#     name: "{{ gnome_extensions[ansible_distribution] }}"
-#     state: present
+- name: Install Gnome extensions
+  become: true
+  ansible.builtin.package:
+    name: "{{ gnome_extensions[ansible_distribution] }}"
+    state: present
 
 # TODO check if debian based distros have different path
 - name: Find user installed GNOME extensions
