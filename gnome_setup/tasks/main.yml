@@ -6,9 +6,13 @@
 # gnome apps: gnome shell, gnome terminal, gedit, nautilus, system-monitor, disk-usage-analyzer, disks, gnome-calendar
 # check values using dconf module
 
-- name: Install required packages
+# TODO check potential speed improvement
+# - name: Gather package facts
+#   ansible.builtin.package_facts:
+
+- name: Install dependencies
   ansible.builtin.package:
-    name: "{{ required_packages }}"
+    name: "{{ dependencies }}"
     state: present
   become: true
 
@@ -34,6 +38,12 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: absent
+
+- name: Get Gnome version
+  ansible.builtin.shell:
+    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+  register: gnome_major_version
+  changed_when: false
 
 - name: Install additional Gnome packages for rhel based distros
   when: ansible_os_family == "RedHat"
@@ -71,12 +81,8 @@
   when: item.name not in user_gnome_extensions_list.stdout_lines
   ansible.builtin.include_tasks:
     file: extensions_github.yml
-
-- name: Get Gnome version
-  ansible.builtin.shell:
-    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
-  register: gnome_major_version
-  changed_when: false
+  loop_control:
+    label: "{{ github_repo_extensions.name }}" 
 
 - name: Set default target to graphical
   become: true

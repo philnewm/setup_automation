@@ -144,7 +144,7 @@ gnome_extensions:
   "Ubuntu":
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
-    - gnome-shell-extension-ubuntu-dock
+    # - gnome-shell-extension-ubuntu-dock
 
 gnome_initial_settings:
   "40":
@@ -224,52 +224,27 @@ additional_repos:
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 github_repo_extensions:
-  "40":
-    - name: "tiling-assistant@leleat-on-github"
-      repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
-      branch: "v32"
-      installer: "build.sh"
-      install_cmd: "./build.sh -i"
-      download_dir: "Tiling-Assistant/"
-      install_dir: "Tiling-Assistant/scripts/"
-    - name: "dash-to-panel@jderose9.github.com"
-      repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
-      branch: "gnome-40"
-      installer: ""
-      install_cmd: "make install"
-      download_dir: "dash-to-panel/"
-      install_dir: "dash-to-panel/"
-  "42":
-    - name: "tiling-assistant@leleat-on-github"
-      repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
-      branch: "v36"
-      installer: "build.sh"
-      install_cmd: "./build.sh -i"
-      download_dir: "Tiling-Assistant/"
-      install_dir: "Tiling-Assistant/scripts/"
-    - name: "dash-to-panel@jderose9.github.com"
-      repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
-      branch: "gnome-40"
-      installer: ""
-      install_cmd: "make install"
-      download_dir: "dash-to-panel/"
-      install_dir: "dash-to-panel/"
-  "43":
-    - name: "tiling-assistant@leleat-on-github"
-      repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
-      branch: "v43"
-      installer: "build.sh"
-      install_cmd: "./build.sh -i"
-      download_dir: "Tiling-Assistant/"
-      install_dir: "Tiling-Assistant/scripts/"
-    - name: "dash-to-panel@jderose9.github.com"
-      repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
-      branch: "gnome-40"
-      installer: ""
-      install_cmd: "make install"
-      download_dir: "dash-to-panel/"
-      install_dir: "dash-to-panel/"
-  
+# TODO check if disabling gnome default side snapping is needed 
+  - name: "tiling-assistant@leleat-on-github"
+    repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
+    branch:
+      "40": "v32"
+      "42": "v36"
+      "43": "v43"
+    installer: "build.sh"
+    install_cmd: "./build.sh -i"
+    download_dir: "Tiling-Assistant/"
+    install_dir: "Tiling-Assistant/scripts/"
+  - name: "dash-to-panel@jderose9.github.com"
+    repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
+    branch:
+      "40": "gnome-40"
+      "42": "v56"
+      "43": "v56"
+    installer: ""
+    install_cmd: "make install"
+    download_dir: "dash-to-panel/"
+    install_dir: "dash-to-panel/"
 
 # TODO move to setup roles for specific app
 text_editor_settings:

@@ -1,10 +1,12 @@
 ---
 # vars file for gnome_config
 
-required_packages:
+dependencies:
   - python3-psutil
   - git
-  - make
-  - gettext  # needed by dash-to-panel extension
+  # TODO move to extensions dictionary
+  - make  # required for dash-to-panel extension
+  - gettext  # required for dash-to-panel extension
+  - zip  # required for tiling-assistent extension
 
 ...

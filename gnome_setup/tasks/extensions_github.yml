@@ -5,7 +5,7 @@
     repo: "{{ item.repo_url }}"
     dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
     single_branch: true
-    version: "{{ item.branch }}"
+    version: "{{ item.branch[gnome_major_version.stdout] }}"
     depth: 1
   register: git_result
 
@@ -15,8 +15,6 @@
     mode: "0755"
   when: git_result.changed
 
-# TODO debian + Ubuntu fail to run build.sh
-# (gnome-extensions pack:28363): GLib-GIO-CRITICAL **: 08:49:07.771: g_subprocess_wait: assertion 'G_IS_SUBPROCESS (subprocess)' failed
 - name: "Install extensions from github"
   ansible.builtin.command: "{{ item.install_cmd }}"
   args:
