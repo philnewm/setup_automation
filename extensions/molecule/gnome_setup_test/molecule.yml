@@ -64,38 +64,38 @@ platforms:
       - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
     groups:
       - client
-  - name: Ubuntu2204
-    box: generic/ubuntu2204
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.40"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-      - "customize ['modifyvm', :id, '--vram', '256']"
-      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
-    groups:
-      - client
-  - name: Debian12
-    box: generic/debian12
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.50"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-      - "customize ['modifyvm', :id, '--vram', '256']"
-      - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
-    groups:
-      - client
+  # - name: Ubuntu2204
+  #   box: generic/ubuntu2204
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.40"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+  #     - "customize ['modifyvm', :id, '--vram', '256']"
+  #     - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
+  #   groups:
+  #     - client
+  # - name: Debian12
+  #   box: generic/debian12
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.50"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+  #     - "customize ['modifyvm', :id, '--vram', '256']"
+  #     - "customize ['modifyvm', :id, '--accelerate3d', 'on']"
+  #   groups:
+  #     - client
 provisioner:
   name: ansible
   inventory:

@@ -124,24 +124,26 @@ gnome_extensions:
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-dash-to-panel
     - gnome-shell-extension-appindicator
-    - gnome-shell-extension-systemMonitor
+    - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
     - gnome-shell-extension-no-overview
   "AlmaLinux":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-appindicator
-    - gnome-shell-extension-systemMonitor
+    # TODO add sudo localectl set-locale LANG=en_IN.UTF-8
+    - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
     - gnome-shell-extension-no-overview
   "Rocky":
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-appindicator
-    - gnome-shell-extension-systemMonitor
+    - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
     - gnome-shell-extension-no-overview
   "Debian":
+    # TODO test gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
     - gnome-shell-extension-no-overview
@@ -152,7 +154,7 @@ gnome_extensions:
 gnome_initial_settings:
   "40":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
-    "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
+    "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
@@ -228,7 +230,6 @@ additional_repos:
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 github_repo_extensions:
-# TODO check if disabling gnome default side snapping is needed 
   - name: "tiling-assistant@leleat-on-github"
     exclude_distro:
       - 

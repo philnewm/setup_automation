@@ -4,5 +4,6 @@
 dependencies:
   - python3-psutil
   - git
+  - glibc-langpack-en
 
 ...

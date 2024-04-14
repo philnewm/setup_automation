@@ -1,8 +1,10 @@
 ---
 
 - name: Install extension dependencies
+  loop: "{{ item.dependencies }}"
+  when: item not in ansible_facts.packages
   ansible.builtin.package:
-    name: "{{ item.dependencies }}"
+    name: "{{ item }}"
     state: present
   become: true
 
@@ -29,6 +31,9 @@
   changed_when: install_result.rc == 0
   when: git_result.changed
 
-# TODO remove downloaded repos
+- name: Remove downloaded repos
+  ansible.builtin.file:
+    path: "{{ user_install_dir }}"
+    state: absent
 
 ...
