@@ -7,12 +7,11 @@
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
 gnome_package:
-  "Debian": "gnome-session-common"
-  "Ubuntu": "gnome-session-common"
-  "CentOS": "gnome-session-xsession"
-  "RedHat": "gnome-session-xsession"
-  "AlmaLinux": "gnome-session-xsession"
-  "Rocky": "gnome-session-xsession"
+  "CentOS": "gnome-session-xsession"  # gnome-shell
+  "AlmaLinux": "gnome-session-xsession"  # gnome-shell
+  "Rocky": "gnome-session-xsession"  # gnome-shell
+  "Debian": "gnome-shell"
+  "Ubuntu": "gnome-shell"
 
 obsolete_packages:
   "Debian":
@@ -33,6 +32,7 @@ additional_packages:
   "CentOS":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
+    - gnome-system-monitor
     - gnome-software
     - gnome-tweaks
     - gnome-user-docs
@@ -51,6 +51,7 @@ additional_packages:
   "AlmaLinux":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
+    - gnome-system-monitor
     - gnome-software
     - gnome-tweaks
     - gnome-user-docs
@@ -69,6 +70,7 @@ additional_packages:
   "Rocky":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
+    - gnome-system-monitor
     - gnome-software
     - gnome-tweaks
     - gnome-user-docs
@@ -85,6 +87,7 @@ additional_packages:
   "Debian":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
+    - gnome-system-monitor
     - gnome-software
     - gnome-tweaks
     - gnome-user-docs
@@ -102,6 +105,7 @@ additional_packages:
   "Ubuntu":
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
+    - gnome-system-monitor
     - gnome-software
     - gnome-tweaks
     - gnome-user-docs
@@ -131,7 +135,6 @@ gnome_extensions:
     - gnome-shell-extension-drive-menu
     - gnome-shell-extension-user-theme
     - gnome-shell-extension-appindicator
-    # TODO add sudo localectl set-locale LANG=en_IN.UTF-8
     - gnome-shell-extension-system-monitor-applet
     - gnome-shell-extension-sound-output-device-chooser
     - gnome-shell-extension-no-overview
@@ -144,10 +147,13 @@ gnome_extensions:
     - gnome-shell-extension-no-overview
   "Debian":
     # TODO test gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extensions
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
     - gnome-shell-extension-no-overview
   "Ubuntu":
+    # TODO test gnome-shell-extension-system-monitor-applet
+    - gnome-shell-extensions
     - gnome-shell-extension-appindicator
     - gnome-shell-extension-gpaste
 
@@ -173,7 +179,8 @@ gnome_initial_settings:
     "/org/gnome/software/first-run": "false"
   "42":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
-    "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
+    "/org/gnome/shell/extensions/user-theme/name": "'Yaru-magenta-dark'"
+    "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
@@ -183,6 +190,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
     "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
     "/org/gnome/mutter/attach-modal-dialogs": "false"
+    "/org/gnome/shell/overrides/attach-modal-dialogs": "false"
     "/org/gnome/mutter/center-new-windows": "false"
     "/org/gnome/desktop/interface/clock-show-weekday": "true"
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
@@ -192,7 +200,7 @@ gnome_initial_settings:
   "43":
     "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
-    "/org/gnome/desktop/interface/org/gnome/desktop/interface/enable-hot-corners": "false"
+    "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
@@ -202,6 +210,7 @@ gnome_initial_settings:
     "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
     "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
     "/org/gnome/mutter/attach-modal-dialogs": "false"
+    "/org/gnome/shell/overrides/attach-modal-dialogs": "false"
     "/org/gnome/mutter/center-new-windows": "false"
     "/org/gnome/desktop/interface/clock-show-weekday": "true"
     "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
@@ -240,13 +249,13 @@ github_repo_extensions:
     branch:
       "40": "v32"
       "42": "v36"
-      "43": "v46"
+      "43": "v44"  # TODO requires update after login
     installer: "build.sh"
     install_cmd: "./build.sh -i"
     download_dir: "Tiling-Assistant/"
     install_dir: "Tiling-Assistant/scripts/"
   - name: "dash-to-panel@jderose9.github.com"
-    exclude_distro: 
+    exclude_distro:
       - CentOS
     dependencies:
       - make
@@ -260,6 +269,32 @@ github_repo_extensions:
     install_cmd: "make install"
     download_dir: "dash-to-panel/"
     install_dir: "dash-to-panel/"
+  - name: "system-monitor@paradoxxx.zero.gmail.com"
+    exclude_distro:
+      - CentOS
+      - AlmaLinux
+      - Rocky
+    dependencies:
+      - make
+      - gir1.2-gtop-2.0
+      - gir1.2-nm-1.0
+      - gir1.2-clutter-1.0
+      - gnome-system-monitor
+    repo_url: "https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet"
+    branch:
+      "40": "master"
+      "42": "master"
+      "43": "master"
+    installer: ""
+    install_cmd: "make install"
+    download_dir: "gnome-shell-system-monitor-applet/"
+    install_dir: "gnome-shell-system-monitor-applet/"
+
+obsolete_gnome_extnesions:
+  - apps-menu@gnome-shell-extensions.gcampax.github.com
+  - places-menu@gnome-shell-extensions.gcampax.github.com
+  - screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
+  - window-list@gnome-shell-extensions.gcampax.github.com
 
 # TODO move to setup roles for specific app
 text_editor_settings:

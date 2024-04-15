@@ -1,6 +1,5 @@
 ---
-# tasks file for gnome_config
-# TODO gnome default install highly distro dependent
+
 # evry distro needs their specific install method for gnome and GUI ingeneral
 # TODO decide: one role per gnome app or one role for all gnome-apps
 # gnome apps: gnome shell, gnome terminal, gedit, nautilus, system-monitor, disk-usage-analyzer, disks, gnome-calendar
@@ -20,12 +19,26 @@
     update_cache: true
 
 - name: Install dependencies 
-  loop: "{{ dependencies }}"
+  loop: "{{ dependencies[ansible_os_family] }}"
   when: item not in ansible_facts.packages
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
   become: true
+
+- name: Get current system locale
+  ansible.builtin.shell:
+    cmd: "localectl status | awk '/LANG/{print $3}'"
+  register: current_locale
+  changed_when: false
+  check_mode: no
+
+- name: "Set system locale to {{ system_local_lang }}"
+  when: ansible_distribution == "AlmaLinux" and current_locale.stdout != system_local_lang
+  ansible.builtin.command:
+    cmd: "localectl set-locale {{ system_local_lang }}"
+  register: set_locale_result
+  changed_when: set_locale_result.rc == 0
 
 - name: Install Gnome desktop
   when: gnome_package[ansible_distribution] not in ansible_facts.packages
@@ -42,6 +55,16 @@
     name: "{{ item }}"
     state: absent
 
+- name: Get Gnome version
+  ansible.builtin.shell:
+    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+  register: gnome_major_version
+  changed_when: false
+
+- name: Show gnome major version
+  ansible.builtin.debug:
+    var: gnome_major_version.stdout
+
 - name: Set default target to graphical
   become: true
   ansible.builtin.file:
@@ -49,12 +72,6 @@
     dest: /etc/systemd/system/default.target
     state: link
   notify: Reboot Host
-
-- name: Get Gnome version
-  ansible.builtin.shell:
-    cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
-  register: gnome_major_version
-  changed_when: false
 
 - name: Install additional Gnome packages for rhel based distros
   when: ansible_os_family == "RedHat" and item not in ansible_facts.packages
@@ -71,6 +88,10 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
+
+- name: Show settings dictionary
+  ansible.builtin.debug:
+    var: gnome_initial_settings[gnome_major_version.stdout]
 
 - name: Configure gnome-settings
   community.general.dconf:
@@ -106,6 +127,13 @@
     file: extensions_github.yml
   loop_control:
     label: "{{ item.name }}" 
+
+- name: Remove unwanted gnome extensions
+  become: true
+  loop: "{{ obsolete_gnome_extnesions }}"
+  ansible.builtin.file:
+    path: "/usr/share/gnome-shell/extensions/{{ item }}"
+    state: absent
 
 - name: Find installed GNOME extensions
   ansible.builtin.shell:
