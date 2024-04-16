@@ -98,6 +98,7 @@
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
+    #  TODO change to loop: "{{ | dict2items }}" 
   with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
 
 # TODO move to dictionary and figure how how to make it work with the other values in on task

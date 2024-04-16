@@ -1,5 +1,9 @@
 ---
 
+- name: Save dconf path
+  ansible.builtin.set_fact:
+    dconf_path: "{{ item.dconf_path }}"
+
 - name: Install extension dependencies
   loop: "{{ item.dependencies }}"
   when: item not in ansible_facts.packages
@@ -30,6 +34,12 @@
   register: install_result
   changed_when: install_result.rc == 0
   when: git_result.changed
+
+- name: Configure extension
+  community.general.dconf:
+    key: "{{ dconf_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ extension_config[item.name].extension_settings | dict2items }}"
 
 - name: Remove downloaded repos
   ansible.builtin.file:
