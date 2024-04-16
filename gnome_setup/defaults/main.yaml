@@ -7,9 +7,9 @@
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
 gnome_package:
-  "CentOS": "gnome-session-xsession"  # gnome-shell
-  "AlmaLinux": "gnome-session-xsession"  # gnome-shell
-  "Rocky": "gnome-session-xsession"  # gnome-shell
+  "CentOS": "gnome-shell"
+  "AlmaLinux": "gnome-shell"
+  "Rocky":  "gnome-shell"
   "Debian": "gnome-shell"
   "Ubuntu": "gnome-shell"
 
