@@ -249,7 +249,7 @@ github_repo_extensions:
     branch:
       "40": "v32"
       "42": "v36"
-      "43": "v44"  # TODO requires update after login
+      "43": "v44"  # INFO requires update after login since Tag "45" is missing in soruce repo
     installer: "build.sh"
     install_cmd: "./build.sh -i"
     download_dir: "Tiling-Assistant/"
@@ -290,7 +290,7 @@ github_repo_extensions:
     download_dir: "gnome-shell-system-monitor-applet/"
     install_dir: "gnome-shell-system-monitor-applet/"
 
-obsolete_gnome_extnesions:
+obsolete_gnome_extensions:
   - apps-menu@gnome-shell-extensions.gcampax.github.com
   - places-menu@gnome-shell-extensions.gcampax.github.com
   - screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com

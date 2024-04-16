@@ -130,7 +130,7 @@
 
 - name: Remove unwanted gnome extensions
   become: true
-  loop: "{{ obsolete_gnome_extnesions }}"
+  loop: "{{ obsolete_gnome_extensions }}"
   ansible.builtin.file:
     path: "/usr/share/gnome-shell/extensions/{{ item }}"
     state: absent
