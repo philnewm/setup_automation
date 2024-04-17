@@ -238,10 +238,14 @@ additional_repos:
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
+# TODO change logic from excluding a distro
+# TODO create "package" key
+# set package key to package name if one is available in the distros repo
+
 github_repo_extensions:
   - name: "tiling-assistant@leleat-on-github"
-    exclude_distro:
-      - 
+    distro_package:
+      -
     dependencies:
       - zip
       - gettext
@@ -268,8 +272,9 @@ github_repo_extensions:
       "tile-bottomleft-quarter": "['<Super>KP_1']"
       "tile-bottomright-quarter": "['<Super>KP_3']"
   - name: "dash-to-panel@jderose9.github.com"
-    exclude_distro:
+    distro_package:
       - CentOS
+    package_name: gnome-shell-extension-dash-to-panel
     dependencies:
       - make
       - gettext
