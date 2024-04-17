@@ -107,26 +107,18 @@
     key: "/org/gnome/desktop/input-sources/sources"
     value: "[('xkb', 'de'), ('xkb', 'us')]"
 
-- name: Install Gnome extensions
-  loop: "{{ gnome_extensions[ansible_distribution] }}"
-  when: item not in ansible_facts.packages
-  become: true
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-
-- name: Find user installed GNOME extensions
+- name: Find installed GNOME extensions
   ansible.builtin.shell:
-    cmd: "ls ~/.local/share/gnome-shell/extensions/"
-  register: user_gnome_extensions_list
+    cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
+  register: gnome_extensions_list
   changed_when: false
-  failed_when: user_gnome_extensions_list.rc not in [0, 2]
+  failed_when: gnome_extensions_list.rc not in [0, 2]
 
-- name: Install extensions from github
-  loop: "{{ github_repo_extensions }}"
-  when: item.name not in user_gnome_extensions_list.stdout_lines and ansible_distribution not in item.exclude_distro
+- name: Install extensions
+  loop: "{{ gnome_extensions }}"
+  when: item.name not in gnome_extensions_list.stdout_lines
   ansible.builtin.include_tasks:
-    file: extensions_github.yml
+    file: extensions.yml
   loop_control:
     label: "{{ item.name }}" 
 

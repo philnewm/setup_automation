@@ -1,0 +1,61 @@
+---
+
+- name: Save dconf path
+  when: item.dconf_path is defined 
+  ansible.builtin.set_fact:
+    dconf_path: "{{ item.dconf_path }}"
+
+- name: Install extension dependencies
+  when: item.dependencies is defined
+  loop: "{{ item.dependencies }}"
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  become: true
+
+- name: Install Gnome extensions
+  when: item.package is defined and ansible_distribution in item.distro_package and item.package not in ansible_facts.packages
+  become: true
+  ansible.builtin.package:
+    name: "{{ item.package}}"
+    state: present
+
+- name: Get Extensions from Github
+  when: item.package is not defined and item.repo_url is defined
+  block:
+    - name: "Clone extensions from github"
+      ansible.builtin.git:
+        repo: "{{ item.repo_url }}"
+        dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
+        single_branch: true
+        version: "{{ item.branch[gnome_major_version.stdout] }}"
+        depth: 1
+      register: git_result
+
+    - name: Update installer permissions
+      ansible.builtin.file:
+        path: "{{ (user_install_dir, item.install_dir, item.installer) | ansible.builtin.path_join }}"
+        mode: "0755"
+      when: git_result.changed
+
+    - name: "Install extensions from github"
+      ansible.builtin.command: "{{ item.install_cmd }}"
+      args:
+        chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"
+      register: install_result
+      changed_when: install_result.rc == 0
+      when: git_result.changed
+
+    - name: Remove downloaded repos
+      ansible.builtin.file:
+        path: "{{ user_install_dir }}"
+        state: absent
+
+- name: Configure extension
+  when: item.dconf_settings is defined
+  loop: "{{  item.dconf_settings | dict2items }}"
+  community.general.dconf:
+    key: "{{ dconf_path }}{{ item.key }}"
+    value: "{{ item.value }}"
+
+...
