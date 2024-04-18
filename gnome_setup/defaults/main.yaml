@@ -244,36 +244,37 @@ additional_repos:
 
 gnome_extensions:
   - name: drive-menu@gnome-shell-extensions.gcampax.github.com
-    package: gnome-shell-extension-drive-menu
-    distro_package:
-      - CentOS
-      - AlmaLinux
-      - Rocky
+    package:
+      CentOS: "gnome-shell-extension-drive-menu"
+      AlmaLinux: "gnome-shell-extension-drive-menu"
+      Rocky: "gnome-shell-extension-drive-menu"
   - name: user-theme@gnome-shell-extensions.gcampax.github.com
-    package: gnome-shell-extension-user-theme
-    distro_package:
-      - CentOS
-      - AlmaLinux
-      - Rocky
+    package:
+      CentOS: "gnome-shell-extension-user-theme"
+      AlmaLinux: "gnome-shell-extension-user-theme"
+      Rocky: "gnome-shell-extension-user-theme"
   - name: appindicatorsupport@rgcjonas.gmail.com
-    package: gnome-shell-extension-appindicator
-    distro_package:
-      - CentOS
-      - AlmaLinux
-      - Rocky
+    package:
+      CentOS: "gnome-shell-extension-appindicator"
+      AlmaLinux: "gnome-shell-extension-appindicator"
+      Rocky: "gnome-shell-extension-appindicator"
   - name: sound-output-device-chooser@kgshank.net
-    package: gnome-shell-extension-sound-output-device-chooser
-    distro_package:
-      - CentOS
-      - AlmaLinux
-      - Rocky
+    package:
+      CentOS: "gnome-shell-extension-sound-output-device-chooser"
+      AlmaLinux: "gnome-shell-extension-sound-output-device-chooser"
+      Rocky: "gnome-shell-extension-sound-output-device-chooser"
   - name: no-overview@fthx
-    package: gnome-shell-extension-no-overview
-    distro_package:
-      - CentOS
-      - AlmaLinux
-      - Rocky
+    package:
+      CentOS: "gnome-shell-extension-no-overview"
+      AlmaLinux: "gnome-shell-extension-no-overview"
+      Rocky: "gnome-shell-extension-no-overview"
   - name: "tiling-assistant@leleat-on-github"
+    package:
+      CentOS: ""
+      AlmaLinux: ""
+      Rocky: ""
+      Debian: ""
+      Ubuntu: ""
     dependencies:
       - zip
       - gettext
@@ -300,9 +301,12 @@ gnome_extensions:
       "tile-bottomleft-quarter": "['<Super>KP_1']"
       "tile-bottomright-quarter": "['<Super>KP_3']"
   - name: "dash-to-panel@jderose9.github.com"
-    package: gnome-shell-extension-dash-to-panel
-    distro_package:
-      - CentOS
+    package:
+      CentOS: "gnome-shell-extension-dash-to-panel"
+      AlmaLinux: ""
+      Rocky: ""
+      Debian: ""
+      Ubuntu: ""
     dependencies:
       - make
       - gettext
@@ -351,7 +355,12 @@ gnome_extensions:
       "tray-size": "16"
       "window-preview-title-position": "'TOP'"
   - name: "system-monitor@paradoxxx.zero.gmail.com"
-    package: gnome-shell-extension-system-monitor-applet
+    package: 
+      CentOS: "gnome-shell-extension-system-monitor-applet"
+      AlmaLinux: "gnome-shell-extension-system-monitor-applet"
+      Rocky: "gnome-shell-extension-system-monitor-applet"
+      Debian: ""
+      Ubuntu: ""
     dependencies:
       - make
       - gir1.2-gtop-2.0

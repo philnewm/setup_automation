@@ -13,15 +13,19 @@
     state: present
   become: true
 
+- name: Show empty values
+  ansible.builtin.debug:
+    msg: "{{ item.package[ansible_distribution] }}"
+
 - name: Install Gnome extensions
-  when: item.package is defined and ansible_distribution in item.distro_package and item.package not in ansible_facts.packages
+  when: item.package[ansible_distribution] != ""
   become: true
   ansible.builtin.package:
-    name: "{{ item.package}}"
+    name: "{{ item.package[ansible_distribution] }}"
     state: present
 
 - name: Get Extensions from Github
-  when: item.package is not defined and item.repo_url is defined
+  when: item.package[ansible_distribution] == ""
   block:
     - name: "Clone extensions from github"
       ansible.builtin.git:

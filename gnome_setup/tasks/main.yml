@@ -114,9 +114,19 @@
   changed_when: false
   failed_when: gnome_extensions_list.rc not in [0, 2]
 
+# - name: Show content
+#   loop: "{{ gnome_extensions }}"
+#   ansible.builtin.debug:
+#     msg: "{{ item.package.keys() | list }}"
+#   loop_control:
+#     label: item.name
+
+# - name: Stop execution
+#   ansible.builtin.fail:
+
 - name: Install extensions
   loop: "{{ gnome_extensions }}"
-  when: item.name not in gnome_extensions_list.stdout_lines
+  when: ansible_distribution in item.package.keys() | list and item.name not in gnome_extensions_list.stdout_lines
   ansible.builtin.include_tasks:
     file: extensions.yml
   loop_control:
