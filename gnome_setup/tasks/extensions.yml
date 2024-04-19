@@ -1,51 +1,53 @@
 ---
 
 - name: Save dconf path
-  when: item.dconf_path is defined 
+  when: extension.dconf_path is defined 
   ansible.builtin.set_fact:
-    dconf_path: "{{ item.dconf_path }}"
+    dconf_path: "{{ extension.dconf_path }}"
 
 - name: Install extension dependencies
-  when: item.dependencies is defined
-  loop: "{{ item.dependencies }}"
+  when: extension.dependencies is defined
+  loop: "{{ extension.dependencies }}"
+  loop_control:
+    loop_var: dependency
   ansible.builtin.package:
-    name: "{{ item }}"
+    name: "{{ dependency }}"
     state: present
   become: true
 
 - name: Show empty values
   ansible.builtin.debug:
-    msg: "{{ item.package[ansible_distribution] }}"
+    msg: "{{ extension.package[ansible_distribution] }}"
 
 - name: Install Gnome extensions
-  when: item.package[ansible_distribution] != ""
+  when: extension.package[ansible_distribution] != ""
   become: true
   ansible.builtin.package:
-    name: "{{ item.package[ansible_distribution] }}"
+    name: "{{ extension.package[ansible_distribution] }}"
     state: present
 
 - name: Get Extensions from Github
-  when: item.package[ansible_distribution] == ""
+  when: extension.package[ansible_distribution] == ""
   block:
     - name: "Clone extensions from github"
       ansible.builtin.git:
-        repo: "{{ item.repo_url }}"
-        dest: "{{ (user_install_dir, item.download_dir) | ansible.builtin.path_join }}"
+        repo: "{{ extension.repo_url }}"
+        dest: "{{ (user_install_dir, extension.download_dir) | ansible.builtin.path_join }}"
         single_branch: true
-        version: "{{ item.branch[gnome_major_version.stdout] }}"
+        version: "{{ extension.branch[gnome_major_version.stdout] }}"
         depth: 1
       register: git_result
 
     - name: Update installer permissions
       ansible.builtin.file:
-        path: "{{ (user_install_dir, item.install_dir, item.installer) | ansible.builtin.path_join }}"
+        path: "{{ (user_install_dir, extension.install_dir, extension.installer) | ansible.builtin.path_join }}"
         mode: "0755"
       when: git_result.changed
 
     - name: "Install extensions from github"
-      ansible.builtin.command: "{{ item.install_cmd }}"
+      ansible.builtin.command: "{{ extension.install_cmd }}"
       args:
-        chdir: "{{ (user_install_dir, item.install_dir) | ansible.builtin.path_join }}"
+        chdir: "{{ (user_install_dir, extension.install_dir) | ansible.builtin.path_join }}"
       register: install_result
       changed_when: install_result.rc == 0
       when: git_result.changed
@@ -56,10 +58,12 @@
         state: absent
 
 - name: Configure extension
-  when: item.dconf_settings is defined
-  loop: "{{  item.dconf_settings | dict2items }}"
+  when: extension.dconf_settings is defined
+  loop: "{{  extension.dconf_settings | dict2items }}"
+  loop_control:
+    loop_var: dconf_setting
   community.general.dconf:
-    key: "{{ dconf_path }}{{ item.key }}"
-    value: "{{ item.value }}"
+    key: "{{ dconf_path }}{{ dconf_setting.key }}"
+    value: "{{ dconf_setting.value }}"
 
 ...

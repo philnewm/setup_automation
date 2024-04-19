@@ -276,6 +276,7 @@ gnome_extensions:
       Debian: ""
       Ubuntu: ""
     dependencies:
+    # TODO change to per distro/family dependency list
       - zip
       - gettext
     repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
@@ -308,6 +309,7 @@ gnome_extensions:
       Debian: ""
       Ubuntu: ""
     dependencies:
+    # TODO change to per distro/family dependency list
       - make
       - gettext
     repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
@@ -362,6 +364,7 @@ gnome_extensions:
       Debian: ""
       Ubuntu: ""
     dependencies:
+    # TODO change to per distro/family dependency list
       - make
       - gir1.2-gtop-2.0
       - gir1.2-nm-1.0
