@@ -7,17 +7,13 @@
 
 - name: Install extension dependencies
   when: extension.dependencies is defined
-  loop: "{{ extension.dependencies }}"
+  loop: "{{ extension.dependencies[ansible_os_family] }}"
   loop_control:
     loop_var: dependency
   ansible.builtin.package:
     name: "{{ dependency }}"
     state: present
   become: true
-
-- name: Show empty values
-  ansible.builtin.debug:
-    msg: "{{ extension.package[ansible_distribution] }}"
 
 - name: Install Gnome extensions
   when: extension.package[ansible_distribution] != ""

@@ -2,7 +2,7 @@
 # defaults file
 
 # INFO some dictionary splits for each ditro may seem redundant
-# INFO this is intentional to enable deaktivation on a per distro basis if neccessary to not break the whole testing setup
+# INFO this is intentional to enable deactivation on a per distro basis if neccessary to not break the whole testing setup
 
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
@@ -276,9 +276,12 @@ gnome_extensions:
       Debian: ""
       Ubuntu: ""
     dependencies:
-    # TODO change to per distro/family dependency list
-      - zip
-      - gettext
+      "RedHat":
+        - zip
+        - gettext
+      "Debian":
+        - zip
+        - gettext
     repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
     branch:
       "40": "v32"
@@ -309,9 +312,12 @@ gnome_extensions:
       Debian: ""
       Ubuntu: ""
     dependencies:
-    # TODO change to per distro/family dependency list
-      - make
-      - gettext
+      "RedHat":
+        - make
+        - gettext
+      "Debian":
+        - make
+        - gettext
     repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
     branch:
       "40": "gnome-40"
@@ -364,12 +370,15 @@ gnome_extensions:
       Debian: ""
       Ubuntu: ""
     dependencies:
-    # TODO change to per distro/family dependency list
-      - make
-      - gir1.2-gtop-2.0
-      - gir1.2-nm-1.0
-      - gir1.2-clutter-1.0
-      - gnome-system-monitor
+      "RedHat":
+        - make
+        - gnome-system-monitor
+      "Debian":
+        - make
+        - gir1.2-gtop-2.0
+        - gir1.2-nm-1.0
+        - gir1.2-clutter-1.0
+        - gnome-system-monitor
     repo_url: "https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet"
     branch:
       "40": "master"
