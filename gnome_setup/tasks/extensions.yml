@@ -5,45 +5,45 @@
   ansible.builtin.set_fact:
     dconf_path: "{{ extension.dconf_path }}"
 
-- name: Install extension dependencies
-  when: extension.dependencies is defined
-  loop: "{{ extension.dependencies[ansible_os_family] }}"
-  loop_control:
-    loop_var: dependency
-  ansible.builtin.package:
-    name: "{{ dependency }}"
-    state: present
-  become: true
-
-- name: Install Gnome extensions
-  when: extension.package[ansible_distribution] != ""
+- name: "Install Gnome extension {{ extension.name }}"
+  when: extension.package[ansible_distribution] != "git"
   become: true
   ansible.builtin.package:
     name: "{{ extension.package[ansible_distribution] }}"
     state: present
 
-- name: Get Extensions from Github
-  when: extension.package[ansible_distribution] == ""
+- name: "Get extension from Github: {{ extension.name }}"
+  when: extension.package[ansible_distribution] == "git"
   block:
-    - name: "Clone extensions from github"
+    - name: "Clone extension from github: {{ git_extension }}"
       ansible.builtin.git:
-        repo: "{{ extension.repo_url }}"
-        dest: "{{ (user_install_dir, extension.download_dir) | ansible.builtin.path_join }}"
+        repo: "{{ git_extension.repo_url }}"
+        dest: "{{ user_install_dir }}/{{ git_extension.download_dir }}"
         single_branch: true
-        version: "{{ extension.branch[gnome_major_version.stdout] }}"
+        version: "{{ git_extension.branch[gnome_major_version.stdout] }}"
         depth: 1
       register: git_result
 
     - name: Update installer permissions
       ansible.builtin.file:
-        path: "{{ (user_install_dir, extension.install_dir, extension.installer) | ansible.builtin.path_join }}"
+        path: "{{ (user_install_dir, git_extension.install_dir, git_extension.installer) | ansible.builtin.path_join }}"
         mode: "0755"
       when: git_result.changed
 
-    - name: "Install extensions from github"
-      ansible.builtin.command: "{{ extension.install_cmd }}"
+    - name: Install git extension dependencies
+      when: git_extension.dependencies is defined
+      loop: "{{ git_extension.dependencies[ansible_os_family] }}"
+      loop_control:
+        loop_var: dependency
+      ansible.builtin.package:
+        name: "{{ dependency }}"
+        state: present
+      become: true
+
+    - name: "Install extension from github"
+      ansible.builtin.command: "{{ git_extension.install_cmd }}"
       args:
-        chdir: "{{ (user_install_dir, extension.install_dir) | ansible.builtin.path_join }}"
+        chdir: "{{ user_install_dir }}/{{git_extension.install_dir}}"
       register: install_result
       changed_when: install_result.rc == 0
       when: git_result.changed
@@ -52,6 +52,8 @@
       ansible.builtin.file:
         path: "{{ user_install_dir }}"
         state: absent
+  vars:
+    git_extension: "{{ git_repos[extension.name] }}"
 
 - name: Configure extension
   when: extension.dconf_settings is defined

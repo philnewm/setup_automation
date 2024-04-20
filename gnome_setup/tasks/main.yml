@@ -1,24 +1,19 @@
 ---
 
-# evry distro needs their specific install method for gnome and GUI ingeneral
-# TODO decide: one role per gnome app or one role for all gnome-apps
-# gnome apps: gnome shell, gnome terminal, gedit, nautilus, system-monitor, disk-usage-analyzer, disks, gnome-calendar
-# check values using dconf module
-
 # TODO check potential speed improvement
 - name: Gather package facts
   ansible.builtin.package_facts:
 
 - name: Install additional repos
-  loop: "{{ additional_repos[ansible_distribution] }}"
-  when: ansible_os_family == "RedHat" and item not in ansible_facts.packages
+  loop: "{{ additional_rhel_repos }}"
+  when: ansible_os_family == redhat
   become: true
   ansible.builtin.dnf:
     name: "{{ item }}"
     disable_gpg_check: true
     update_cache: true
 
-- name: Install dependencies 
+- name: Install global dependencies 
   loop: "{{ dependencies[ansible_os_family] }}"
   when: item not in ansible_facts.packages
   ansible.builtin.package:
@@ -41,13 +36,15 @@
   register: set_locale_result
   changed_when: set_locale_result.rc == 0
 
-- name: Install Gnome desktop
-  when: gnome_package[ansible_distribution] not in ansible_facts.packages
+- name: Install Gnome packages
+  # check fails since it's now a list
+  # when: gnome_packages[ansible_distribution] not in ansible_facts.packages
+  loop: "{{ gnome_packages[ansible_distribution] }}"
   become: true
   ansible.builtin.package:
-    name: "{{ gnome_package[ansible_distribution] }}"
+    name: "{{ item }}"
     state: present
-    update_cache: true
+    # update_cache: true
 
 - name: Remove obsolete Gnome packages
   become: true
@@ -62,10 +59,6 @@
   register: gnome_major_version
   changed_when: false
 
-- name: Show gnome major version
-  ansible.builtin.debug:
-    var: gnome_major_version.stdout
-
 - name: Set default target to graphical
   become: true
   ansible.builtin.file:
@@ -74,32 +67,11 @@
     state: link
   notify: Reboot Host
 
-- name: Install additional Gnome packages for rhel based distros
-  when: ansible_os_family == "RedHat" and item not in ansible_facts.packages
-  loop: "{{ additional_packages[ansible_distribution] }}"
-  become: true
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-
-- name: Install additional Gnome packages for Debian based distros
-  when: ansible_os_family == "Debian" and item not in ansible_facts.packages
-  loop: "{{ additional_packages[ansible_distribution] }}"
-  become: true
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-
-- name: Show settings dictionary
-  ansible.builtin.debug:
-    var: gnome_initial_settings[gnome_major_version.stdout]
-
-- name: Configure gnome-settings
+- name: Configure basic gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
-    #  TODO change to loop: "{{ | dict2items }}" 
-  with_dict: "{{ gnome_initial_settings[gnome_major_version.stdout] }}"
+  loop: "{{ gnome_initial_settings[gnome_major_version.stdout] | dict2items }}"
 
 # TODO move to dictionary and figure how how to make it work with the other values in on task
 - name: Set keyboard layouts
@@ -113,16 +85,6 @@
   register: gnome_extensions_list
   changed_when: false
   failed_when: gnome_extensions_list.rc not in [0, 2]
-
-# - name: Show content
-#   loop: "{{ gnome_extensions }}"
-#   ansible.builtin.debug:
-#     msg: "{{ item.package.keys() | list }}"
-#   loop_control:
-#     label: item.name
-
-# - name: Stop execution
-#   ansible.builtin.fail:
 
 - name: Install extensions
   loop: "{{ gnome_extensions }}"

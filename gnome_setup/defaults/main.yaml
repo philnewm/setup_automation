@@ -6,30 +6,9 @@
 
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
-gnome_package:
-  "CentOS": "gnome-shell"
-  "AlmaLinux": "gnome-shell"
-  "Rocky":  "gnome-shell"
-  "Debian": "gnome-shell"
-  "Ubuntu": "gnome-shell"
-
-obsolete_packages:
-  "Debian":
-    - gnome-tour
-    - gnome-shell-extension-background-logo
-    # TODO research why ubuntu reports change on every run - which breaks idempotency
-    # - gnome-remote-desktop
-    - gnome-software-plugin-snap
-    - gnome-startup-applications
-  "RedHat":
-    - gnome-tour
-    - gnome-shell-extension-background-logo
-    - gnome-remote-desktop
-    - gnome-software-plugin-snap
-    - gnome-startup-applications
-
-additional_packages:
+gnome_packages:
   "CentOS":
+    - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
     - gnome-system-monitor
@@ -44,11 +23,8 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    - lm_sensors
-    - gettext
-    # - NetworkManager-openvpn
-    # - NetworkManager-openvpn-gnome
   "AlmaLinux":
+    - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
     - gnome-system-monitor
@@ -63,11 +39,8 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    - lm_sensors
-    - gettext
-    # - NetworkManager-openvpn
-    # - NetworkManager-openvpn-gnome
   "Rocky":
+    - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
     - gnome-system-monitor
@@ -82,9 +55,8 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    # - NetworkManager-openvpn
-    # - NetworkManager-openvpn-gnome
   "Debian":
+    - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
     - gnome-system-monitor
@@ -99,10 +71,8 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    # - network-manager-openvpn
-    # - network-manager-openvpn-gnome
-    # - network-manager-gnome
   "Ubuntu":
+    - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
     - gnome-system-monitor
@@ -118,44 +88,21 @@ additional_packages:
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
-    # - network-manager-openvpn
-    # - network-manager-openvpn-gnome
-    # - network-manager-gnome
 
-# gnome_extensions:
-#   "CentOS":
-#     - gnome-shell-extension-drive-menu
-#     - gnome-shell-extension-user-theme
-#     - gnome-shell-extension-dash-to-panel
-#     - gnome-shell-extension-appindicator
-#     - gnome-shell-extension-system-monitor-applet
-#     - gnome-shell-extension-sound-output-device-chooser
-#     - gnome-shell-extension-no-overview
-#   "AlmaLinux":
-#     - gnome-shell-extension-drive-menu
-#     - gnome-shell-extension-user-theme
-#     - gnome-shell-extension-appindicator
-#     - gnome-shell-extension-system-monitor-applet
-#     - gnome-shell-extension-sound-output-device-chooser
-#     - gnome-shell-extension-no-overview
-#   "Rocky":
-#     - gnome-shell-extension-drive-menu
-#     - gnome-shell-extension-user-theme
-#     - gnome-shell-extension-appindicator
-#     - gnome-shell-extension-system-monitor-applet
-#     - gnome-shell-extension-sound-output-device-chooser
-#     - gnome-shell-extension-no-overview
-#   "Debian":
-#     # TODO test gnome-shell-extension-system-monitor-applet
-#     - gnome-shell-extensions
-#     - gnome-shell-extension-appindicator
-#     - gnome-shell-extension-gpaste
-#     - gnome-shell-extension-no-overview
-#   "Ubuntu":
-#     # TODO test gnome-shell-extension-system-monitor-applet
-#     - gnome-shell-extensions
-#     - gnome-shell-extension-appindicator
-#     - gnome-shell-extension-gpaste
+obsolete_packages:
+  "Debian":
+    - gnome-tour
+    - gnome-shell-extension-background-logo
+    # TODO research why ubuntu reports change on every run - which breaks idempotency
+    # - gnome-remote-desktop
+    - gnome-software-plugin-snap
+    - gnome-startup-applications
+  "RedHat":
+    - gnome-tour
+    - gnome-shell-extension-background-logo
+    - gnome-remote-desktop
+    - gnome-software-plugin-snap
+    - gnome-startup-applications
 
 gnome_initial_settings:
   "40":
@@ -222,26 +169,12 @@ gnome_initial_settings:
     "/org/gnome/desktop/privacy/remove-old-temp-files": "true"
     "/org/gnome/desktop/privacy/remove-old-trash-files": "true"
 
-
-### gnome extensions ###
-additional_repos:
-  "CentOS":
-    - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
-    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  "AlmaLinux":
-    - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
-    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  "Rocky":
+additional_rhel_repos:
     - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
-# TODO change logic from excluding a distro
-# TODO create "package" key
-# set package key to package name if one is available in the distros repo
-
+# TODO move github data into their own dictionaries
 gnome_extensions:
   - name: drive-menu@gnome-shell-extensions.gcampax.github.com
     package:
@@ -274,27 +207,11 @@ gnome_extensions:
       Rocky: "gnome-shell-extension-no-overview"
   - name: "tiling-assistant@leleat-on-github"
     package:
-      CentOS: ""
-      AlmaLinux: ""
-      Rocky: ""
-      Debian: ""
-      Ubuntu: ""
-    dependencies:
-      "RedHat":
-        - zip
-        - gettext
-      "Debian":
-        - zip
-        - gettext
-    repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
-    branch:
-      "40": "v32"
-      "42": "v36"
-      "43": "v44"  # INFO requires update after login since Tag "45" is missing in soruce repo
-    installer: "build.sh"
-    install_cmd: "./build.sh -i"
-    download_dir: "Tiling-Assistant/"
-    install_dir: "Tiling-Assistant/scripts/"
+      CentOS: "git"
+      AlmaLinux: "git"
+      Rocky: "git"
+      Debian: "git"
+      Ubuntu: "git"
     dconf_path: "/org/gnome/shell/extensions/tiling-assistant/"
     dconf_settings:
       "enable-tiling-popup": "false"
@@ -311,26 +228,10 @@ gnome_extensions:
   - name: "dash-to-panel@jderose9.github.com"
     package:
       CentOS: "gnome-shell-extension-dash-to-panel"
-      AlmaLinux: ""
-      Rocky: ""
-      Debian: ""
-      Ubuntu: ""
-    dependencies:
-      "RedHat":
-        - make
-        - gettext
-      "Debian":
-        - make
-        - gettext
-    repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
-    branch:
-      "40": "gnome-40"
-      "42": "v56"
-      "43": "v56"
-    installer: ""
-    install_cmd: "make install"
-    download_dir: "dash-to-panel/"
-    install_dir: "dash-to-panel/"
+      AlmaLinux: "git"
+      Rocky: "git"
+      Debian: "git"
+      Ubuntu: "git"
     dconf_path: "/org/gnome/shell/extensions/dash-to-panel/"
     dconf_settings:
       "animate-appicon-hover": "false"
@@ -371,8 +272,60 @@ gnome_extensions:
       CentOS: "gnome-shell-extension-system-monitor-applet"
       AlmaLinux: "gnome-shell-extension-system-monitor-applet"
       Rocky: "gnome-shell-extension-system-monitor-applet"
-      Debian: ""
-      Ubuntu: ""
+      Debian: "git"
+      Ubuntu: "git"
+    dconf_path: "/org/gnome/shell/extensions/system-monitor/"
+    dconf_settings:
+      "compact-display": "true"
+      "cpu-graph-width": "50"
+      "cpu-individual-cores": "false"
+      "cpu-style": "'graph'"
+      "disk-display": "false"
+      "freq-display": "false"
+      "gpu-display": "false"
+      "memory-graph-width": "50"
+      "memory-style": "'graph'"
+      "move-clock": "true"
+      "net-graph-width": "50"
+      "thermal-display": "false"
+      "thermal-style": "'graph'"
+
+git_repos:
+  "tiling-assistant@leleat-on-github":    
+      dependencies:
+        "RedHat":
+          - zip
+          - gettext
+        "Debian":
+          - zip
+          - gettext
+      repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
+      branch:
+        "40": "v32"
+        "42": "v36"
+        "43": "v44"  # INFO requires update after login since Tag "45" is missing in soruce repo
+      installer: "build.sh"
+      install_cmd: "./build.sh -i"
+      download_dir: "Tiling-Assistant/"
+      install_dir: "Tiling-Assistant/scripts/"
+  "dash-to-panel@jderose9.github.com":
+    dependencies:
+      "RedHat":
+        - make
+        - gettext
+      "Debian":
+        - make
+        - gettext
+    repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
+    branch:
+      "40": "gnome-40"
+      "42": "v56"
+      "43": "v56"
+    installer: ""
+    install_cmd: "make install"
+    download_dir: "dash-to-panel/"
+    install_dir: "dash-to-panel/"
+  "system-monitor@paradoxxx.zero.gmail.com":
     dependencies:
       "RedHat":
         - make
@@ -398,74 +351,6 @@ obsolete_gnome_extensions:
   - places-menu@gnome-shell-extensions.gcampax.github.com
   - screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
   - window-list@gnome-shell-extensions.gcampax.github.com
-
-extension_config:
-  "dash-to-panel@jderose9.github.com":
-    extension_path: "/org/gnome/shell/extensions/dash-to-panel/"
-    extension_settings:
-      "animate-appicon-hover": "false"
-      "animate-appicon-hover-animation-convexity": "{'RIPPLE': 2.0, 'PLANK': 1.0, 'SIMPLE': 0.0}"
-      "animate-appicon-hover-animation-extent": "{'RIPPLE': 4, 'PLANK': 4, 'SIMPLE': 1}"
-      "animate-appicon-hover-animation-type": "'SIMPLE'"
-      "appicon-margin": "0"
-      "appicon-padding": "6"
-      "dot-position": "'BOTTOM'"
-      "dot-style-focused": "'DOTS'"
-      "dot-style-unfocused": "'DASHES'"
-      "group-apps": "true"
-      "hotkeys-overlay-combo": "'TEMPORARILY'"
-      "intellihide": "true"
-      "intellihide-hide-from-windows": "true"
-      "leftbox-padding": "-1"
-      "leftbox-size": "14"
-      "panel-anchors": "{'0':'MIDDLE'}"
-      "panel-lengths": "{'0':100}"
-      "panel-positions": "{'0':'BOTTOM'}"
-      "panel-sizes": "{'0':48}"
-      "primary-monitor": "0"
-      "show-apps-icon-file": "''"
-      "status-icon-padding": "4"
-      "trans-bg-color": "'#613583'"
-      "trans-gradient-bottom-color": "'#613583'"
-      "trans-gradient-top-color": "'#dc8add'"
-      "trans-panel-opacity": "0.2"
-      "trans-use-custom-bg": "true"
-      "trans-use-custom-gradient": "true"
-      "trans-use-custom-opacity": "true"
-      "trans-use-dynamic-opacity": "true"
-      "tray-padding": "6"
-      "tray-size": "16"
-      "window-preview-title-position": "'TOP'"
-  "system-monitor@paradoxxx.zero.gmail.com":
-    extension_path: "/org/gnome/shell/extensions/system-monitor/"
-    extension_settings:
-      "compact-display": "true"
-      "cpu-graph-width": "50"
-      "cpu-individual-cores": "false"
-      "cpu-style": "'graph'"
-      "disk-display": "false"
-      "freq-display": "false"
-      "gpu-display": "false"
-      "memory-graph-width": "50"
-      "memory-style": "'graph'"
-      "move-clock": "true"
-      "net-graph-width": "50"
-      "thermal-display": "false"
-      "thermal-style": "'graph'"
-  "tiling-assistant@leleat-on-github":
-    extension_path: "/org/gnome/shell/extensions/tiling-assistant/"
-    extension_settings:
-      "enable-tiling-popup": "false"
-      "active-window-hint-color": "'rgb(123,136,255)'"
-      "restore-window": "['<Super>Down']"
-      "tile-bottom-half": "['<Super>KP_2']"
-      "tile-top-half": "['<Super>KP_8']"
-      "tile-left-half": "['<Super>Left', '<Super>KP_4']"
-      "tile-right-half": "['<Super>Right', '<Super>KP_6']"
-      "tile-topleft-quarter": "['<Super>KP_7']"
-      "tile-topright-quarter": "['<Super>KP_9']"
-      "tile-bottomleft-quarter": "['<Super>KP_1']"
-      "tile-bottomright-quarter": "['<Super>KP_3']"
 
 # TODO move to setup roles for specific app
 text_editor_settings:
