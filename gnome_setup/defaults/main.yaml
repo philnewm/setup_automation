@@ -253,11 +253,15 @@ gnome_extensions:
       CentOS: "gnome-shell-extension-user-theme"
       AlmaLinux: "gnome-shell-extension-user-theme"
       Rocky: "gnome-shell-extension-user-theme"
+      Debian: "gnome-shell-extensions"
+      Ubuntu: "gnome-shell-extensions"
   - name: appindicatorsupport@rgcjonas.gmail.com
     package:
       CentOS: "gnome-shell-extension-appindicator"
       AlmaLinux: "gnome-shell-extension-appindicator"
       Rocky: "gnome-shell-extension-appindicator"
+      Debian: "gnome-shell-extension-appindicator"
+      Ubuntu: "gnome-shell-extension-appindicator"
   - name: sound-output-device-chooser@kgshank.net
     package:
       CentOS: "gnome-shell-extension-sound-output-device-chooser"
