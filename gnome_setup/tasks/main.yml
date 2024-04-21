@@ -37,14 +37,13 @@
   changed_when: set_locale_result.rc == 0
 
 - name: Install Gnome packages
-  # check fails since it's now a list
-  # when: gnome_packages[ansible_distribution] not in ansible_facts.packages
+  when: item not in ansible_facts.packages
   loop: "{{ gnome_packages[ansible_distribution] }}"
   become: true
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-    # update_cache: true
+    update_cache: true  # updates cache in case of outdates repo entries
 
 - name: Remove obsolete Gnome packages
   become: true
@@ -120,7 +119,7 @@
 #     value: "{{ item.value }}"
 #   with_dict: "{{ nautilus_settings }}"
 
-# - name: Configure text editor
+# - name: Configure gedit
 #   community.general.dconf:
 #     key: "{{ item.key }}"
 #     value: "{{ item.value }}"

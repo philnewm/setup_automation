@@ -15,7 +15,7 @@
 - name: "Get extension from Github: {{ extension.name }}"
   when: extension.package[ansible_distribution] == "git"
   block:
-    - name: "Clone extension from github: {{ git_extension }}"
+    - name: "Clone extension from github: {{ extension.name }}"
       ansible.builtin.git:
         repo: "{{ git_extension.repo_url }}"
         dest: "{{ user_install_dir }}/{{ git_extension.download_dir }}"
