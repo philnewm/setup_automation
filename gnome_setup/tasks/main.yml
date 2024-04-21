@@ -23,7 +23,7 @@
 
 - name: Get current system locale
   ansible.builtin.shell:
-    cmd: "localectl status | awk '/LANG/{print $3}'"
+    cmd: "localectl status | awk '/LANG/{print $3}' | cut -d'=' -f2"
   register: current_locale
   changed_when: false
   check_mode: no
