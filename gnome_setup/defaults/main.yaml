@@ -118,7 +118,8 @@ gdm_config_file:
 
 gnome_base_settings:
   "40":
-    "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
+    # obsolete cause user theme gets added
+    # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
@@ -137,8 +138,9 @@ gnome_base_settings:
     "/org/gnome/software/download-updates": "false"
     "/org/gnome/software/first-run": "false"
   "42":
-    "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
-    "/org/gnome/shell/extensions/user-theme/name": "'Yaru-magenta-dark'"
+    # obsolete cause user theme gets added
+    # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
+    # "/org/gnome/shell/extensions/user-theme/name": "'Yaru-magenta-dark'"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
@@ -157,8 +159,9 @@ gnome_base_settings:
     "/org/gnome/software/download-updates": "false"
     "/org/gnome/software/first-run": "false"
   "43":
-    "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
-    "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
+    # obsolete cause user theme gets added
+    # "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
+    # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
@@ -297,24 +300,25 @@ gnome_extensions:
       "thermal-display": "false"
       "thermal-style": "'graph'"
 
+# TODO rename to git_ext - for consistency
 git_repos:
   "tiling-assistant@leleat-on-github":    
-      dependencies:
-        "RedHat":
-          - zip
-          - gettext
-        "Debian":
-          - zip
-          - gettext
-      repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
-      branch:
-        "40": "v32"
-        "42": "v36"
-        "43": "v44"  # INFO requires update after login since Tag "45" is missing in soruce repo
-      installer: "build.sh"
-      install_cmd: "./build.sh -i"
-      download_dir: "Tiling-Assistant/"
-      install_dir: "Tiling-Assistant/scripts/"
+    dependencies:
+      "RedHat":
+        - zip
+        - gettext
+      "Debian":
+        - zip
+        - gettext
+    repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
+    branch:
+      "40": "v32"
+      "42": "v36"
+      "43": "v44"  # INFO requires update after login since Tag "45" is missing in soruce repo
+    installer: "build.sh"
+    install_cmd: "./build.sh -i"
+    download_dir: "Tiling-Assistant/"
+    install_dir: "Tiling-Assistant/scripts/"
   "dash-to-panel@jderose9.github.com":
     dependencies:
       "RedHat":
@@ -358,6 +362,78 @@ obsolete_gnome_extensions:
   - places-menu@gnome-shell-extensions.gcampax.github.com
   - screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
   - window-list@gnome-shell-extensions.gcampax.github.com
+
+gnome_themes:
+  - name: "Lavanda-Dark"
+    package:
+      CentOS: "git"
+      AlmaLinux: "git"
+      Rocky: "git"
+      Debian: "git"
+      Ubuntu: "git"
+    dconf_path: "/org/gnome/"
+    dconf_settings:
+      "shell/extensions/user-theme/name": "'Lavanda-Dark'"
+      "desktop/interface/gtk-theme": "'Lavanda-Dark'"
+  - name: "Tela-circle-purple-dark"
+    package:
+      CentOS: "git"
+      AlmaLinux: "git"
+      Rocky: "git"
+      Debian: "git"
+      Ubuntu: "git"
+    dconf_path: "/org/gnome/desktop/interface/"
+    dconf_settings:
+      "icon-theme": "'Tela-circle-purple-dark'"
+  - name: "Qogir-cursors"
+    package:
+      CentOS: "git"
+      AlmaLinux: "git"
+      Rocky: "git"
+      Debian: "git"
+      Ubuntu: "git"
+    dconf_path: "/org/gnome/desktop/interface/"
+    dconf_settings:
+      "cursor-theme": "'Qogir-ubuntu-cursors'"
+
+git_themes:
+ "Lavanda-Dark":    
+    dependencies:
+      "RedHat":
+        - gtk-murrine-engine
+        - sassc
+      "Debian":
+        - gtk2-engines-murrine
+        - sassc
+    repo_url: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
+    branch:
+      "40": "main"
+      "42": "main"
+      "43": "main"
+    installer: "install.sh"
+    install_cmd: "./install.sh --icon {{ ansible_distribution | lower }}"
+    download_dir: "Lavanda-gtk-theme/"
+    install_dir: "Lavanda-gtk-theme/"
+ "Tela-circle-purple-dark":    
+    repo_url: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
+    branch:
+      "40": "master"
+      "42": "master"
+      "43": "master"
+    installer: "install.sh"
+    install_cmd: "./install.sh -c purple"
+    download_dir: "Tela-circle-icon-theme/"
+    install_dir: "Tela-circle-icon-theme/"
+ "Qogir-cursors":    
+    repo_url: "https://github.com/vinceliuice/Qogir-icon-theme.git"
+    branch:
+      "40": "master"
+      "42": "master"
+      "43": "master"
+    installer: "install.sh"
+    install_cmd: "./install.sh"
+    download_dir: "Qogir-icon-theme/"
+    install_dir: "Qogir-icon-theme/src/cursors/"
 
 # TODO move to setup roles for specific app
 text_editor_settings:

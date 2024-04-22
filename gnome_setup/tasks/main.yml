@@ -97,6 +97,22 @@
     key: "/org/gnome/shell/enabled-extensions"
     value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
 
+- name: Find installed GNOME extensions
+  ansible.builtin.shell:
+    cmd: "ls ~/.themes/ && ls .local/share/icons/"
+  register: gnome_themes_list
+  changed_when: false
+  failed_when: gnome_themes_list.rc not in [0, 2]
+
+- name: Install themes
+  loop: "{{ gnome_themes }}"
+  when: theme.name not in gnome_themes_list.stdout_lines
+  ansible.builtin.include_tasks:
+    file: themes.yml
+  loop_control:
+    label: "{{ theme.name }}"
+    loop_var: theme
+
 ...
 
 # INFO partly broken visible columns show no effect

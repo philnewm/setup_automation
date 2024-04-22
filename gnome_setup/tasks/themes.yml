@@ -1,0 +1,60 @@
+---
+
+- name: Save dconf path
+  when: theme.dconf_path is defined 
+  ansible.builtin.set_fact:
+    dconf_path: "{{ theme.dconf_path }}"
+
+- name: "Get theme from Github: {{ theme.name }}"
+  when: theme.package[ansible_distribution] == "git"
+  block:
+    - name: "Clone theme from github: {{ theme.name }}"
+      ansible.builtin.git:
+        repo: "{{ git_theme.repo_url }}"
+        dest: "{{ user_install_dir }}/{{ git_theme.download_dir }}"
+        single_branch: true
+        version: "{{ git_theme.branch[gnome_major_version.stdout] }}"
+        depth: 1
+      register: git_result
+
+    - name: Update installer permissions
+      ansible.builtin.file:
+        path: "{{ (user_install_dir, git_theme.install_dir, git_theme.installer) | ansible.builtin.path_join }}"
+        mode: "0755"
+      when: git_result.changed
+
+    - name: Install git extension dependencies
+      when: git_theme.dependencies is defined
+      loop: "{{ git_theme.dependencies[ansible_os_family] }}"
+      loop_control:
+        loop_var: dependency
+      ansible.builtin.package:
+        name: "{{ dependency }}"
+        state: present
+      become: true
+
+    - name: "Install extension from github"
+      ansible.builtin.command: "{{ git_theme.install_cmd }}"
+      args:
+        chdir: "{{ user_install_dir }}/{{git_theme.install_dir}}"
+      register: install_result
+      changed_when: install_result.rc == 0
+      when: git_result.changed
+
+    - name: Remove downloaded repos
+      ansible.builtin.file:
+        path: "{{ user_install_dir }}"
+        state: absent
+  vars:
+    git_theme: "{{ git_themes[theme.name] }}"
+
+- name: Configure extension
+  when: theme.dconf_settings is defined
+  loop: "{{  theme.dconf_settings | dict2items }}"
+  loop_control:
+    loop_var: dconf_setting
+  community.general.dconf:
+    key: "{{ dconf_path }}{{ dconf_setting.key }}"
+    value: "{{ dconf_setting.value }}"
+
+...
