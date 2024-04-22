@@ -4,38 +4,11 @@
 - name: Gather package facts
   ansible.builtin.package_facts:
 
-- name: Install additional repos
-  loop: "{{ additional_rhel_repos }}"
-  when: ansible_os_family == redhat
-  become: true
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    disable_gpg_check: true
-    update_cache: true
+- name: Include requirements
+  ansible.builtin.include_tasks:
+    file: requirements.yml
 
-- name: Install global dependencies 
-  loop: "{{ dependencies[ansible_os_family] }}"
-  when: item not in ansible_facts.packages
-  ansible.builtin.package:
-    name: "{{ item }}"
-    state: present
-  become: true
-
-- name: Get current system locale
-  ansible.builtin.shell:
-    cmd: "localectl status | awk '/LANG/{print $3}' | cut -d'=' -f2"
-  register: current_locale
-  changed_when: false
-  check_mode: no
-
-- name: "Set system locale to {{ system_local_lang }}"
-  when: ansible_distribution == "AlmaLinux" and current_locale.stdout != system_local_lang
-  become: true
-  ansible.builtin.command:
-    cmd: "localectl set-locale {{ system_local_lang }}"
-  register: set_locale_result
-  changed_when: set_locale_result.rc == 0
-
+##### Package installation #####
 - name: Install Gnome packages
   when: item not in ansible_facts.packages
   loop: "{{ gnome_packages[ansible_distribution] }}"
@@ -43,7 +16,7 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-    update_cache: true  # updates cache in case of outdates repo entries
+    update_cache: true  # updates cache in case of outdated repo entries
 
 - name: Remove obsolete Gnome packages
   become: true
@@ -66,6 +39,9 @@
     state: link
   notify: Reboot Host
 
+# TODO default dispalyserver to X11
+
+##### Package configuration #####
 - name: Configure basic gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"
@@ -78,6 +54,7 @@
     key: "/org/gnome/desktop/input-sources/sources"
     value: "[('xkb', 'de'), ('xkb', 'us')]"
 
+##### optional #####
 - name: Find installed GNOME extensions
   ansible.builtin.shell:
     cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"

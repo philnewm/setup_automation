@@ -1,0 +1,36 @@
+---
+
+# pre-requirements file
+
+- name: Install additional repos
+  loop: "{{ additional_rhel_repos }}"
+  when: ansible_os_family == redhat
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    update_cache: true
+
+- name: Install global dependencies 
+  loop: "{{ dependencies[ansible_os_family] }}"
+  when: item not in ansible_facts.packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  become: true
+
+- name: Get current system locale
+  ansible.builtin.shell:
+    cmd: "localectl status | awk '/LANG/{print $3}' | cut -d'=' -f2"
+  register: current_locale
+  changed_when: false
+  check_mode: no
+
+# alma9 box missing default locals -> extension system-monitor fails to activate if locals are missing
+- name: "Set system locale to {{ system_local_lang }}"
+  when: ansible_distribution == "AlmaLinux" and current_locale.stdout != system_local_lang
+  become: true
+  ansible.builtin.command:
+    cmd: "localectl set-locale {{ system_local_lang }}"
+  register: set_locale_result
+  changed_when: set_locale_result.rc == 0
