@@ -174,7 +174,7 @@ additional_rhel_repos:
     - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
-# TODO move github data into their own dictionaries
+# TODO add gpaste or similar clipboard manager
 gnome_extensions:
   - name: drive-menu@gnome-shell-extensions.gcampax.github.com
     package:
