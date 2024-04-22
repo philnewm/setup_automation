@@ -2,12 +2,21 @@
 
 # pre-requirements file
 
-- name: Install additional repos
-  loop: "{{ additional_rhel_repos }}"
+- name: Enable CRB (CentOS Extras) repository
   when: ansible_os_family == redhat
   become: true
+  community.general.dnf_config_manager:
+    name: crb
+    state: enabled
+
+- name: Install additional repos
+  loop: "{{ additional_rhel_repos }}"
+  loop_control:
+    loop_var: repo
+  when: ansible_os_family == redhat and repo not in ansible_facts.packages
+  become: true
   ansible.builtin.dnf:
-    name: "{{ item }}"
+    name: "{{ repo }}"
     disable_gpg_check: true
     update_cache: true
 

@@ -6,6 +6,11 @@
 
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
+additional_rhel_repos:
+    - epel-release
+    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+
 gnome_packages:
   "CentOS":
     - gnome-shell
@@ -104,7 +109,14 @@ obsolete_packages:
     - gnome-software-plugin-snap
     - gnome-startup-applications
 
-gnome_initial_settings:
+gdm_config_file:
+  "CentOS": "/etc/gdm/custom.conf"
+  "AlmaLinux": "/etc/gdm/custom.conf"
+  "Rocky": "/etc/gdm/custom.conf"
+  "Ubuntu": "/etc/gdm3/custom.conf"
+  "Debian": "/etc/gdm3/daemon.conf"
+
+gnome_base_settings:
   "40":
     "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
@@ -168,11 +180,6 @@ gnome_initial_settings:
     "/org/gnome/desktop/privacy/recent-files-max-age": "30"
     "/org/gnome/desktop/privacy/remove-old-temp-files": "true"
     "/org/gnome/desktop/privacy/remove-old-trash-files": "true"
-
-additional_rhel_repos:
-    - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
-    - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-    - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 # TODO add gpaste, copyQ or similar clipboard manager
 gnome_extensions:

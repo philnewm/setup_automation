@@ -120,7 +120,6 @@ provisioner:
         ansible_timeout: 180
         redhat: "RedHat"
         debian: "Debian"
-        github: "Github"
         debian_based_distros: ["Debian", "Ubuntu"]
         rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
         system_local_lang: "en_US.UTF-8"

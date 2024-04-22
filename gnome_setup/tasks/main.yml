@@ -39,14 +39,22 @@
     state: link
   notify: Reboot Host
 
-# TODO default dispalyserver to X11
+- name: Update GDM configuration file
+  ansible.builtin.lineinfile:
+    path: "{{ gdm_config_file[ansible_distribution] }}"
+    backrefs: true
+    regexp: '^#WaylandEnable=false$'
+    line: 'WaylandEnable=false\nDefaultSession=gnome-xorg.desktop'
+    state: present
+  become: true
+  notify: Reboot Host
 
 ##### Package configuration #####
 - name: Configure basic gnome-settings
   community.general.dconf:
     key: "{{ item.key }}"
     value: "{{ item.value }}"
-  loop: "{{ gnome_initial_settings[gnome_major_version.stdout] | dict2items }}"
+  loop: "{{ gnome_base_settings[gnome_major_version.stdout] | dict2items }}"
 
 # TODO move to dictionary and figure how how to make it work with the other values in on task
 - name: Set keyboard layouts
@@ -88,6 +96,8 @@
   ansible.builtin.dconf:
     key: "/org/gnome/shell/enabled-extensions"
     value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
+
+...
 
 # INFO partly broken visible columns show no effect
 # - name: Configure nautilus
