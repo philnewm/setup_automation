@@ -1,6 +1,6 @@
 ---
 
-# pre-requirements file
+# requirements file
 
 - name: Enable CRB (CentOS Extras) repository
   when: ansible_os_family == redhat
@@ -37,7 +37,7 @@
 
 # alma9 box missing default locals -> extension system-monitor fails to activate if locals are missing
 - name: "Set system locale to {{ system_local_lang }}"
-  when: ansible_distribution == "AlmaLinux" and current_locale.stdout != system_local_lang
+  when: current_locale.stdout != system_local_lang
   become: true
   ansible.builtin.command:
     cmd: "localectl set-locale {{ system_local_lang }}"
