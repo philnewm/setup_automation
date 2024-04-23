@@ -99,7 +99,7 @@
 
 - name: Find installed GNOME extensions
   ansible.builtin.shell:
-    cmd: "ls ~/.themes/ && ls .local/share/icons/"
+    cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"
   register: gnome_themes_list
   changed_when: false
   failed_when: gnome_themes_list.rc not in [0, 2]

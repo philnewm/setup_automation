@@ -160,7 +160,7 @@ gnome_base_settings:
     "/org/gnome/software/first-run": "false"
   "43":
     # obsolete cause user theme gets added
-    # "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
+    "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
     # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
     # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
@@ -395,9 +395,23 @@ gnome_themes:
     dconf_path: "/org/gnome/desktop/interface/"
     dconf_settings:
       "cursor-theme": "'Qogir-ubuntu-cursors'"
+  # TODO filter for wanetd wallpapers to not download complete library
+  - name: "Dynamic_Wallpapers"
+    package:
+      CentOS: "git"
+      AlmaLinux: "git"
+      Rocky: "git"
+      Debian: "git"
+      Ubuntu: "git"
+    dconf_path: "/org/gnome/desktop/background/"
+    dconf_settings:
+      "picture-options": "'zoom'"
+      "picture-uri": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+      "picture-uri-dark": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+
 
 git_themes:
- "Lavanda-Dark":    
+  "Lavanda-Dark":    
     dependencies:
       "RedHat":
         - gtk-murrine-engine
@@ -414,7 +428,7 @@ git_themes:
     install_cmd: "./install.sh --icon {{ ansible_distribution | lower }}"
     download_dir: "Lavanda-gtk-theme/"
     install_dir: "Lavanda-gtk-theme/"
- "Tela-circle-purple-dark":    
+  "Tela-circle-purple-dark":    
     repo_url: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
     branch:
       "40": "master"
@@ -424,7 +438,7 @@ git_themes:
     install_cmd: "./install.sh -c purple"
     download_dir: "Tela-circle-icon-theme/"
     install_dir: "Tela-circle-icon-theme/"
- "Qogir-cursors":    
+  "Qogir-cursors":    
     repo_url: "https://github.com/vinceliuice/Qogir-icon-theme.git"
     branch:
       "40": "master"
@@ -434,6 +448,17 @@ git_themes:
     install_cmd: "./install.sh"
     download_dir: "Qogir-icon-theme/"
     install_dir: "Qogir-icon-theme/src/cursors/"
+  "Dynamic_Wallpapers":
+    repo_url: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
+    branch:
+      "40": "main"
+      "42": "main"
+      "43": "main"
+    installer: "install.sh"
+    install_cmd: "./install.sh"
+    download_dir: "Linux_dynamic_Wallpapers/"
+    install_dir: "Linux_dynamic_Wallpapers/"
+
 
 # TODO move to setup roles for specific app
 text_editor_settings:
