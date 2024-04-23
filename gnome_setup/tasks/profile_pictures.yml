@@ -2,43 +2,24 @@
 
 # task file for profile pictures
 
-- name: Get list of users with valid shell
-  ansible.builtin.getent:
-    database: passwd
-  register: passwd_entries
-
-# TODO extend to support a list of shells
-- name: Extract usernames with valid shell
-  ansible.builtin.set_fact:
-    users_sh: "{{ getent_passwd | dict2items | selectattr('value', 'contains', '/bin/bash') | map(attribute='key') }}"
-
-# TODO get rid per loop task and combine them
 - name: Copy profile pictures
   become: true
-  loop: "{{ users_sh }}"
-  loop_control:
-    loop_var: user
-  when: profile_pictures[user] is defined
   ansible.builtin.copy:
-    src: "{{ (picture_src_path, user) | ansible.builtin.path_join }}"
-    dest: "{{ (picture_dest_path, user) | ansible.builtin.path_join }}"
+    src: "{{ (picture_src_path, shell_user) | ansible.builtin.path_join }}"
+    dest: "{{ (picture_dest_path, shell_user) | ansible.builtin.path_join }}"
     owner: root
     group: root
     mode: '0344'
 
-- name: Create the user configuration file
+- name: Create the shell_user configuration file
   become: true
-  loop: "{{ users_sh }}"
-  loop_control:
-    loop_var: user
-  when: profile_pictures[user] is defined
   ansible.builtin.copy:
     content: |
       [User]
       Session=
-      Icon={{ (picture_dest_path, user) | ansible.builtin.path_join }}
+      Icon={{ (picture_dest_path, shell_user) | ansible.builtin.path_join }}
       SystemAccount=false
-    dest: /var/lib/AccountsService/users/{{ user }}
+    dest: /var/lib/AccountsService/users/{{ shell_user }}
     owner: root
     group: root
     mode: 0644

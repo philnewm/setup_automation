@@ -465,10 +465,10 @@ picture_dest_path: /var/lib/AccountsService/icons
 profile_pictures:
   "vagrant": "vagrant"
 
-# valid_shells:
-#   - "/bin/bash"
-#   - "/bin/sh"
-#   - "/bin/zsh"
+valid_shells:
+  - "/bin/bash"
+  - "/bin/sh"
+  - "/bin/zsh"
 
 # TODO move to setup roles for specific app
 text_editor_settings:

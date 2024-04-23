@@ -4,10 +4,6 @@
 - name: Gather package facts
   ansible.builtin.package_facts:
 
-- name: Include profile pictures
-  ansible.builtin.include_tasks:
-    file: profile_pictures.yml
-
 - name: Include requirements
   ansible.builtin.include_tasks:
     file: requirements.yml
@@ -116,6 +112,27 @@
   loop_control:
     label: "{{ theme.name }}"
     loop_var: theme
+
+- name: Get users list
+  ansible.builtin.getent:
+    database: passwd
+
+# INFO get user names enabled for login
+- name: Extract usernames with valid shell
+  loop: "{{ getent_passwd | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: item.value[5] in valid_shells
+  ansible.builtin.set_fact:
+    shell_users: "{{ shell_users | default([]) + [item.key] }}"
+
+- name: Configure profile pictures
+  loop: "{{ shell_users }}"
+  loop_control:
+    loop_var: shell_user
+  when: profile_pictures[shell_users] is defined
+  ansible.builtin.include_tasks:
+    file: profile_pictures.yml
 
 ...
 
