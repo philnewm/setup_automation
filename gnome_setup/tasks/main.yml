@@ -130,7 +130,7 @@
   loop: "{{ shell_users }}"
   loop_control:
     loop_var: shell_user
-  when: profile_pictures[shell_users] is defined
+  when: profile_pictures[shell_user] is defined
   ansible.builtin.include_tasks:
     file: profile_pictures.yml
 
