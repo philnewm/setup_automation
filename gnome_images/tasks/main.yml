@@ -25,9 +25,6 @@
     owner: root
     group: root
     mode: '0344'
-  loop:
-    - "{{ local_user }}"
-    - "{{ ansible_user }}"
   become: true
 
 - name: Create the user configuration file

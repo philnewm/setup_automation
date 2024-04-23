@@ -459,6 +459,16 @@ git_themes:
     download_dir: "Linux_dynamic_Wallpapers/"
     install_dir: "Linux_dynamic_Wallpapers/"
 
+picture_src_path: ~/Documents/
+picture_dest_path: /var/lib/AccountsService/icons
+
+profile_pictures:
+  "vagrant": "vagrant"
+
+# valid_shells:
+#   - "/bin/bash"
+#   - "/bin/sh"
+#   - "/bin/zsh"
 
 # TODO move to setup roles for specific app
 text_editor_settings:
