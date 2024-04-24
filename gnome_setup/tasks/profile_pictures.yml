@@ -11,19 +11,6 @@
     group: root
     mode: '0344'
 
-- name: get profile file stats
-  become: true
-  ansible.builtin.stat:
-    path: /var/lib/AccountsService/users/{{ shell_user }}
-  register: file_stats
-  failed_when: false
-
-- name: Show stats
-  ansible.builtin.debug:
-    var: file_stats
-  failed_when: false
-
-# TODO fix Idempotency check
 - name: Create the shell_user configuration file
   become: true
   ansible.builtin.copy:
