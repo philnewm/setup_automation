@@ -132,6 +132,7 @@ provisioner:
         install_name: install 
   config_options:
     defaults:
+      diff: True
       gathering: smart
       fact_caching_timeout: 3600
       fact_caching: jsonfile
