@@ -3,11 +3,65 @@
 - name: Verify
   hosts: client
 
-  tasks:
-    # TODO check gnome is installed
-    # TODO check basic OS UI settings
-    # TODO check gnome settings usnign dconf module
-    # TODO research additional gnome specific checks
+  vars:
+    requirements:
+      "RedHat":
+        - python3-psutil
+        - git
+        - glibc-langpack-en
+      "Debian":
+        - python3-psutil
+        - git
 
-    # - name: Roll back changes
-    # TODO impleemnt absent version of this role
+  tasks:
+    - name: Include role defaults
+      ansible.builtin.include_vars:
+        file: ../../../gnome_setup/defaults/main.yml
+
+    # gather package facts:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+
+    # check enabled repos
+    - name: Chek repos on rhel based systems
+      when: ansible_os_family == "RedHat"
+      block:
+        - name: Get enabled repos
+          ansible.builtin.command:
+            cmd: "dnf repolist --enabled | awk '/repolist:/ {print $1}'"
+          register: enabled_repos
+          changed_when: false
+
+        - name: Test enabled repos
+          ansible.builtin.assert:
+            that:
+              - item in enabled_repos
+              - item in ansible_facts.packages
+            fail_msg: "Repo {{ item }} is missing"
+            success_msg: "All excpected repos are enabled"
+          loop:
+            - epel-release
+            - rpmfusion-free
+            - rpmfusion-nonfree
+
+    # check installed requirements
+    - name: Test installed requirements
+      ansible.builtin.assert:
+        that:
+          - item in ansible_facts.packages
+        fail_msg: "Required package {{ item }} is missing"
+        success_msg: "All excpected requirements are installed"
+      loop:
+        - requirements[ansible_os_family]
+
+    # check installed packages
+    # check removed packages
+    # assert graphical target
+    # assert X11
+    # asser gnome base settings
+    # assert installed extensions´
+    # assert enabled extensions
+    # assert disabled extensions
+    # assert gnome themes
+    # assert configured profile picture
+    # TODO implement absent version of this role

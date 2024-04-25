@@ -1,6 +1,8 @@
 ---
 # defaults file
 
+# TODO split into miltiple files
+
 # INFO some dictionary splits for each ditro may seem redundant
 # INFO this is intentional to enable deactivation on a per distro basis if neccessary to not break the whole testing setup
 
