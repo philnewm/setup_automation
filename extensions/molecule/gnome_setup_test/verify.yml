@@ -3,46 +3,36 @@
 - name: Verify
   hosts: client
 
-  vars:
-    requirements:
-      "RedHat":
-        - python3-psutil
-        - git
-        - glibc-langpack-en
-      "Debian":
-        - python3-psutil
-        - git
+  vars_files:
+    - ../../../gnome_setup/defaults/main.yml
+    - ../../../gnome_setup/vars/main.yml
 
   tasks:
-    - name: Include role defaults
-      ansible.builtin.include_vars:
-        file: ../../../gnome_setup/defaults/main.yml
-
     # gather package facts:
     - name: Gather package facts
       ansible.builtin.package_facts:
 
     # check enabled repos
-    - name: Chek repos on rhel based systems
+    - name: Get repos on rhel based systems
       when: ansible_os_family == "RedHat"
       block:
         - name: Get enabled repos
-          ansible.builtin.command:
-            cmd: "dnf repolist --enabled | awk '/repolist:/ {print $1}'"
+          ansible.builtin.shell:
+            cmd: "dnf repolist --enabled | awk '{print $1}'"
           register: enabled_repos
           changed_when: false
 
         - name: Test enabled repos
           ansible.builtin.assert:
             that:
-              - item in enabled_repos
-              - item in ansible_facts.packages
+              - item in enabled_repos.stdout_lines
             fail_msg: "Repo {{ item }} is missing"
-            success_msg: "All excpected repos are enabled"
+            quiet: true
           loop:
-            - epel-release
-            - rpmfusion-free
-            - rpmfusion-nonfree
+            - crb
+            - epel
+            - rpmfusion-free-updates
+            - rpmfusion-nonfree-updates
 
     # check installed requirements
     - name: Test installed requirements
@@ -50,12 +40,27 @@
         that:
           - item in ansible_facts.packages
         fail_msg: "Required package {{ item }} is missing"
-        success_msg: "All excpected requirements are installed"
-      loop:
-        - requirements[ansible_os_family]
+        quiet: true
+      loop: "{{ dependencies[ansible_os_family] }}"
 
     # check installed packages
+    - name: Test installed gnome packages
+      ansible.builtin.assert:
+        that:
+          - item in ansible_facts.packages
+        fail_msg: "Gnome package {{ item }} is missing"
+        quiet: true
+      loop: "{{ gnome_packages[ansible_distribution] }}"
+
     # check removed packages
+    - name: Test removed gnome packages
+      ansible.builtin.assert:
+        that:
+          - item not in ansible_facts.packages
+        fail_msg: "Obsolete Gnome package {{ item }} is still rpesent"
+        quiet: true
+      loop: "{{ obsolete_packages[ansible_os_family] }}"
+
     # assert graphical target
     # assert X11
     # asser gnome base settings
