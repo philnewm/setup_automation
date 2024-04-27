@@ -62,7 +62,35 @@
       loop: "{{ obsolete_packages[ansible_os_family] }}"
 
     # assert graphical target
+    - name: Get current target
+      ansible.builtin.stat:
+        path: /etc/systemd/system/default.target
+      register: default_target
+
+    - name: Test graphical target
+      ansible.builtin.assert:
+        that:
+          - default_target.stat.islnk == true
+          - default_target.stat.lnk_target == "/usr/lib/systemd/system/graphical.target"
+        fail_msg: "Graphical target not set as default"
+        quiet: true
+
     # assert X11
+    - name: "Get gdm config"
+      ansible.builtin.command:
+        cmd: "cat {{ gdm_config_file[ansible_distribution] }}"
+      register: gdm_config
+      changed_when: false
+
+    - name: Assert X11 is set
+      ansible.builtin.assert:
+        that:
+          - "'WaylandEnable=false' in gdm_config.stdout_lines"
+          - "'DefaultSession=gnome-xorg.desktop' in gdm_config.stdout_lines"
+        fail_msg: "One or both of the expected lines are not present in {{ gdm_config_file[ansible_distribution] }}"
+        success_msg: "Both expected lines are present in {{ gdm_config_file[ansible_distribution] }}"
+        quiet: true
+
     # asser gnome base settings
     # assert installed extensions´
     # assert enabled extensions

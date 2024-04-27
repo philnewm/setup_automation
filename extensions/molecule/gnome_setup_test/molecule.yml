@@ -100,6 +100,10 @@ platforms:
       - client
 provisioner:
   name: ansible
+  env:
+    # ANSIBLE_VERBOSITY: 3
+    ANSIBLE_DIFF_ALWAYS: true
+
   inventory:
     host_vars:
       CentosStream9:

@@ -22,6 +22,6 @@
     dest: /var/lib/AccountsService/users/{{ shell_user }}
     owner: root
     group: root
-    mode: 0600
+    mode: 0644  # 0600 by default and changes to 0644 after first login
 
 ...

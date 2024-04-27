@@ -72,7 +72,7 @@ gnome_packages:
     - gnome-user-docs
     - gnome-photos
     - gnome-font-viewer
-    - gnome-extensions-app
+    - gnome-shell-extension-prefs
     - gnome-control-center
     - gnome-characters
     - gnome-devel-docs
@@ -88,9 +88,9 @@ gnome_packages:
     - gnome-user-docs
     - gnome-photos
     - gnome-font-viewer
-    - gnome-extensions-app
+    - gnome-shell-extension-prefs
     # TODO research why ubuntu reports change on every run - which breaks idempotency
-    # - gnome-control-center
+    - gnome-control-center
     - gnome-characters
     - gnome-devel-docs
     - gnome-disk-utility
