@@ -444,10 +444,10 @@ gnome_themes:
       Rocky: "git"
       Debian: "git"
       Ubuntu: "git"
-    dconf_path: "/org/gnome/"
+    dconf_path: none
     dconf_settings:
-      "shell/extensions/user-theme/name": "'Lavanda-Dark'"
-      "desktop/interface/gtk-theme": "'Lavanda-Dark'"
+      "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
+      "/org/gnome/desktop/interface/gtk-theme": "'Lavanda-Dark'"
   - name: "Tela-circle-purple-dark"
     package:
       CentOS: "git"
@@ -455,9 +455,9 @@ gnome_themes:
       Rocky: "git"
       Debian: "git"
       Ubuntu: "git"
-    dconf_path: "/org/gnome/desktop/interface/"
+    dconf_path: none
     dconf_settings:
-      "icon-theme": "'Tela-circle-purple-dark'"
+      "/org/gnome/desktop/interface/icon-theme": "'Tela-circle-purple-dark'"
   - name: "Qogir-cursors"
     package:
       CentOS: "git"
@@ -465,10 +465,10 @@ gnome_themes:
       Rocky: "git"
       Debian: "git"
       Ubuntu: "git"
-    dconf_path: "/org/gnome/desktop/interface/"
+    dconf_path: none
     dconf_settings:
-      "cursor-theme": "'Qogir-ubuntu-cursors'"
-  # TODO filter for wanetd wallpapers to not download complete library
+      "/org/gnome/desktop/interface/cursor-theme": "'Qogir-ubuntu-cursors'"
+  # TODO filter for wanted wallpapers to not download complete library
   - name: "Dynamic_Wallpapers"
     package:
       CentOS: "git"
@@ -476,11 +476,11 @@ gnome_themes:
       Rocky: "git"
       Debian: "git"
       Ubuntu: "git"
-    dconf_path: "/org/gnome/desktop/background/"
+    dconf_path: none
     dconf_settings:
-      "picture-options": "'zoom'"
-      "picture-uri": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
-      "picture-uri-dark": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+      "/org/gnome/desktop/background/picture-options": "'zoom'"
+      "/org/gnome/desktop/background/picture-uri": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+      "/org/gnome/desktop/background/picture-uri-dark": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
 
 
 git_themes:

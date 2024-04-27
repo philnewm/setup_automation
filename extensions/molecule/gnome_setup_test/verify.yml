@@ -26,7 +26,7 @@
           ansible.builtin.assert:
             that:
               - item in enabled_repos.stdout_lines
-            fail_msg: "Repo {{ item }} is missing"
+            fail_msg: "Repo '{{ item }}' is missing."
             quiet: true
           loop:
             - crb
@@ -39,18 +39,18 @@
       ansible.builtin.assert:
         that:
           - item in ansible_facts.packages
-        fail_msg: "Required package {{ item }} is missing"
+        fail_msg: "Required package '{{ item }}' is missing."
         quiet: true
       loop: "{{ dependencies[ansible_os_family] }}"
 
     # check installed packages
     - name: Test installed gnome packages
+      loop: "{{ gnome_packages[ansible_distribution] }}"
       ansible.builtin.assert:
         that:
           - item in ansible_facts.packages
-        fail_msg: "Gnome package {{ item }} is missing"
+        fail_msg: "Gnome package '{{ item }}' is missing."
         quiet: true
-      loop: "{{ gnome_packages[ansible_distribution] }}"
 
     # check removed packages
     - name: Test removed gnome packages
@@ -72,7 +72,7 @@
         that:
           - default_target.stat.islnk == true
           - default_target.stat.lnk_target == "/usr/lib/systemd/system/graphical.target"
-        fail_msg: "Graphical target not set as default"
+        fail_msg: "Graphical target not set as default."
         quiet: true
 
     # assert X11
@@ -88,7 +88,7 @@
           - "'WaylandEnable=false' in gdm_config.stdout_lines"
           - "'DefaultSession=gnome-xorg.desktop' in gdm_config.stdout_lines"
         fail_msg: "One or both of the expected lines are not present in {{ gdm_config_file[ansible_distribution] }}"
-        success_msg: "Both expected lines are present in {{ gdm_config_file[ansible_distribution] }}"
+        success_msg: "Both expected lines are present in '{{ gdm_config_file[ansible_distribution] }}'."
         quiet: true
 
     - name: Get Gnome version
@@ -104,7 +104,7 @@
         state: read
       register: dconf_list
 
-    # asser gnome base settings
+    # assert gnome base settings
     - name: Test gnome settings
       loop: "{{ dconf_list.results }}"
       loop_control:
@@ -113,7 +113,7 @@
       ansible.builtin.assert:
         that:
           - entry.value == gnome_base_settings[gnome_major_version.stdout][entry.item.key]
-        fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'"
+        fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
         quiet: true
 
     # assert installed extensions
@@ -132,11 +132,85 @@
       ansible.builtin.assert:
         that:
           extension.distro[ansible_distribution].name in gnome_extensions_list.stdout_lines
-        fail_msg: "Failed to find {{ extension.name }} in installed extensions"
+        fail_msg: "Failed to find '{{ extension.name }}' in installed extensions."
         quiet: true
 
     # assert enabled extensions
+    - name: Get enabled extensions
+      community.general.dconf:
+        key: "/org/gnome/shell/enabled-extensions"
+        state: read
+      register: enabled_extensions_list
+
+    - name: Test enabled extensions
+      loop: "{{ gnome_extensions }}"
+      loop_control:
+        label: "{{ extension.name }}"
+        loop_var: extension
+      when: extension.distro[ansible_distribution] is defined
+      ansible.builtin.assert:
+        that:
+          extension.distro[ansible_distribution].name in enabled_extensions_list.value
+        fail_msg: "'{{ extension.distro[ansible_distribution].name }}' did not get enabled."
+        quiet: true
+
     # assert disabled extensions
+    - name: Get disabled extensions
+      community.general.dconf:
+        key: "/org/gnome/shell/disabled-extensions"
+        state: read
+      register: disabled_extensions_list
+
+    - name: Test disabled extensions
+      ansible.builtin.assert:
+        that:
+          disabled_extensions_list.value ==  none
+        fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none."
+        quiet: true
+
     # assert gnome themes
+    - name: Get installed gnome themes
+      ansible.builtin.shell:
+        cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"
+      register: gnome_themes_list
+      changed_when: false
+
+    - name: Test installed gnome themes
+      loop: "{{ gnome_themes }}"
+      loop_control:
+        loop_var: theme
+        label: "{{ theme.name }}"
+      ansible.builtin.assert:
+        that:
+          theme.name in gnome_themes_list.stdout_lines
+        fail_msg: "Theme {{ theme.name }} not found."
+        quiet: true
+
+    - name: Get expected gnome theme settings
+      loop: "{{ gnome_themes }}"
+      ansible.builtin.set_fact:
+        expected_theme_settings: "{{ expected_theme_settings | combine(item.dconf_settings) }}"
+
+    - name: Get present gnome theme settings
+      loop: "{{ expected_theme_settings.keys() | list }}"
+      loop_control:
+        loop_var: theme_key
+      community.general.dconf:
+        key: "{{ theme_key }}"
+        state: read
+      register: theme_value_list
+
+    # assert gnome theme settings
+    - name: Test gnome settings
+      loop: "{{ gnome_themes }}"
+      loop_control:
+        loop_var: theme
+        label: "{{ theme.item.key }}"
+      ansible.builtin.assert:
+        that:
+          - entry.value == gnome_themes[gnome_major_version.stdout][entry.item.key]
+        fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
+        quiet: true
+
     # assert configured profile picture
     # TODO implement absent version of this role
