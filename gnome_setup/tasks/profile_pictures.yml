@@ -19,6 +19,12 @@
       Session=
       Icon={{ (picture_dest_path, shell_user) | ansible.builtin.path_join }}
       SystemAccount=false
+
+      [InputSource0]
+      xkb=de
+
+      [InputSource1]
+      xkb=us
     dest: /var/lib/AccountsService/users/{{ shell_user }}
     owner: root
     group: root

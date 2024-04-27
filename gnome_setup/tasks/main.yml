@@ -63,7 +63,7 @@
     value: "[('xkb', 'de'), ('xkb', 'us')]"
 
 ##### optional #####
-- name: Find installed GNOME extensions
+- name: Get installed GNOME extensions
   ansible.builtin.shell:
     cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
   register: gnome_extensions_list
@@ -72,7 +72,7 @@
 
 - name: Install extensions
   loop: "{{ gnome_extensions }}"
-  when: ansible_distribution in extension.package.keys() | list and extension.name not in gnome_extensions_list.stdout_lines
+  when: extension.distro[ansible_distribution] is defined and extension.distro[ansible_distribution].name not in gnome_extensions_list.stdout_lines
   ansible.builtin.include_tasks:
     file: extensions.yml
   loop_control:
@@ -86,7 +86,7 @@
     path: "/usr/share/gnome-shell/extensions/{{ item }}"
     state: absent
 
-- name: Find installed GNOME extensions
+- name: Get installed GNOME extensions
   ansible.builtin.shell:
     cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
   register: gnome_extensions_list
@@ -97,7 +97,7 @@
     key: "/org/gnome/shell/enabled-extensions"
     value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
 
-- name: Find installed GNOME extensions
+- name: Get installed GNOME themes
   ansible.builtin.shell:
     cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"
   register: gnome_themes_list

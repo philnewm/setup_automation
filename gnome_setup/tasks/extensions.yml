@@ -6,14 +6,14 @@
     dconf_path: "{{ extension.dconf_path }}"
 
 - name: "Install Gnome extension {{ extension.name }}"
-  when: extension.package[ansible_distribution] != "git"
+  when: extension.distro[ansible_distribution].package != "git"
   become: true
   ansible.builtin.package:
-    name: "{{ extension.package[ansible_distribution] }}"
+    name: "{{ extension.distro[ansible_distribution].package }}"
     state: present
 
 - name: "Get extension from Github: {{ extension.name }}"
-  when: extension.package[ansible_distribution] == "git"
+  when: extension.distro[ansible_distribution].package == "git"
   block:
     - name: "Clone extension from github: {{ extension.name }}"
       ansible.builtin.git:

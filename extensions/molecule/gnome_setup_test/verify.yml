@@ -91,8 +91,50 @@
         success_msg: "Both expected lines are present in {{ gdm_config_file[ansible_distribution] }}"
         quiet: true
 
+    - name: Get Gnome version
+      ansible.builtin.shell:
+        cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+      register: gnome_major_version
+      changed_when: false
+
+    - name: Get gnome base settings
+      loop: "{{ gnome_base_settings[gnome_major_version.stdout] | dict2items }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        state: read
+      register: dconf_list
+
     # asser gnome base settings
-    # assert installed extensions´
+    - name: Test gnome settings
+      loop: "{{ dconf_list.results }}"
+      loop_control:
+        loop_var: entry
+        label: "{{ entry.item.key }}"
+      ansible.builtin.assert:
+        that:
+          - entry.value == gnome_base_settings[gnome_major_version.stdout][entry.item.key]
+        fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'"
+        quiet: true
+
+    # assert installed extensions
+    - name: Get installed GNOME extensions
+      ansible.builtin.shell:
+        cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
+      register: gnome_extensions_list
+      changed_when: false
+
+    - name: Test installed extensions
+      loop: "{{ gnome_extensions }}"
+      loop_control:
+        label: "{{ extension.name }}"
+        loop_var: extension
+      when: extension.distro[ansible_distribution] is defined
+      ansible.builtin.assert:
+        that:
+          extension.distro[ansible_distribution].name in gnome_extensions_list.stdout_lines
+        fail_msg: "Failed to find {{ extension.name }} in installed extensions"
+        quiet: true
+
     # assert enabled extensions
     # assert disabled extensions
     # assert gnome themes
