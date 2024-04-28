@@ -1,5 +1,4 @@
 ---
-
 # variables for gnome themes config
 
 gnome_themes:
@@ -17,7 +16,7 @@ gnome_themes:
     name: "Dynamic_Wallpapers"
     dconf_value: "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
 
-git_theme:
+theme_repo:
   "Lavanda-Dark":
     dependencies:
       "RedHat":
@@ -104,5 +103,3 @@ valid_shells:
   - "/bin/bash"
   - "/bin/sh"
   - "/bin/zsh"
-
-...

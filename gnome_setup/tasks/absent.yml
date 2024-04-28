@@ -1,0 +1,46 @@
+---
+
+# tasks to remove gnome_setup
+
+- name: Get users list
+  ansible.builtin.getent:
+    database: passwd
+
+# INFO get user names enabled for login
+- name: Extract usernames with valid shell
+  loop: "{{ getent_passwd | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: item.value[5] in valid_shells
+  ansible.builtin.set_fact:
+    shell_users: "{{ shell_users | default([]) + [item.key] }}"
+
+- name: Remove user profile config file
+  loop: "{{ shell_users }}"
+  loop_control:
+    loop_var: shell_user
+  when: profile_pictures[shell_user] is defined
+  ansible.builtin.file:
+    path: "{{ profile_config_path }}/{{ shell_user }}"
+    state: absent
+
+- name: Remove installed themes
+  loop: "{{ gnome_themes | dict2items }}"
+  ansible.builtin.file:
+    path:
+
+- name: Remove files if present
+  vars:
+    directories:
+      - ~/.themes/
+      - .local/share/icons/
+      - /usr/share/backgrounds/
+  loop: "{{ directories | theme.value.name | map('join', '/')|list }}"
+  loop_control:
+  label: "{{ theme.value.name }}"
+  loop_var: theme
+  ansible.builtin.file:
+    path: "{{ item.0 }}/{{ theme.value.name }}"
+    state: absent
+
+...

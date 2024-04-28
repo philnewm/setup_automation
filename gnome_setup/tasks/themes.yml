@@ -1,8 +1,8 @@
 ---
 
-- name: "Get theme from Github: {{ theme.name }}"
+- name: "Get theme from Github: {{ theme.value.name }}"
   block:
-    - name: "Clone theme from github: {{ theme.name }}"
+    - name: "Clone theme from github: {{ theme.value.name }}"
       ansible.builtin.git:
         repo: "{{ git_theme.repo_url }}"
         dest: "{{ user_install_dir }}/{{ git_theme.download_dir }}"
@@ -40,14 +40,13 @@
         path: "{{ user_install_dir }}"
         state: absent
   vars:
-    git_theme: "{{ git_theme[theme.name] }}"
+    git_theme: "{{ theme_repo[theme.value.name] }}"
 
-- name: Configure extension
-  loop: "{{ gnome_theme_settings[gnome_major_version] | dict2items }}"
+# TODO prevent execution on every run
+- name: Configure themes
+  loop: "{{ gnome_theme_settings[gnome_major_version.stdout] | dict2items }}"
   loop_control:
     loop_var: dconf_setting
   community.general.dconf:
     key: "{{ dconf_setting.key }}"
     value: "{{ dconf_setting.value }}"
-
-...

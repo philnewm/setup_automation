@@ -6,7 +6,6 @@
     - name: Include gnome role present
       ansible.builtin.include_role:
         name: gnome_setup
-        tasks_from: main.yml
       vars:
         gnome_setup_state: present
 
