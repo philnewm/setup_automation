@@ -2,7 +2,7 @@
 
 # variables for basic gnome config
 
-# INFO some dictionary splits for each ditro may seem redundant
+# INFO some dictionary splits for each distro may seem redundant
 # INFO this is intentional to enable deactivation on a per distro basis if neccessary to not break the whole testing setup
 
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
