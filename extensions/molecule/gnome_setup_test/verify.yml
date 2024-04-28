@@ -88,7 +88,6 @@
           - "'WaylandEnable=false' in gdm_config.stdout_lines"
           - "'DefaultSession=gnome-xorg.desktop' in gdm_config.stdout_lines"
         fail_msg: "One or both of the expected lines are not present in {{ gdm_config_file[ansible_distribution] }}"
-        success_msg: "Both expected lines are present in '{{ gdm_config_file[ansible_distribution] }}'."
         quiet: true
 
     - name: Get Gnome version
@@ -176,41 +175,69 @@
       changed_when: false
 
     - name: Test installed gnome themes
-      loop: "{{ gnome_themes }}"
+      loop: "{{ gnome_themes | dict2items }}"
       loop_control:
         loop_var: theme
-        label: "{{ theme.name }}"
+        label: "{{ theme.value.name }}"
       ansible.builtin.assert:
         that:
-          theme.name in gnome_themes_list.stdout_lines
-        fail_msg: "Theme {{ theme.name }} not found."
+          theme.value.name in gnome_themes_list.stdout_lines
+        fail_msg: "Theme {{ theme.value.name }} not found."
         quiet: true
 
-    - name: Get expected gnome theme settings
-      loop: "{{ gnome_themes }}"
-      ansible.builtin.set_fact:
-        expected_theme_settings: "{{ expected_theme_settings | combine(item.dconf_settings) }}"
-
-    - name: Get present gnome theme settings
-      loop: "{{ expected_theme_settings.keys() | list }}"
-      loop_control:
-        loop_var: theme_key
+    - name: Get gnome theme settings
+      loop: "{{ gnome_theme_settings[gnome_major_version.stdout] | dict2items }}"
       community.general.dconf:
-        key: "{{ theme_key }}"
+        key: "{{ item.key }}"
         state: read
-      register: theme_value_list
+      register: dconf_theme_list
 
     # assert gnome theme settings
-    - name: Test gnome settings
-      loop: "{{ gnome_themes }}"
+    - name: Test gnome theme settings
+      loop: "{{ dconf_theme_list.results }}"
       loop_control:
-        loop_var: theme
-        label: "{{ theme.item.key }}"
+        loop_var: entry
+        label: "{{ entry.item.key }}"
       ansible.builtin.assert:
         that:
-          - entry.value == gnome_themes[gnome_major_version.stdout][entry.item.key]
-        fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
+          - entry.item.value == gnome_theme_settings[gnome_major_version.stdout][entry.item.key]
+        fail_msg: "Expected value '{{ gnome_theme_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
         quiet: true
 
+    - name: Get users list
+      ansible.builtin.getent:
+        database: passwd
+
+    - name: Extract usernames with valid shell
+      loop: "{{ getent_passwd | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+      when: item.value[5] in valid_shells
+      ansible.builtin.set_fact:
+        shell_users: "{{ shell_users | default([]) + [item.key] }}"
+
+    - name: Get profile config
+      become: true
+      loop: "{{ shell_users }}"
+      loop_control:
+        loop_var: shell_user
+      when: profile_pictures[shell_user] is defined
+      ansible.builtin.command:
+        cmd: "cat /var/lib/AccountsService/users/{{ shell_user }}"
+      register: profile_config
+      changed_when: false
+
     # assert configured profile picture
+    - name: Assert profile picture for username
+      loop: "{{ profile_config.results }}"
+      loop_control:
+        loop_var: profile
+        label: profile.shell_user
+      when: profile.stdout_lines is defined
+      ansible.builtin.assert:
+        that:
+          "'Icon=' ~ picture_dest_path ~ '/' ~ profile.shell_user in profile.stdout_lines"
+        fail_msg: "Expected profile picture path 'Icon={{ picture_dest_path }}/{{ profile.shell_user }}' is not present in {{ profile_config_path }}/{{ profile.shell_user }}"
+        quiet: true
+
     # TODO implement absent version of this role

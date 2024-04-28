@@ -17,7 +17,7 @@
     content: |
       [User]
       Session=
-      Icon={{ (picture_dest_path, shell_user) | ansible.builtin.path_join }}
+      Icon={{ picture_dest_path }}/{{ shell_user }}
       SystemAccount=false
 
       [InputSource0]
@@ -25,7 +25,7 @@
 
       [InputSource1]
       xkb=us
-    dest: /var/lib/AccountsService/users/{{ shell_user }}
+    dest: "{{ profile_config_path }}/{{ shell_user }}"
     owner: root
     group: root
     mode: 0644  # 0600 by default and changes to 0644 after first login

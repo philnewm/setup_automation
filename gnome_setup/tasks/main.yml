@@ -105,12 +105,12 @@
   failed_when: gnome_themes_list.rc not in [0, 2]
 
 - name: Install themes
-  loop: "{{ gnome_themes }}"
-  when: theme.name not in gnome_themes_list.stdout_lines
+  loop: "{{ gnome_themes | dict2items }}"
+  when: theme.value.name not in gnome_themes_list.stdout_lines
   ansible.builtin.include_tasks:
     file: themes.yml
   loop_control:
-    label: "{{ theme.name }}"
+    label: "{{ theme.value.name }}"
     loop_var: theme
 
 - name: Get users list

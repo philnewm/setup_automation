@@ -102,7 +102,7 @@ provisioner:
   name: ansible
   env:
     # ANSIBLE_VERBOSITY: 3
-    ANSIBLE_DIFF_ALWAYS: true
+    ANSIBLE_DIFF_ALWAYS: false
 
   inventory:
     host_vars:

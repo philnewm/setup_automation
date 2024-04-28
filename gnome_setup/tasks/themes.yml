@@ -1,12 +1,6 @@
 ---
 
-- name: Save dconf path
-  when: theme.dconf_path is defined 
-  ansible.builtin.set_fact:
-    dconf_path: "{{ theme.dconf_path }}"
-
 - name: "Get theme from Github: {{ theme.name }}"
-  when: theme.package[ansible_distribution] == "git"
   block:
     - name: "Clone theme from github: {{ theme.name }}"
       ansible.builtin.git:
@@ -46,15 +40,14 @@
         path: "{{ user_install_dir }}"
         state: absent
   vars:
-    git_theme: "{{ git_themes[theme.name] }}"
+    git_theme: "{{ git_theme[theme.name] }}"
 
 - name: Configure extension
-  when: theme.dconf_settings is defined
-  loop: "{{  theme.dconf_settings | dict2items }}"
+  loop: "{{ gnome_theme_settings[gnome_major_version] | dict2items }}"
   loop_control:
     loop_var: dconf_setting
   community.general.dconf:
-    key: "{{ dconf_path }}{{ dconf_setting.key }}"
+    key: "{{ dconf_setting.key }}"
     value: "{{ dconf_setting.value }}"
 
 ...
