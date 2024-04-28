@@ -1,7 +1,6 @@
 ---
-
 - name: Save dconf path
-  when: extension.dconf_path is defined 
+  when: extension.dconf_path is defined
   ansible.builtin.set_fact:
     dconf_path: "{{ extension.dconf_path }}"
 
@@ -53,7 +52,7 @@
         path: "{{ user_install_dir }}"
         state: absent
   vars:
-    git_extension: "{{ git_repos[extension.name] }}"
+    git_extension: "{{ git_ext[extension.name] }}"
 
 - name: Configure extension
   when: extension.dconf_settings is defined
@@ -63,5 +62,3 @@
   community.general.dconf:
     key: "{{ dconf_path }}{{ dconf_setting.key }}"
     value: "{{ dconf_setting.value }}"
-
-...

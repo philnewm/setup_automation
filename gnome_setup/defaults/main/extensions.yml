@@ -1,0 +1,313 @@
+---
+
+# variables for gnome extension config
+
+# TODO add gpaste, copyQ or similar clipboard manager
+# TODO structure needs more clever solution
+# INFO debian and ubuntu package: gnome-shell-extension-appindicator, installed name: ubuntu-appindicators@ubuntu.com
+# INFO CentOS Stream9 package: "gnome-shell-extension-dash-to-panel", installed name: "dash-to-panel@gnome-shell-extensions.gcampax.github.com"
+gnome_extensions:
+  - name: "drive-menu"
+    distro:
+      CentOS:
+        name: "drive-menu@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-drive-menu"
+      AlmaLinux:
+        name: "drive-menu@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-drive-menu"
+      Rocky:
+        name: "drive-menu@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-drive-menu"
+  - name: "user-theme"
+    distro:
+      CentOS:
+        name: "user-theme@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-user-theme"
+      AlmaLinux:
+        name: "user-theme@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-user-theme"
+      Rocky:
+        name: "user-theme@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-user-theme"
+      Debian:
+        name: "user-theme@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extensions"
+      Ubuntu:
+        name: "user-theme@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extensions"
+  - name: "appindicator"
+    distro:
+      CentOS:
+        name: "appindicatorsupport@rgcjonas.gmail.com"
+        package: "gnome-shell-extension-appindicator"
+      AlmaLinux:
+        name: "appindicatorsupport@rgcjonas.gmail.com"
+        package: "gnome-shell-extension-appindicator"
+      Rocky:
+        name: "appindicatorsupport@rgcjonas.gmail.com"
+        package: "gnome-shell-extension-appindicator"
+      Debian:
+        name: "ubuntu-appindicators@ubuntu.com"
+        package: "gnome-shell-extension-appindicator"
+      Ubuntu:
+        name: "ubuntu-appindicators@ubuntu.com"
+        package: "gnome-shell-extension-appindicator"
+  - name: "sound-output-device-chooser"
+    distro:
+      CentOS:
+        name: "sound-output-device-chooser@kgshank.net"
+        package: "gnome-shell-extension-sound-output-device-chooser"
+      AlmaLinux:
+        name: "sound-output-device-chooser@kgshank.net"
+        package: "gnome-shell-extension-sound-output-device-chooser"
+      Rocky:
+        name: "sound-output-device-chooser@kgshank.net"
+        package: "gnome-shell-extension-sound-output-device-chooser"
+  - name: "no-overview"
+    distro:
+      CentOS:
+        name: "no-overview@fthx"
+        package: "gnome-shell-extension-no-overview"
+      AlmaLinux:
+        name: "no-overview@fthx"
+        package: "gnome-shell-extension-no-overview"
+      Rocky:
+        name: "no-overview@fthx"
+        package: "gnome-shell-extension-no-overview"
+  - name: "tiling-assistant"
+    distro:
+      CentOS:
+        name: "tiling-assistant@leleat-on-github"
+        package: "git"
+      AlmaLinux:
+        name: "tiling-assistant@leleat-on-github"
+        package: "git"
+      Rocky:
+        name: "tiling-assistant@leleat-on-github"
+        package: "git"
+      Debian:
+        name: "tiling-assistant@leleat-on-github"
+        package: "git"
+      Ubuntu:
+        name: "tiling-assistant@leleat-on-github"
+        package: "git"
+    dconf_path: "/org/gnome/shell/extensions/tiling-assistant/"
+    dconf_settings:
+      "enable-tiling-popup": "false"
+      "active-window-hint-color": "'rgb(123,136,255)'"
+      "restore-window": "['<Super>Down']"
+      "tile-bottom-half": "['<Super>KP_2']"
+      "tile-top-half": "['<Super>KP_8']"
+      "tile-left-half": "['<Super>Left', '<Super>KP_4']"
+      "tile-right-half": "['<Super>Right', '<Super>KP_6']"
+      "tile-topleft-quarter": "['<Super>KP_7']"
+      "tile-topright-quarter": "['<Super>KP_9']"
+      "tile-bottomleft-quarter": "['<Super>KP_1']"
+      "tile-bottomright-quarter": "['<Super>KP_3']"
+  - name: "dash-to-panel"
+    distro:
+      CentOS:
+        name: "dash-to-panel@gnome-shell-extensions.gcampax.github.com"
+        package: "gnome-shell-extension-dash-to-panel"
+      AlmaLinux:
+        name: "dash-to-panel@jderose9.github.com"
+        package: "git"
+      Rocky:
+        name: "dash-to-panel@jderose9.github.com"
+        package: "git"
+      Debian:
+        name: "dash-to-panel@jderose9.github.com"
+        package: "git"
+      Ubuntu:
+        name: "dash-to-panel@jderose9.github.com"
+        package: "git"
+    dconf_path: "/org/gnome/shell/extensions/dash-to-panel/"
+    dconf_settings:
+      "animate-appicon-hover": "false"
+      "animate-appicon-hover-animation-convexity": "{'RIPPLE': 2.0, 'PLANK': 1.0, 'SIMPLE': 0.0}"
+      "animate-appicon-hover-animation-extent": "{'RIPPLE': 4, 'PLANK': 4, 'SIMPLE': 1}"
+      "animate-appicon-hover-animation-type": "'SIMPLE'"
+      "appicon-margin": "0"
+      "appicon-padding": "6"
+      "dot-position": "'BOTTOM'"
+      "dot-style-focused": "'DOTS'"
+      "dot-style-unfocused": "'DASHES'"
+      "group-apps": "true"
+      "hotkeys-overlay-combo": "'TEMPORARILY'"
+      "intellihide": "true"
+      "intellihide-hide-from-windows": "true"
+      "leftbox-padding": "-1"
+      "leftbox-size": "14"
+      "panel-anchors": "{'0':'MIDDLE'}"
+      "panel-lengths": "{'0':100}"
+      "panel-positions": "{'0':'BOTTOM'}"
+      "panel-sizes": "{'0':48}"
+      "primary-monitor": "0"
+      "show-apps-icon-file": "''"
+      "status-icon-padding": "4"
+      "trans-bg-color": "'#613583'"
+      "trans-gradient-bottom-color": "'#613583'"
+      "trans-gradient-top-color": "'#dc8add'"
+      "trans-panel-opacity": "0.2"
+      "trans-use-custom-bg": "true"
+      "trans-use-custom-gradient": "true"
+      "trans-use-custom-opacity": "true"
+      "trans-use-dynamic-opacity": "true"
+      "tray-padding": "6"
+      "tray-size": "16"
+      "window-preview-title-position": "'TOP'"
+  - name: "system-monitor"
+    distro:
+      CentOS:
+        name: "system-monitor@paradoxxx.zero.gmail.com"
+        package: "gnome-shell-extension-system-monitor-applet"
+      AlmaLinux:
+        name: "system-monitor@paradoxxx.zero.gmail.com"
+        package: "gnome-shell-extension-system-monitor-applet"
+      Rocky:
+        name: "system-monitor@paradoxxx.zero.gmail.com"
+        package: "gnome-shell-extension-system-monitor-applet"
+      Debian:
+        name: "system-monitor@paradoxxx.zero.gmail.com"
+        package: "git"
+      Ubuntu:
+        name: "system-monitor@paradoxxx.zero.gmail.com"
+        package: "git"
+    dconf_path: "/org/gnome/shell/extensions/system-monitor/"
+    dconf_settings:
+      "compact-display": "true"
+      "cpu-graph-width": "50"
+      "cpu-individual-cores": "false"
+      "cpu-style": "'graph'"
+      "disk-display": "false"
+      "freq-display": "false"
+      "gpu-display": "false"
+      "memory-graph-width": "50"
+      "memory-style": "'graph'"
+      "move-clock": "true"
+      "net-graph-width": "50"
+      "thermal-display": "false"
+      "thermal-style": "'graph'"
+
+# TODO test this updated extensions install setup
+gnome_extensions_2:
+  CentOS:
+    - "drive_menu"
+    - "user-theme"
+    - "appindicator"
+    - "sound-output-device-chooser"
+    - "no-overview"
+    - "tiling-assistant"
+    - "dash-to-panel"
+    - "system-monitor"
+  AlmaLinux:
+    - "drive_menu"
+    - "user-theme"
+    - "appindicator"
+    - "sound-output-device-chooser"
+    - "no-overview"
+    - "tiling-assistant"
+    - "dash-to-panel"
+    - "system-monitor"
+  Rocky:
+    - "drive_menu"
+    - "user-theme"
+    - "appindicator" # WARNING called different for debian based distros: ubuntu-appindicators@ubuntu.com
+    - "sound-output-device-chooser"
+    - "no-overview"
+    - "tiling-assistant"
+    - "dash-to-panel"
+    - "system-monitor"
+
+ext_config:
+  CentOS:
+    name: "dash-to-panel"
+    dconf_config:
+      "enable-tiling-popup": "false"
+      "active-window-hint-color": "'rgb(123,136,255)'"
+      "restore-window": "['<Super>Down']"
+      "tile-bottom-half": "['<Super>KP_2']"
+      "tile-top-half": "['<Super>KP_8']"
+      "tile-left-half": "['<Super>Left', '<Super>KP_4']"
+      "tile-right-half": "['<Super>Right', '<Super>KP_6']"
+      "tile-topleft-quarter": "['<Super>KP_7']"
+      "tile-topright-quarter": "['<Super>KP_9']"
+      "tile-bottomleft-quarter": "['<Super>KP_1']"
+      "tile-bottomright-quarter": "['<Super>KP_3']"
+  AlmaLinux:
+    name: "dash-to-panel@jderose9.github.com"
+    package: "git"
+  Rocky:
+    name: "dash-to-panel@jderose9.github.com"
+    package: "git"
+  Debian:
+    name: "dash-to-panel@jderose9.github.com"
+    package: "git"
+  Ubuntu:
+    name: "dash-to-panel@jderose9.github.com"
+    package: "git"
+
+git_ext:
+  "tiling-assistant":
+    dependencies:
+      "RedHat":
+        - zip
+        - gettext
+      "Debian":
+        - zip
+        - gettext
+    repo_url: "https://github.com/Leleat/Tiling-Assistant.git"
+    branch:
+      "40": "v32"
+      "42": "v36"
+      "43": "v44" # INFO requires update after login since Tag "45" is missing in source repo
+    installer: "build.sh"
+    install_cmd: "./build.sh -i"
+    download_dir: "Tiling-Assistant/"
+    install_dir: "Tiling-Assistant/scripts/"
+  "dash-to-panel":
+    dependencies:
+      "RedHat":
+        - make
+        - gettext
+      "Debian":
+        - make
+        - gettext
+    repo_url: "https://github.com/home-sweet-gnome/dash-to-panel"
+    branch:
+      "40": "gnome-40"
+      "42": "v56"
+      "43": "v56"
+    installer: ""
+    install_cmd: "make install"
+    download_dir: "dash-to-panel/"
+    install_dir: "dash-to-panel/"
+  "system-monitor":
+    dependencies:
+      "RedHat":
+        - make
+        - gnome-system-monitor
+      "Debian":
+        - make
+        - gir1.2-gtop-2.0
+        - gir1.2-nm-1.0
+        - gir1.2-clutter-1.0
+        - gnome-system-monitor
+    repo_url: "https://github.com/paradoxxxzero/gnome-shell-system-monitor-applet"
+    branch:
+      "40": "master"
+      "42": "master"
+      "43": "master"
+    installer: ""
+    install_cmd: "make install"
+    download_dir: "gnome-shell-system-monitor-applet/"
+    install_dir: "gnome-shell-system-monitor-applet/"
+
+obsolete_gnome_extensions:
+  - apps-menu@gnome-shell-extensions.gcampax.github.com
+  - places-menu@gnome-shell-extensions.gcampax.github.com
+  - screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
+  - window-list@gnome-shell-extensions.gcampax.github.com
+
+
+...

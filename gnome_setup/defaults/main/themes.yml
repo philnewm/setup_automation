@@ -1,0 +1,108 @@
+---
+
+# variables for gnome themes config
+
+gnome_themes:
+  shell_theme:
+    name: "Lavanda-Dark"
+    dconf_value: "'Lavanda-Dark'"
+  icon_theme:
+    name: "Tela-circle-purple-dark"
+    dconf_value: "'Tela-circle-purple-dark'"
+  cursor_theme:
+    name: "Qogir-cursors"
+    dconf_value: "'Qogir-ubuntu-cursors'"
+  # TODO filter for wanted wallpapers to not download complete library
+  wallpaper:
+    name: "Dynamic_Wallpapers"
+    dconf_value: "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
+
+git_theme:
+  "Lavanda-Dark":
+    dependencies:
+      "RedHat":
+        - gtk-murrine-engine
+        - sassc
+      "Debian":
+        - gtk2-engines-murrine
+        - sassc
+    repo_url: "https://github.com/vinceliuice/Lavanda-gtk-theme.git"
+    branch:
+      "40": "main"
+      "42": "main"
+      "43": "main"
+    installer: "install.sh"
+    install_cmd: "./install.sh --icon {{ ansible_distribution | lower }}"
+    download_dir: "Lavanda-gtk-theme/"
+    install_dir: "Lavanda-gtk-theme/"
+  "Tela-circle-purple-dark":
+    repo_url: "https://github.com/vinceliuice/Tela-circle-icon-theme.git"
+    branch:
+      "40": "master"
+      "42": "master"
+      "43": "master"
+    installer: "install.sh"
+    install_cmd: "./install.sh -c purple"
+    download_dir: "Tela-circle-icon-theme/"
+    install_dir: "Tela-circle-icon-theme/"
+  "Qogir-cursors":
+    repo_url: "https://github.com/vinceliuice/Qogir-icon-theme.git"
+    branch:
+      "40": "master"
+      "42": "master"
+      "43": "master"
+    installer: "install.sh"
+    install_cmd: "./install.sh"
+    download_dir: "Qogir-icon-theme/"
+    install_dir: "Qogir-icon-theme/src/cursors/"
+  "Dynamic_Wallpapers":
+    repo_url: "https://github.com/saint-13/Linux_Dynamic_Wallpapers.git"
+    branch:
+      "40": "main"
+      "42": "main"
+      "43": "main"
+    installer: "install.sh"
+    install_cmd: "./install.sh"
+    download_dir: "Linux_dynamic_Wallpapers/"
+    install_dir: "Linux_dynamic_Wallpapers/"
+
+gnome_theme_settings:
+  "40":
+    "/org/gnome/desktop/interface/gtk-theme": "{{ gnome_themes.shell_theme.dconf_value }}"
+    "/org/gnome/shell/extensions/user-theme/name": "{{ gnome_themes.shell_theme.dconf_value }}"
+    "/org/gnome/desktop/interface/icon-theme": "{{ gnome_themes.icon_theme.dconf_value }}"
+    "/org/gnome/desktop/interface/cursor-theme": "{{ gnome_themes.cursor_theme.dconf_value }}"
+    "/org/gnome/desktop/background/picture-options": "'zoom'"
+    "/org/gnome/desktop/background/picture-uri": "{{ gnome_themes.wallpaper.dconf_value }}"
+    "/org/gnome/desktop/background/picture-uri-dark": "{{ gnome_themes.wallpaper.dconf_value }}"
+  "42":
+    "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
+    "/org/gnome/desktop/interface/gtk-theme": "{{ gnome_themes.shell_theme.dconf_value }}"
+    "/org/gnome/shell/extensions/user-theme/name": "{{ gnome_themes.shell_theme.dconf_value }}"
+    "/org/gnome/desktop/interface/icon-theme": "{{ gnome_themes.icon_theme.dconf_value }}"
+    "/org/gnome/desktop/interface/cursor-theme": "{{ gnome_themes.cursor_theme.dconf_value }}"
+    "/org/gnome/desktop/background/picture-options": "'zoom'"
+    "/org/gnome/desktop/background/picture-uri": "{{ gnome_themes.wallpaper.dconf_value }}"
+    "/org/gnome/desktop/background/picture-uri-dark": "{{ gnome_themes.wallpaper.dconf_value }}"
+  "43":
+    "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
+    "/org/gnome/desktop/interface/gtk-theme": "{{ gnome_themes.shell_theme.dconf_value }}"
+    "/org/gnome/shell/extensions/user-theme/name": "{{ gnome_themes.shell_theme.dconf_value }}"
+    "/org/gnome/desktop/interface/icon-theme": "{{ gnome_themes.icon_theme.dconf_value }}"
+    "/org/gnome/desktop/interface/cursor-theme": "{{ gnome_themes.cursor_theme.dconf_value }}"
+    "/org/gnome/desktop/background/picture-options": "'zoom'"
+    "/org/gnome/desktop/background/picture-uri": "{{ gnome_themes.wallpaper.dconf_value }}"
+    "/org/gnome/desktop/background/picture-uri-dark": "{{ gnome_themes.wallpaper.dconf_value }}"
+
+picture_src_path: ~/Documents/
+picture_dest_path: /var/lib/AccountsService/icons
+profile_config_path: /var/lib/AccountsService/users
+profile_pictures:
+  "vagrant": "vagrant"
+
+valid_shells:
+  - "/bin/bash"
+  - "/bin/sh"
+  - "/bin/zsh"
+
+...
