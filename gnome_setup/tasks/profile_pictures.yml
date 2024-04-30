@@ -28,6 +28,6 @@
     dest: "{{ profile_config_path }}/{{ shell_user }}"
     owner: root
     group: root
-    mode: 0644  # 0600 by default and changes to 0644 after first login
+    mode: 0600  # 0600 by default and changes to 0644 after first login
 
 ...

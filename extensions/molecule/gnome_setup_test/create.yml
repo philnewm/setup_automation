@@ -38,17 +38,17 @@
           with_items: "{{ server.results }}"
           register: instance_config_dict
 
-        - name: Create initial snapshot per instance
-          when: molecule_yml.driver.snapshot is defined 
-          loop: "{{ instance_config_dict.results }}"
-          ansible.builtin.command:
-            cmd: "vagrant snapshot save {{ item.item.Host }} {{ molecule_yml.driver.snapshot}}"
-          args:
-            chdir: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
-          register: result
-          loop_control:
-            label: "{{ item.item.Host }}"
-          changed_when: result.rc == 0
+        # - name: Create initial snapshot per instance
+        #   when: molecule_yml.driver.snapshot is defined 
+        #   loop: "{{ instance_config_dict.results }}"
+        #   ansible.builtin.command:
+        #     cmd: "vagrant snapshot save {{ item.item.Host }} {{ molecule_yml.driver.snapshot}}"
+        #   args:
+        #     chdir: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}"
+        #   register: result
+        #   loop_control:
+        #     label: "{{ item.item.Host }}"
+        #   changed_when: result.rc == 0
 
         - name: Convert instance config dict to a list
           ansible.builtin.set_fact:

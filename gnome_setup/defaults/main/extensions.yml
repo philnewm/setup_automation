@@ -303,6 +303,10 @@ git_ext:
     download_dir: "gnome-shell-system-monitor-applet/"
     install_dir: "gnome-shell-system-monitor-applet/"
 
+extension_paths:
+  - "{{ ansible_env.HOME }}/.local/share/gnome-shell/extensions/"
+  - "/usr/share/gnome-shell/extensions/"
+
 obsolete_gnome_extensions:
   - apps-menu@gnome-shell-extensions.gcampax.github.com
   - places-menu@gnome-shell-extensions.gcampax.github.com

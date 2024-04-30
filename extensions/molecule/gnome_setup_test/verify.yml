@@ -4,15 +4,15 @@
   hosts: client
 
   vars_files:
-    - ../../../gnome_setup/defaults/main.yml
+    - ../../../gnome_setup/defaults/main/common.yml
+    - ../../../gnome_setup/defaults/main/extensions.yml
+    - ../../../gnome_setup/defaults/main/themes.yml
     - ../../../gnome_setup/vars/main.yml
 
   tasks:
-    # gather package facts:
     - name: Gather package facts
       ansible.builtin.package_facts:
 
-    # check enabled repos
     - name: Get repos on rhel based systems
       when: ansible_os_family == "RedHat"
       block:
@@ -34,7 +34,6 @@
             - rpmfusion-free-updates
             - rpmfusion-nonfree-updates
 
-    # check installed requirements
     - name: Test installed requirements
       ansible.builtin.assert:
         that:
@@ -43,7 +42,6 @@
         quiet: true
       loop: "{{ dependencies[ansible_os_family] }}"
 
-    # check installed packages
     - name: Test installed gnome packages
       loop: "{{ gnome_packages[ansible_distribution] }}"
       ansible.builtin.assert:
@@ -52,7 +50,6 @@
         fail_msg: "Gnome package '{{ item }}' is missing."
         quiet: true
 
-    # check removed packages
     - name: Test removed gnome packages
       ansible.builtin.assert:
         that:
@@ -61,7 +58,6 @@
         quiet: true
       loop: "{{ obsolete_packages[ansible_os_family] }}"
 
-    # assert graphical target
     - name: Get current target
       ansible.builtin.stat:
         path: /etc/systemd/system/default.target
@@ -75,7 +71,6 @@
         fail_msg: "Graphical target not set as default."
         quiet: true
 
-    # assert X11
     - name: "Get gdm config"
       ansible.builtin.command:
         cmd: "cat {{ gdm_config_file[ansible_distribution] }}"
@@ -103,7 +98,6 @@
         state: read
       register: dconf_list
 
-    # assert gnome base settings
     - name: Test gnome settings
       loop: "{{ dconf_list.results }}"
       loop_control:
@@ -115,7 +109,6 @@
         fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
         quiet: true
 
-    # assert installed extensions
     - name: Get installed GNOME extensions
       ansible.builtin.shell:
         cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
@@ -134,7 +127,6 @@
         fail_msg: "Failed to find '{{ extension.name }}' in installed extensions."
         quiet: true
 
-    # assert enabled extensions
     - name: Get enabled extensions
       community.general.dconf:
         key: "/org/gnome/shell/enabled-extensions"
@@ -153,7 +145,6 @@
         fail_msg: "'{{ extension.distro[ansible_distribution].name }}' did not get enabled."
         quiet: true
 
-    # assert disabled extensions
     - name: Get disabled extensions
       community.general.dconf:
         key: "/org/gnome/shell/disabled-extensions"
@@ -167,7 +158,6 @@
         fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none."
         quiet: true
 
-    # assert gnome themes
     - name: Get installed gnome themes
       ansible.builtin.shell:
         cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"
@@ -192,7 +182,6 @@
         state: read
       register: dconf_theme_list
 
-    # assert gnome theme settings
     - name: Test gnome theme settings
       loop: "{{ dconf_theme_list.results }}"
       loop_control:
@@ -240,4 +229,8 @@
         fail_msg: "Expected profile picture path 'Icon={{ picture_dest_path }}/{{ profile.shell_user }}' is not present in {{ profile_config_path }}/{{ profile.shell_user }}"
         quiet: true
 
-    # TODO implement absent version of this role
+    - name: Roll back gnome changes
+      ansible.builtin.include_role:
+        name: gnome_setup
+      vars:
+        gnome_setup_state: absent

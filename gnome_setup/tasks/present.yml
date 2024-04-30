@@ -114,6 +114,7 @@
     label: "{{ theme.value.name }}"
     loop_var: theme
 
+# TODO move back to themes.yml but prevent execution in every run
 - name: Configure themes
   loop: "{{ gnome_theme_settings[gnome_major_version.stdout] | dict2items }}"
   loop_control:
