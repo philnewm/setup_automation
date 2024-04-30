@@ -1,15 +1,21 @@
 galaxy_info:
   author: philnewm
-  description: Adjust basic gnome settings
+  description: Build custom gnome desktop
 
   license: MIT
 
   min_ansible_version: "2.1"
 
   platforms:
-  - name: Fedora
+  - name: EL
     versions:
-    - "38"
+    - "9"
+  - name: Debian
+    versions:
+    - "bookworm"
+  - name: Ubuntu
+    versions:
+      - "jammy"
 
   galaxy_tags: []
 

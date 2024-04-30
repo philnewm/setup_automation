@@ -84,6 +84,17 @@ platforms:
       - "customize ['modifyvm', :id, '--vram', '256']"
       - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
       - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+    provision:
+      - name: Remove snapd
+        type: shell
+        inline: |
+          sudo apt-get purge -y snapd
+          sudo rm -rf /var/cache/snapd
+      - name: Disable snapd service
+        type: shell
+        inline: |
+          sudo systemctl disable snapd.service
+          sudo systemctl mask snapd.service
     groups:
       - client
   - name: Debian12
