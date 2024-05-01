@@ -2,6 +2,25 @@
 
 # requirements file
 
+- name: Update package cache
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+
+- name: Upgrade packages
+  become: true
+    when: ansible_os_family == debian
+    ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Upgrade packages
+  become: true
+  when: ansible_os_family == debian
+  ansible.builtin.apt:
+    upgrade: yes
+    autoclean: yes
+
 - name: Enable CRB (CentOS Extras) repository
   when: ansible_os_family == redhat
   become: true

@@ -15,62 +15,61 @@ lint: |
 platforms:
   # TODO check how to fix Error: Failed to download metadata for repo 'baseos': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
   # https://www.reddit.com/r/CentOS/comments/18ard59/is_there_something_wrong_with_cs9_dnfyum/
-  - name: CentosStream9
-    box: centos/stream9
-    box_url:
-      https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230501.0.x86_64.vagrant-libvirt.box
-      # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.10"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-      - "customize ['modifyvm', :id, '--vram', '256']"
-      - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
-      - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
-    groups:
-      - client
-  - name: Alma9
-    box: almalinux/9
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.20"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-      - "customize ['modifyvm', :id, '--vram', '256']"
-      - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
-      - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
-    groups:
-      - client
-  - name: Rocky9
-    box: rockylinux/9
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.30"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-      - "customize ['modifyvm', :id, '--vram', '256']"
-      - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
-      - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
-    groups:
-      - client
-  - name: Ubuntu2204
-    box: generic/ubuntu2204
+  # - name: CentosStream9
+  #   box: centos/stream9
+  #   box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230501.0.x86_64.vagrant-virtualbox.box
+  #     # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.10"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+  #     - "customize ['modifyvm', :id, '--vram', '256']"
+  #     - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+  #     - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+  #   groups:
+  #     - client
+  # - name: Alma9
+  #   box: almalinux/9
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.20"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+  #     - "customize ['modifyvm', :id, '--vram', '256']"
+  #     - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+  #     - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+  #   groups:
+  #     - client
+  # - name: Rocky9
+  #   box: rockylinux/9
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.30"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+  #     - "customize ['modifyvm', :id, '--vram', '256']"
+  #     - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+  #     - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+  #   groups:
+  #     - client
+  - name: Ubuntu2210
+    box: ubuntu/jammy64
     memory: 2048
     cpus: 2
     interfaces:
@@ -84,21 +83,10 @@ platforms:
       - "customize ['modifyvm', :id, '--vram', '256']"
       - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
       - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
-    provision:
-      - name: Remove snapd
-        type: shell
-        inline: |
-          sudo apt-get purge -y snapd
-          sudo rm -rf /var/cache/snapd
-      - name: Disable snapd service
-        type: shell
-        inline: |
-          sudo systemctl disable snapd.service
-          sudo systemctl mask snapd.service
     groups:
       - client
   - name: Debian12
-    box: generic/debian12
+    box: debian/bookworm64
     memory: 2048
     cpus: 2
     interfaces:

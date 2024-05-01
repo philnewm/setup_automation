@@ -17,7 +17,6 @@
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
-    update_cache: true  # updates cache in case of outdated repo entries
 
 - name: Remove obsolete Gnome packages
   become: true
