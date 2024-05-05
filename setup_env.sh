@@ -15,6 +15,13 @@ sudo apt-get install python3.10-venv -y
 echo 'export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"' >> ~/.bashrc
 echo 'export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"' >> ~/.bashrc
 
+# TODO add wsl config options to 7etc/wsl-conf
+# [boot]
+# systemd=true
+# [automount]
+# options = "metadata"
+
+
 # now reload the ~/.bashrc file
 source ~/.bashrc
 
