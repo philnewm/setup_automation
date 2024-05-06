@@ -175,22 +175,29 @@
         fail_msg: "Theme {{ theme.value.name }} not found."
         quiet: true
 
+    - name: Collect themes dconf config
+      loop: "{{ gnome_themes | dict2items }}"
+      loop_control:
+        label: "{{ item.value.name }}"
+      ansible.builtin.set_fact:
+        theme_dconf: "{{ combined_config | default({}) | combine(item.value.dconf) }}"
+
     - name: Get gnome theme settings
-      loop: "{{ gnome_theme_settings[gnome_major_version.stdout] | dict2items }}"
+      loop: "{{ theme_dconf | dict2items }}"
       community.general.dconf:
         key: "{{ item.key }}"
         state: read
-      register: dconf_theme_list
+      register: dconf_value_list
 
     - name: Test gnome theme settings
-      loop: "{{ dconf_theme_list.results }}"
+      loop: "{{ dconf_value_list.results }}"
       loop_control:
         loop_var: entry
         label: "{{ entry.item.key }}"
       ansible.builtin.assert:
         that:
-          - entry.item.value == gnome_theme_settings[gnome_major_version.stdout][entry.item.key]
-        fail_msg: "Expected value '{{ gnome_theme_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
+          - entry.item.value == theme_dconf[entry.item.key]
+        fail_msg: "Expected value '{{ theme_dconf[entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
         quiet: true
 
     - name: Get users list

@@ -113,15 +113,6 @@
     label: "{{ theme.value.name }}"
     loop_var: theme
 
-# TODO move back to themes.yml but prevent execution in every run
-- name: Configure themes
-  loop: "{{ gnome_theme_settings[gnome_major_version.stdout] | dict2items }}"
-  loop_control:
-    loop_var: dconf_setting
-  community.general.dconf:
-    key: "{{ dconf_setting.key }}"
-    value: "{{ dconf_setting.value }}"
-
 - name: Get users list
   ansible.builtin.getent:
     database: passwd

@@ -2,17 +2,14 @@
 
 # requirements file
 
-- name: Update package cache
-  become: true
-  ansible.builtin.package:
-    update_cache: true
-
 - name: Upgrade packages
   become: true
-    when: ansible_os_family == debian
-    ansible.builtin.dnf:
+  when: ansible_os_family == debian
+  ansible.builtin.apt:
     name: "*"
     state: latest
+    update_cache: true
+    cache_valid_time: 3600
 
 - name: Upgrade packages
   become: true
