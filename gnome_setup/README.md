@@ -55,9 +55,8 @@ Role Variables
   - extension_paths: directories gnome extensions should be installed in
   - obsolete_gnome_extensions: List of extensions to remove from default gnome-shell install
 - defaults/main/themes.yml
-  - gnome_themes: Dictionary of theme types having the names as their values
+  - gnome_themes: Dictionary of theme types having the names as their values and dconf dictionary
   - theme_repo: Dictionary of theme names including their git specific information
-  - gnome_theme_settings: Dictionary holding theme related dconf settings grouped by gnome major version numbers
   - theme_paths: directories gnome themes should be installed in
   - picture_src_path: profile picture source path
   - picture_dest_path: profile picture destination path
