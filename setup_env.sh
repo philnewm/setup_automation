@@ -41,6 +41,7 @@ python3 -m pip install docker
 python3 -m pip install molecule ansible-core
 python3 -m pip install molecule ansible-lint
 python3 -m pip install "molecule-plugins[vagrant]"
+python3 -m pip install jmespath
 
 # ansible packages
 ansible-galaxy collection install ansible.posix
