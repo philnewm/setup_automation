@@ -2,17 +2,16 @@
 
 # handle gnome extension tasks
 
-# TODO get by list instead of hardcoded - like themes already do
 - name: Get installed GNOME extensions
   ansible.builtin.shell:
-    cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
-  register: gnome_extensions_list
+    cmd: "ls -1d {{ extension_paths | join('* ') }}* | xargs -n1 basename | cat"
+  register: ext_names_list
   changed_when: false
-  failed_when: gnome_extensions_list.rc not in [0, 2]
+  failed_when: ext_names_list.rc not in [0, 2]
 
 - name: Install extensions
   loop: "{{ gnome_extensions }}"
-  when: extension.distro[ansible_distribution] is defined and extension.distro[ansible_distribution].name not in gnome_extensions_list.stdout_lines
+  when: extension.distro[ansible_distribution] is defined and extension.distro[ansible_distribution].name not in ext_names_list.stdout_lines
   ansible.builtin.include_tasks:
     file: present_extensions.yml
   loop_control:
@@ -26,16 +25,16 @@
     path: "/usr/share/gnome-shell/extensions/{{ item }}"
     state: absent
 
-# TODO get by list instead of hardcoded - like themes already do
 - name: Get installed GNOME extensions
   ansible.builtin.shell:
-    cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
-  register: gnome_extensions_list
+    cmd: "ls -1d {{ extension_paths | join('* ') }}* | xargs -n1 basename | cat"
+  register: ext_names_list
   changed_when: false
+  failed_when: ext_names_list.rc not in [0, 2]
 
 - name: Enable installed extensions
   ansible.builtin.dconf:
     key: "/org/gnome/shell/enabled-extensions"
-    value: "{{ gnome_extensions_list.stdout_lines | to_json }}"
+    value: "{{ ext_names_list.stdout_lines | to_json }}"
 
 ...
