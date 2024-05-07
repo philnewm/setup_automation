@@ -158,6 +158,8 @@
         fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none."
         quiet: true
 
+    # TODO get and test extension dconf config
+
     - name: Get installed gnome themes
       ansible.builtin.shell:
         cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"

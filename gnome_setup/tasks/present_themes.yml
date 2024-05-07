@@ -1,4 +1,7 @@
 ---
+
+# install and configure gnome themes
+
 - name: "Get theme from Github: {{ theme.value.name }}"
   block:
     - name: "Clone theme from github: {{ theme.value.name }}"

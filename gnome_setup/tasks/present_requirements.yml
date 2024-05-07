@@ -25,6 +25,7 @@
     name: crb
     state: enabled
 
+# TODO add gpg keys using rpm key module
 - name: Install additional repos
   loop: "{{ additional_rhel_repos }}"
   loop_control:
