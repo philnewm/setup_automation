@@ -8,9 +8,12 @@
 user_install_dir: "{{ (ansible_env.HOME, install_name) | ansible.builtin.path_join }}"
 
 additional_rhel_repos:
-  - epel-release
-  - "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
-  - "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+  - name: rpmfusion-free
+    gpg_key: "/usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-free-el-{{ ansible_distribution_major_version }}"
+    src: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
+  - name: rpmfusion-nonfree
+    gpg_key: "/usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-nonfree-el-{{ ansible_distribution_major_version }}"
+    src: "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 gnome_packages:
   "CentOS":

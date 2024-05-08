@@ -16,13 +16,13 @@
     shell_users: "{{ shell_users | default([]) + [item.key] }}"
 
 - name: Configure profile pictures
+  when: profile_pictures[shell_user] is defined
   block:
     - name: Copy profile pictures
       become: true
       loop: "{{ shell_users }}"
       loop_control:
         loop_var: shell_user
-      when: profile_pictures[shell_user] is defined
       ansible.builtin.copy:
         src: "{{ (picture_src_path, shell_user) | ansible.builtin.path_join }}"
         dest: "{{ (picture_dest_path, shell_user) | ansible.builtin.path_join }}"
@@ -35,20 +35,8 @@
       loop: "{{ shell_users }}"
       loop_control:
         loop_var: shell_user
-      when: profile_pictures[shell_user] is defined
-      # TODO move to template file
-      ansible.builtin.copy:
-        content: |
-          [User]
-          Session=
-          Icon={{ picture_dest_path }}/{{ shell_user }}
-          SystemAccount=false
-
-          [InputSource0]
-          xkb=de
-
-          [InputSource1]
-          xkb=us
+      ansible.builtin.template:
+        src: gnome_profile.j2
         dest: "{{ profile_config_path }}/{{ shell_user }}"
         owner: root
         group: root
