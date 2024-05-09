@@ -159,7 +159,7 @@
         quiet: true
 
     # TODO get and test extension dconf config
-
+    # TODO switch to loop like in "Get installed GNOME themes"
     - name: Get installed gnome themes
       ansible.builtin.shell:
         cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"

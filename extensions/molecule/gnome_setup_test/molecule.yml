@@ -18,7 +18,6 @@ platforms:
   - name: CentosStream9
     box: centos/stream9
     box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230501.0.x86_64.vagrant-virtualbox.box
-      # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
     memory: 2048
     cpus: 2
     interfaces:

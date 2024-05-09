@@ -4,7 +4,7 @@
 
 - name: Install Gnome packages
   when: item not in ansible_facts.packages
-  loop: "{{ gnome_packages[ansible_distribution] }}"
+  loop: "{{ gnome_packages[ansible_os_family] }}"
   become: true
   ansible.builtin.package:
     name: "{{ item }}"

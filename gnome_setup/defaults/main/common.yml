@@ -16,39 +16,7 @@ additional_rhel_repos:
     src: "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 gnome_packages:
-  "CentOS":
-    - gnome-shell
-    - gnome-themes-extra # includes Adwaita-dark
-    - gnome-terminal
-    - gnome-system-monitor
-    - gnome-software
-    - gnome-tweaks
-    - gnome-user-docs
-    - gnome-photos
-    - gnome-font-viewer
-    - gnome-extensions-app
-    - gnome-control-center-filesystem
-    - gnome-characters
-    - gnome-devel-docs
-    - gnome-disk-utility
-    - baobab
-  "AlmaLinux":
-    - gnome-shell
-    - gnome-themes-extra # includes Adwaita-dark
-    - gnome-terminal
-    - gnome-system-monitor
-    - gnome-software
-    - gnome-tweaks
-    - gnome-user-docs
-    - gnome-photos
-    - gnome-font-viewer
-    - gnome-extensions-app
-    - gnome-control-center-filesystem
-    - gnome-characters
-    - gnome-devel-docs
-    - gnome-disk-utility
-    - baobab
-  "Rocky":
+  "RedHat":
     - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
@@ -75,23 +43,6 @@ gnome_packages:
     - gnome-photos
     - gnome-font-viewer
     - gnome-shell-extension-prefs
-    - gnome-control-center
-    - gnome-characters
-    - gnome-devel-docs
-    - gnome-disk-utility
-    - baobab
-  "Ubuntu":
-    - gnome-shell
-    - gnome-themes-extra # includes Adwaita-dark
-    - gnome-terminal
-    - gnome-system-monitor
-    - gnome-software
-    - gnome-tweaks
-    - gnome-user-docs
-    - gnome-photos
-    - gnome-font-viewer
-    - gnome-shell-extension-prefs
-    # TODO research why ubuntu reports change on every run - which breaks idempotency
     - gnome-control-center
     - gnome-characters
     - gnome-devel-docs
@@ -99,17 +50,17 @@ gnome_packages:
     - baobab
 
 obsolete_packages:
+  "RedHat":
+    - gnome-tour
+    - gnome-shell-extension-background-logo
+    - gnome-remote-desktop
+    - gnome-software-plugin-snap
+    - gnome-startup-applications
   "Debian":
     - gnome-tour
     - gnome-shell-extension-background-logo
     # TODO research why ubuntu reports change on every run - which breaks idempotency
     # - gnome-remote-desktop
-    - gnome-software-plugin-snap
-    - gnome-startup-applications
-  "RedHat":
-    - gnome-tour
-    - gnome-shell-extension-background-logo
-    - gnome-remote-desktop
     - gnome-software-plugin-snap
     - gnome-startup-applications
 
