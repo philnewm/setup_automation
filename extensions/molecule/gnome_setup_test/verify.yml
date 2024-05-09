@@ -18,7 +18,10 @@
       block:
         - name: Get enabled repos
           ansible.builtin.shell:
-            cmd: "dnf repolist --enabled | awk '{print $1}'"
+            cmd: |
+              set -o pipefail
+              dnf repolist --enabled | awk '{print $1}'
+            executable: /bin/bash
           register: enabled_repos
           changed_when: false
 
@@ -43,7 +46,7 @@
       loop: "{{ dependencies[ansible_os_family] }}"
 
     - name: Test installed gnome packages
-      loop: "{{ gnome_packages[ansible_distribution] }}"
+      loop: "{{ gnome_packages[ansible_os_family] }}"
       ansible.builtin.assert:
         that:
           - item in ansible_facts.packages
@@ -87,7 +90,10 @@
 
     - name: Get Gnome version
       ansible.builtin.shell:
-        cmd: "gnome-shell --version | awk '{print $3}' | cut -d'.' -f1"
+        cmd: |
+          set -o pipefail
+          gnome-shell --version | awk '{print $3}' | cut -d'.' -f1
+        executable: /bin/bash
       register: gnome_major_version
       changed_when: false
 
@@ -106,12 +112,17 @@
       ansible.builtin.assert:
         that:
           - entry.value == gnome_base_settings[gnome_major_version.stdout][entry.item.key]
-        fail_msg: "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
+        fail_msg: |
+          "Expected value '{{ gnome_base_settings[gnome_major_version.stdout][entry.item.key] }}'
+          but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
         quiet: true
 
     - name: Get installed GNOME extensions
       ansible.builtin.shell:
-        cmd: "ls ~/.local/share/gnome-shell/extensions/ && ls /usr/share/gnome-shell/extensions"
+        cmd: |
+          set -o pipefail
+          "ls -1d {{ extension_paths | join('* ') }}* | xargs -n1 basename | cat"
+        executable: /bin/bash
       register: gnome_extensions_list
       changed_when: false
 
@@ -120,11 +131,11 @@
       loop_control:
         label: "{{ extension.name }}"
         loop_var: extension
-      when: extension.distro[ansible_distribution] is defined
+      when: extension[ansible_os_family] is defined
       ansible.builtin.assert:
         that:
-          extension.distro[ansible_distribution].name in gnome_extensions_list.stdout_lines
-        fail_msg: "Failed to find '{{ extension.name }}' in installed extensions."
+          extension[ansible_os_family].address in gnome_extensions_list.stdout_lines
+        fail_msg: "Failed to find '{{ extension[ansible_os_family].address }}' in installed extensions."
         quiet: true
 
     - name: Get enabled extensions
@@ -138,11 +149,11 @@
       loop_control:
         label: "{{ extension.name }}"
         loop_var: extension
-      when: extension.distro[ansible_distribution] is defined
+      when: extension[ansible_os_family] is defined
       ansible.builtin.assert:
         that:
-          extension.distro[ansible_distribution].name in enabled_extensions_list.value
-        fail_msg: "'{{ extension.distro[ansible_distribution].name }}' did not get enabled."
+          extension[ansible_os_family].address in enabled_extensions_list.value
+        fail_msg: "'{{ extension[ansible_os_family].address }}' did not get enabled."
         quiet: true
 
     - name: Get disabled extensions
@@ -158,11 +169,41 @@
         fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none."
         quiet: true
 
-    # TODO get and test extension dconf config
-    # TODO switch to loop like in "Get installed GNOME themes"
+    - name: Collect gnome extensions dconf config
+      loop: "{{ gnome_extensions }}"
+      loop_control:
+        loop_var: ext
+        label: "{{ ext.name }}"
+      when: ext.dconf_settings is defined
+      ansible.builtin.set_fact:
+        ext_dconf: "{{ ext_dconf | default({}) | combine(ext.dconf_settings) }}"
+
+    - name: Get gnome extension settings
+      loop: "{{ ext_dconf | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+      community.general.dconf:
+        key: "{{ item.key }}"
+        state: read
+      register: ext_dconf_value_list
+
+    - name: Test gnome extension settings
+      loop: "{{ ext_dconf_value_list.results }}"
+      loop_control:
+        loop_var: entry
+        label: "{{ entry.item.key }}"
+      ansible.builtin.assert:
+        that:
+          - entry.item.value == ext_dconf[entry.item.key]
+        fail_msg: "Expected value '{{ ext_dconf[entry.item.key] }}' but got '{{ entry.value }}' instead for key '{{ entry.item.key }}'."
+        quiet: true
+
     - name: Get installed gnome themes
       ansible.builtin.shell:
-        cmd: "ls ~/.themes/ && ls .local/share/icons/ && ls /usr/share/backgrounds/"
+        cmd: |
+          set -o pipefail
+          ls -1d "{{ theme_paths | join('* ') }}"* | xargs -n1 basename | cat
+        executable: /bin/bash
       register: gnome_themes_list
       changed_when: false
 
@@ -182,17 +223,17 @@
       loop_control:
         label: "{{ item.value.name }}"
       ansible.builtin.set_fact:
-        theme_dconf: "{{ combined_config | default({}) | combine(item.value.dconf) }}"
+        theme_dconf: "{{ theme_dconf | default({}) | combine(item.value.dconf) }}"
 
     - name: Get gnome theme settings
       loop: "{{ theme_dconf | dict2items }}"
       community.general.dconf:
         key: "{{ item.key }}"
         state: read
-      register: dconf_value_list
+      register: theme_dconf_value_list
 
     - name: Test gnome theme settings
-      loop: "{{ dconf_value_list.results }}"
+      loop: "{{ theme_dconf_value_list.results }}"
       loop_control:
         loop_var: entry
         label: "{{ entry.item.key }}"
@@ -235,11 +276,14 @@
       ansible.builtin.assert:
         that:
           "'Icon=' ~ picture_dest_path ~ '/' ~ profile.shell_user in profile.stdout_lines"
-        fail_msg: "Expected profile picture path 'Icon={{ picture_dest_path }}/{{ profile.shell_user }}' is not present in {{ profile_config_path }}/{{ profile.shell_user }}"
+        fail_msg: |
+          "Expected profile picture path 'Icon={{ picture_dest_path }}/
+          {{ profile.shell_user }}' is not present in
+          {{ profile_config_path }}/{{ profile.shell_user }}"
         quiet: true
 
-    - name: Roll back gnome changes
-      ansible.builtin.include_role:
-        name: gnome_setup
-      vars:
-        gnome_setup_state: absent
+    # - name: Roll back gnome changes
+    #   ansible.builtin.include_role:
+    #     name: gnome_setup
+    #   vars:
+    #     gnome_setup_state: absent

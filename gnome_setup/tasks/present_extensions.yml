@@ -5,14 +5,14 @@
     dconf_path: "{{ extension.dconf_path }}"
 
 - name: "Install Gnome extension {{ extension.name }}"
-  when: extension.distro[ansible_distribution].package != "git"
+  when: extension[ansible_os_family].package != "git"
   become: true
   ansible.builtin.package:
-    name: "{{ extension.distro[ansible_distribution].package }}"
+    name: "{{ extension[ansible_os_family].package }}"
     state: present
 
 - name: "Get extension from Github: {{ extension.name }}"
-  when: extension.distro[ansible_distribution].package == "git"
+  when: extension[ansible_os_family].package == "git"
   block:
     - name: "Clone extension from github: {{ extension.name }}"
       ansible.builtin.git:
@@ -59,9 +59,9 @@
 
 - name: Configure extension
   when: extension.dconf_settings is defined
-  loop: "{{  extension.dconf_settings | dict2items }}"
+  loop: "{{ extension.dconf_settings | dict2items }}"
   loop_control:
     loop_var: dconf_setting
   community.general.dconf:
-    key: "{{ dconf_path }}{{ dconf_setting.key }}"
+    key: "{{ dconf_setting.key }}"
     value: "{{ dconf_setting.value }}"

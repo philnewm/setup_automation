@@ -15,7 +15,6 @@ gnome_themes:
     name: "Qogir-cursors"
     dconf: 
       "/org/gnome/desktop/interface/cursor-theme": "'Qogir-ubuntu-cursors'"
-  # TODO filter for wanted wallpapers to not download complete library
   wallpaper:
     name: "Dynamic_Wallpapers"
     dconf: 
