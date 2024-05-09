@@ -35,7 +35,6 @@
         name: epel-release
         state: present
 
-    # TODO install after epel since it depends on epel repo
     - name: Install distribution-gpg-keys package
       ansible.builtin.dnf:
         name: distribution-gpg-keys

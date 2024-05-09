@@ -12,6 +12,9 @@
         version: "{{ git_theme.branch[gnome_major_version.stdout] }}"
         depth: 1
       register: git_result
+      until: git_result is succeeded
+      retries: 5
+      delay: 10
 
     - name: Update installer permissions
       ansible.builtin.file:
