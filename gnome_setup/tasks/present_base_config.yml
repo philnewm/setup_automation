@@ -8,7 +8,7 @@
     value: "{{ item.value }}"
   loop: "{{ gnome_base_settings[gnome_major_version.stdout] | dict2items }}"
 
-# TODO move to dictionary and figure how how to make it work with the other values in on task
+# TODO move to dictionary and figure how to make it work with the other values in on task
 - name: Set keyboard layouts
   ansible.builtin.dconf:
     key: "/org/gnome/desktop/input-sources/sources"

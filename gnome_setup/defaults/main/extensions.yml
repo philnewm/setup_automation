@@ -2,7 +2,7 @@
 
 # variables for gnome extension config
 
-# TODO add gpaste, copyQ or similar clipboard manager
+# TODO add https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator
 gnome_extensions:
   - name: "drive-menu"
     "RedHat":

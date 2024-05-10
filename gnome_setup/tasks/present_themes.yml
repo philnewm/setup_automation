@@ -45,7 +45,7 @@
         path: "{{ user_install_dir }}"
         state: absent
 
-    # TODO fix theme for software center on centos stream 9 - stays in light theme
+    # TODO fix theme for software center on centos stream 9 - stays in light theme and test on rocky and alma if same behavior occurs
     - name: Configure themes
       loop: "{{ theme.value.dconf | dict2items }}"
       loop_control:

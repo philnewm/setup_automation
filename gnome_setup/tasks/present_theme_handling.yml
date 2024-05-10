@@ -6,11 +6,11 @@
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
-      ls -1d "{{ theme_paths | join('* ') }}"* | xargs -n1 basename | cat
+      ls -1d {{ theme_paths | join('* ') }}* | xargs -n1 basename | cat
     executable: /bin/bash
   register: theme_names_list
   changed_when: false
-  failed_when: theme_names_list.rc not in [0, 2]
+  failed_when: ext_names_list.rc != 0 and 'No such file or directory' not in ext_names_list.stderr
 
 - name: Install themes
   loop: "{{ gnome_themes | dict2items }}"

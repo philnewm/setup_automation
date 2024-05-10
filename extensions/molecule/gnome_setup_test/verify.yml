@@ -121,7 +121,7 @@
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          "ls -1d {{ extension_paths | join('* ') }}* | xargs -n1 basename | cat"
+          ls -1d {{ extension_paths | join('* ') }}* | xargs -n1 basename | cat
         executable: /bin/bash
       register: gnome_extensions_list
       changed_when: false
@@ -202,7 +202,7 @@
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          ls -1d "{{ theme_paths | join('* ') }}"* | xargs -n1 basename | cat
+          ls -1d {{ theme_paths | join('* ') }}* | xargs -n1 basename | cat
         executable: /bin/bash
       register: gnome_themes_list
       changed_when: false
