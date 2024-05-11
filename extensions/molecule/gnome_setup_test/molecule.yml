@@ -31,49 +31,15 @@ platforms:
       - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
     groups:
       - client
-  # - name: Alma9
-  #   box: almalinux/9
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.56.20"
-  #   provider_raw_config_args:
-  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-  #     - "customize ['modifyvm', :id, '--vram', '256']"
-  #     - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
-  #     - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
-  #   groups:
-  #     - client
-  # - name: Rocky9
-  #   box: rockylinux/9
-  #   memory: 2048
-  #   cpus: 2
-  #   interfaces:
-  #     - auto_config: true
-  #       network_name: private_network
-  #       type: "static"
-  #       ip: "192.168.56.30"
-  #   provider_raw_config_args:
-  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
-  #     - "customize ['modifyvm', :id, '--vram', '256']"
-  #     - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
-  #     - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
-  #   groups:
-  #     - client
-  - name: Ubuntu2210
-    box: ubuntu/jammy64
+  - name: Alma9
+    box: almalinux/9
     memory: 2048
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.40"
+        ip: "192.168.56.20"
     provider_raw_config_args:
       - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
       - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
@@ -82,6 +48,40 @@ platforms:
       - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
     groups:
       - client
+  - name: Rocky9
+    box: rockylinux/9
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.30"
+    provider_raw_config_args:
+      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+      - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+      - "customize ['modifyvm', :id, '--vram', '256']"
+      - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+      - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+    groups:
+      - client
+  # - name: Ubuntu2210
+  #   box: ubuntu/jammy64
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.40"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #     - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
+  #     - "customize ['modifyvm', :id, '--vram', '256']"
+  #     - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+  #     - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+  #   groups:
+  #     - client
   # - name: Debian12
   #   box: debian/bookworm64
   #   memory: 2048
