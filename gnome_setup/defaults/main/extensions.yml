@@ -117,7 +117,7 @@ gnome_extensions:
       "/org/gnome/shell/extensions/system-monitor/net-graph-width": "50"
       "/org/gnome/shell/extensions/system-monitor/thermal-display": "false"
       "/org/gnome/shell/extensions/system-monitor/thermal-style": "'graph'"
-  - name: "app-indicator"
+  - name: "clipboard-indicator"
     "RedHat":
       address: "clipboard-indicator@tudmotu.com"
       package: "git"

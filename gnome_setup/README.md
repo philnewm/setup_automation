@@ -13,6 +13,7 @@ Extensions (not available on every distro):
 - tiling-assistant
 - dash-to-panel
 - system-monitor
+- clipboard-indicator
 
 Themes:
 - Shell Theme: Lavanda-Dark
