@@ -14,6 +14,7 @@
 - name: "Get extension from Github: {{ extension.name }}"
   when: extension[ansible_os_family].package == "git"
   block:
+    # TODO test installing in destination path "{{ ansible_env.HOME }}/.local/share/gnome-shell/extensions/" right away 
     - name: "Clone extension from github: {{ extension.name }}"
       ansible.builtin.git:
         repo: "{{ git_extension.repo_url }}"
@@ -33,6 +34,7 @@
       when: git_result.changed
 
     - name: Install git extension dependencies
+      become: true
       when: git_extension.dependencies is defined
       loop: "{{ git_extension.dependencies[ansible_os_family] }}"
       loop_control:
@@ -40,15 +42,15 @@
       ansible.builtin.package:
         name: "{{ dependency }}"
         state: present
-      become: true
 
     - name: "Install extension from github"
-      ansible.builtin.command: "{{ git_extension.install_cmd }}"
+      ansible.builtin.shell: "{{ git_extension.install_cmd }}"
       args:
         chdir: "{{ user_install_dir }}/{{git_extension.install_dir}}"
       register: install_result
       changed_when: install_result.rc == 0
       when: git_result.changed
+      failed_when: install_result.rc not in [0, 2]  # INFO make install errors for clipboard-indicator even tho it works
 
     - name: Remove downloaded repos
       ansible.builtin.file:

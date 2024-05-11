@@ -13,8 +13,6 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  # TODO check how to fix Error: Failed to download metadata for repo 'baseos': Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
-  # https://www.reddit.com/r/CentOS/comments/18ard59/is_there_something_wrong_with_cs9_dnfyum/
   - name: CentosStream9
     box: centos/stream9
     box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230501.0.x86_64.vagrant-virtualbox.box

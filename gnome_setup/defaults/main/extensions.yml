@@ -2,7 +2,6 @@
 
 # variables for gnome extension config
 
-# TODO add https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator
 gnome_extensions:
   - name: "drive-menu"
     "RedHat":
@@ -38,7 +37,7 @@ gnome_extensions:
       address: "tiling-assistant@leleat-on-github"
       package: "git"
     dconf_path: "/org/gnome/shell/extensions/tiling-assistant/"
-    # TODO integrate path
+    # INFO integrating path requires custom filter to grab dconf_path in internal loop
     dconf_settings:
       "/org/gnome/shell/extensions/tiling-assistant/enable-tiling-popup": "false"
       "/org/gnome/shell/extensions/tiling-assistant/active-window-hint-color": "'rgb(123,136,255)'"
@@ -59,6 +58,7 @@ gnome_extensions:
     "Debian":
       address: "dash-to-panel@jderose9.github.com"
       package: "git"
+    # INFO integrating path requires custom filter to grab dconf_path in internal loop
     dconf_path: "/org/gnome/shell/extensions/dash-to-panel/"
     dconf_settings:
       "/org/gnome/shell/extensions/dash-to-panel/animate-appicon-hover": "false"
@@ -101,6 +101,7 @@ gnome_extensions:
     "Debian":
       address: "system-monitor@paradoxxx.zero.gmail.com"
       package: "git"
+    # INFO integrating path requires custom filter to grab dconf_path in internal loop
     dconf_path: "/org/gnome/shell/extensions/system-monitor/"
     dconf_settings:
       "/org/gnome/shell/extensions/system-monitor/compact-display": "true"
@@ -116,6 +117,20 @@ gnome_extensions:
       "/org/gnome/shell/extensions/system-monitor/net-graph-width": "50"
       "/org/gnome/shell/extensions/system-monitor/thermal-display": "false"
       "/org/gnome/shell/extensions/system-monitor/thermal-style": "'graph'"
+  - name: "app-indicator"
+    "RedHat":
+      address: "clipboard-indicator@tudmotu.com"
+      package: "git"
+    "Debian":
+      address: "clipboard-indicator@tudmotu.com"
+      package: "git"
+    # INFO integrating path requires custom filter to grab dconf_path in internal loop
+    dconf_path: "/org/gnome/shell/extensions/clipboard-indicator/"
+    dconf_settings:
+      "/org/gnome/shell/extensions/clipboard-indicator/move-item-first": true
+      "/org/gnome/shell/extensions/clipboard-indicator/notify-on-copy": true
+      "/org/gnome/shell/extensions/clipboard-indicator/toggle-menu": "['<Super>v']"
+      "/org/gnome/shell/keybindings/toggle-message-tray": "@as []"
 
 git_ext:
   "tiling-assistant":
@@ -172,6 +187,16 @@ git_ext:
     install_cmd: "make install"
     download_dir: "gnome-shell-system-monitor-applet/"
     install_dir: "gnome-shell-system-monitor-applet/"
+  "app-indicator":
+    repo_url: "https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator.git"
+    branch:
+      "40": "v39"
+      "42": "v47"
+      "43": "v47"
+    installer: "Makefile"
+    install_cmd: "make install"
+    download_dir: "gnome-shell-extension-clipboard-indicator/"
+    install_dir: "gnome-shell-extension-clipboard-indicator/"
 
 extension_paths:
   - "{{ ansible_env.HOME }}/.local/share/gnome-shell/extensions/"

@@ -29,6 +29,11 @@
   ansible.builtin.include_tasks:
     file: present_profile_picture.yml
 
+- name: Remove unused dependencies
+  become: true
+  ansible.builtin.package:
+    autoremove: true
+
 ...
 
 # INFO partly broken visible columns show no effect

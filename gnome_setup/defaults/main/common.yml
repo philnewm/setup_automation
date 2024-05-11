@@ -59,8 +59,7 @@ obsolete_packages:
   "Debian":
     - gnome-tour
     - gnome-shell-extension-background-logo
-    # TODO research why ubuntu reports change on every run - which breaks idempotency
-    # - gnome-remote-desktop
+    # INFO gnome-remote-desktop is a part of gnome-control-center package
     - gnome-software-plugin-snap
     - gnome-startup-applications
 
