@@ -12,6 +12,8 @@ lint: |
   set -e
   yamllint
   ansible-lint
+# Warning redownloading and updating abse images can cause setup to break caused by download mirror troubles
+# TODO boot VMs from local updated images - use packer
 platforms:
   - name: CentosStream9
     box: centos/stream9
