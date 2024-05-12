@@ -43,10 +43,6 @@ python3 -m pip install molecule ansible-lint
 python3 -m pip install "molecule-plugins[vagrant]"
 python3 -m pip install jmespath
 
-# ansible packages
-ansible-galaxy collection install ansible.posix
-ansible-galaxy collection install community.general
-
 # vscode workspace settings:
 mkdir -p "$repo_path/.vscode"
 jq -n \
