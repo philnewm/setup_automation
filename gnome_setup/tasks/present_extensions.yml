@@ -66,4 +66,4 @@
     loop_var: dconf_setting
   community.general.dconf:
     key: "{{ dconf_setting.key }}"
-    value: "{{ dconf_setting.value }}"
+    value: "{{ dconf_setting.value | string }}"

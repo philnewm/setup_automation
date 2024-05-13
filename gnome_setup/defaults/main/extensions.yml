@@ -127,8 +127,8 @@ gnome_extensions:
     # INFO integrating path requires custom filter to grab dconf_path in internal loop
     dconf_path: "/org/gnome/shell/extensions/clipboard-indicator/"
     dconf_settings:
-      "/org/gnome/shell/extensions/clipboard-indicator/move-item-first": true
-      "/org/gnome/shell/extensions/clipboard-indicator/notify-on-copy": true
+      "/org/gnome/shell/extensions/clipboard-indicator/move-item-first": "true"
+      "/org/gnome/shell/extensions/clipboard-indicator/notify-on-copy": "true"
       "/org/gnome/shell/extensions/clipboard-indicator/toggle-menu": "['<Super>v']"
       "/org/gnome/shell/keybindings/toggle-message-tray": "@as []"
 

@@ -52,7 +52,7 @@
         loop_var: dconf_entry
       community.general.dconf:
         key: "{{ dconf_entry.key }}"
-        value: "{{ dconf_entry.value }}"
+        value: "{{ dconf_entry.value | string }}"
 
   vars:
     git_theme: "{{ theme_repo[theme.value.name] }}"

@@ -69,6 +69,27 @@
       retries: 5
       delay: 10
 
+- name: Install Flatpak
+  become: true
+  ansible.builtin.package:
+    state: present
+    name:
+    - flatpak
+
+- name: Add the flathub flatpak repository remote
+  become: true
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+- name: Remove filters from flathub
+  become: true
+  when: ansible_distribution == "Fedora"
+  ansible.builtin.command:
+    cmd: flatpak remote-modify --no-filter flathub 
+  changed_when: false
+
 - name: Install global dependencies
   loop: "{{ dependencies[ansible_os_family] }}"
   when: item not in ansible_facts.packages
