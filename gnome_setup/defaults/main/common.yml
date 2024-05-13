@@ -72,10 +72,11 @@ gdm_config_file:
 
 gnome_base_settings:
   "40":
+    # update gnome formats to United Kingdom
     # obsolete if user theme gets added
     # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
-    # "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
+    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
     "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
     "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"

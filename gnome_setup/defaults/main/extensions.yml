@@ -187,7 +187,7 @@ git_ext:
     install_cmd: "make install"
     download_dir: "gnome-shell-system-monitor-applet/"
     install_dir: "gnome-shell-system-monitor-applet/"
-  "app-indicator":
+  "clipboard-indicator":
     repo_url: "https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator.git"
     branch:
       "40": "v39"
