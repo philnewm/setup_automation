@@ -79,6 +79,8 @@
     name: "{{ item }}"
     state: absent
 
+# TODO remove additional repos
+
 - name: Remove unused dependencies
   become: true
   ansible.builtin.package:
