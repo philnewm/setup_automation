@@ -23,7 +23,7 @@ Themes:
 
 The rolse is 
 
-Additionally this role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.04 VMs at `extensions/molecule/gnome_setup_test`
+Additionally this role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.10 VMs at `extensions/molecule/gnome_setup_test`
 
 Structure
 ---------
