@@ -79,7 +79,21 @@
     name: "{{ item }}"
     state: absent
 
-# TODO remove additional repos
+- name: Remove Flatpaks
+  community.general.flatpak:
+    name: "*"
+    state: absent
+
+- name: Remove Flatpak
+  ansible.builtin.package:
+    name: flatpak
+    state: absent
+
+- name: Remove flathub flatpak repository remote
+  become: true
+  community.general.flatpak_remote:
+    name: flathub
+    state: absent
 
 - name: Remove unused dependencies
   become: true

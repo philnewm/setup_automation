@@ -72,9 +72,8 @@
 - name: Install Flatpak
   become: true
   ansible.builtin.package:
+    name: flatpak
     state: present
-    name:
-    - flatpak
 
 - name: Add the flathub flatpak repository remote
   become: true

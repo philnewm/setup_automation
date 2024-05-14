@@ -21,7 +21,48 @@ Themes:
 - Cursor Theme: Qogir-cursors
 - Wallpaper: Dynamic_Wallpapers
 
+The rolse is 
+
 Additionally this role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.04 VMs at `extensions/molecule/gnome_setup_test`
+
+Structure
+---------
+```
+📦gnome_setup
+ ┣ 📂defaults
+ ┃ ┗ 📂main
+ ┃ ┃ ┣ 📜common.yml
+ ┃ ┃ ┣ 📜extensions.yml
+ ┃ ┃ ┗ 📜themes.yml
+ ┣ 📂handlers
+ ┃ ┗ 📜main.yml
+ ┣ 📂meta
+ ┃ ┗ 📜main.yml
+ ┣ 📂tasks
+ ┃ ┣ 📜absent.yml
+ ┃ ┣ 📜main.yml
+ ┃ ┣ 📜present.yml
+ ┃ ┣ 📜present_base_config.yml
+ ┃ ┣ 📜present_base_setup.yml
+ ┃ ┣ 📜present_extension_handling.yml
+ ┃ ┣ 📜present_extensions.yml
+ ┃ ┣ 📜present_profile_picture.yml
+ ┃ ┣ 📜present_requirements.yml
+ ┃ ┣ 📜present_theme_handling.yml
+ ┃ ┗ 📜present_themes.yml
+ ┣ 📂templates
+ ┃ ┗ 📜gnome_profile.j2
+ ┣ 📂vars
+ ┃ ┗ 📜main.yml
+ ┗ 📜README.md
+```
+
+The variables are split up into three files according to their content (`common.yml`, `extensions.yml`, `themes.yml`).
+The same goes for tasks and they are addtionally prefixed with `present` or `absent` depending on them beeing intended to setup a certain feature or remove it.
+As you can see currently the absent implementation only exist in one single file since it's feasable for my curernt usecase.
+The tasks related to extensions and tehemes are split up into handelers and the actual setup tasks.
+The handlers are meant to take care o preparation steps and check if the extensions/themes are already present or not.
+In case not they loop over the tasks to setup and run their install routine implemented in (`present_extension` and `present_themes`)
 
 Requirements
 ------------
@@ -49,9 +90,7 @@ Role Variables
   - gdm_config_file: Path to gdm configuration file per distribution
   - gnome_base_settings: Gnome dconf settings to change per gnome major version number
 - defaults/main/extensions.yml
-  - gnome_extensions: list of extensions grouped by their distro specific names, including dconf settings if required
-  - gnome_extensions_2: New list for more flat structure of the original implementation (WiP)
-  - ext_config: list of extension specific dconf configs for more flat structure (WiP)
+  - gnome_extensions: list of extensions including their os family specific names and including dconf settings if required
   - git_ext: List of extensions to be installed from custom sources using git and their respective git realted information
   - extension_paths: directories gnome extensions should be installed in
   - obsolete_gnome_extensions: List of extensions to remove from default gnome-shell install
