@@ -1,14 +1,15 @@
 Gnome Setup
 =========
 
+# TODO add links to tools
 This Roles builds a customized gnome desktop environment.
-It includes a bunch of dconf settings as well as extensions and themes beeing installed all in one go.
+It includes a bunch of [dconf](https://wiki.gnome.org/Projects/dconf) settings as well as extensions and themes beeing installed all in one go.
 
 Extensions (not available on every distro):
-- drive-menu
-- user-theme
-- appindicator
-- sound-output-device-chooser
+- [drive-menu](https://extensions.gnome.org/extension/7/removable-drive-menu/)
+- [user-theme](https://extensions.gnome.org/extension/19/user-themes/)
+- [appindicator](https://extensions.gnome.org/extension/615/appindicator-support/)
+- [sound-output-device-chooser](https://extensions.gnome.org/extension/906/sound-output-device-chooser/)
 - no-overview
 - tiling-assistant
 - dash-to-panel

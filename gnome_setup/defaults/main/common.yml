@@ -76,6 +76,8 @@ gnome_base_settings:
     # obsolete if user theme gets added
     # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/system/locale/region": "'en_GB.UTF-8'"
+    # TODO test if this works
+    "/org/gnome/shell/extensions/dash-to-dock/disable-overview-on-startup": "true"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
     "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
