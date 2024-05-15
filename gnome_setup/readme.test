@@ -3,18 +3,27 @@ Gnome Setup
 
 # TODO add links to tools
 This Roles builds a customized gnome desktop environment.
-It includes a bunch of {{ dconf }} settings as well as extensions and themes beeing installed all in one go.
+It includes a bunch of [dconf](https://wiki.gnome.org/Projects/dconf) settings as well as extensions and themes beeing installed all in one go.
 
 Extensions (not available on every distro):
-{% for extension in extension_list -%}
-- {{ extension.name }}
-{% endfor %}
-Themes:
-{% for theme in theme_list -%}
-- {{ theme }}: {{ theme.value }}
-{% endfor %}
+- drive-menu
+- user-theme
+- appindicator
+- sound-output-device-chooser
+- no-overview
+- tiling-assistant
+- dash-to-panel
+- system-monitor
+- clipboard-indicator
 
-Additionally this role includes a full vagrant based molecule testing setup for {% for distro in vm_list %}{{ distro.name }}, {% endfor %}VMs at `extensions/molecule/gnome_setup_test`
+Themes:
+- shell_theme: 
+- icon_theme: 
+- cursor_theme: 
+- wallpaper: 
+
+
+Additionally this role includes a full vagrant based molecule testing setup for CentosStream9, Alma9, Rocky9, Ubuntu2210, Debian12, VMs at `extensions/molecule/gnome_setup_test`
 
 Structure
 ---------

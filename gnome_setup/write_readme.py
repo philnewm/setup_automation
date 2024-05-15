@@ -4,29 +4,41 @@ from jinja2 import Environment, FileSystemLoader
 
 import yaml
 
-with open("defaults/main/extensions.yml", "r") as file:
-        yaml_content = yaml.safe_load(file)
+with open("../extensions/molecule/gnome_setup_test/molecule.yml", "r") as file:
+    # TODO test other loader classes https://realpython.com/python-yaml/#historical-context
+    molecule_config = yaml.load(file, yaml.CBaseLoader)
 
-for extensions in yaml_content['gnome_extensions']:
-    print(extensions['name'])
+vm_list = molecule_config["platforms"]
 
-# print(extensions_content.)
+with open("./defaults/main/extensions.yml", "r") as file:
+    # TODO test other loader classes https://realpython.com/python-yaml/#historical-context
+    extensions = yaml.load(file, yaml.CBaseLoader)
 
+extension_list = extensions["gnome_extensions"]
+
+with open("./defaults/main/themes.yml", "r") as file:
+    # TODO test other loader classes https://realpython.com/python-yaml/#historical-context
+    themes = yaml.load(file, yaml.CBaseLoader)
+
+theme_list = themes["gnome_themes"]
+
+# with open("../extensions/molecule/gnome_setup_test/converge.yml", "r"):
+    # TODO get task content for setting up role
 dconf = "[dconf](https://wiki.gnome.org/Projects/dconf)"
-extensions = []
 
+# for extensions in molecule_config['platforms']:
+#     print(extensions['name'])
 
+environment = Environment(loader=FileSystemLoader("templates/"))
+results_filename = "readme.test"
+results_template = environment.get_template("README_template.j2")
+context = {
+    "dconf": dconf,
+    "vm_list": vm_list,
+    "extension_list": extension_list,
+    "theme_list": theme_list,
+}
 
-# environment = Environment(loader=FileSystemLoader("templates/"))
-# results_filename = "students_results.html"
-# results_template = environment.get_template("results.html")
-# context = {
-#     "students": students,
-#     "test_name": test_name,
-#     "max_score": max_score,
-# }
-
-
-# with open(results_filename, mode="w", encoding="utf-8")as message:
-#     message.write(results_template.render(context))
-#     print(f"wrote {results_filename}")
+with open(results_filename, mode="w", encoding="utf-8")as message:
+    message.write(results_template.render(context))
+    print(f"wrote {results_filename}")
