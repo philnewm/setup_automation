@@ -8,7 +8,7 @@ with open("../extensions/molecule/gnome_setup_test/molecule.yml", "r") as file:
     # TODO test other loader classes https://realpython.com/python-yaml/#historical-context
     molecule_config = yaml.load(file, yaml.CBaseLoader)
 
-vm_list = molecule_config["platforms"]
+vm_list = [distro["name"] for distro in molecule_config["platforms"]]
 
 with open("./defaults/main/extensions.yml", "r") as file:
     # TODO test other loader classes https://realpython.com/python-yaml/#historical-context
@@ -25,12 +25,10 @@ theme_list = themes["gnome_themes"]
 # with open("../extensions/molecule/gnome_setup_test/converge.yml", "r"):
     # TODO get task content for setting up role
 dconf = "[dconf](https://wiki.gnome.org/Projects/dconf)"
-
-# for extensions in molecule_config['platforms']:
-#     print(extensions['name'])
+    
 
 environment = Environment(loader=FileSystemLoader("templates/"))
-results_filename = "readme.test"
+results_filename = "readme_test.md"
 results_template = environment.get_template("README_template.j2")
 context = {
     "dconf": dconf,
@@ -39,6 +37,6 @@ context = {
     "theme_list": theme_list,
 }
 
-with open(results_filename, mode="w", encoding="utf-8")as message:
+with open(results_filename, mode="w", encoding="utf-8") as message:
     message.write(results_template.render(context))
     print(f"wrote {results_filename}")

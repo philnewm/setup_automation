@@ -4,10 +4,12 @@
 
 gnome_extensions:
   - name: "drive-menu"
+    link: "https://extensions.gnome.org/extension/7/removable-drive-menu/"
     "RedHat":
       address: "drive-menu@gnome-shell-extensions.gcampax.github.com"
       package: "gnome-shell-extension-drive-menu"
   - name: "user-theme"
+    link: "https://extensions.gnome.org/extension/19/user-themes/"
     "RedHat":
       address: "user-theme@gnome-shell-extensions.gcampax.github.com"
       package: "gnome-shell-extension-user-theme"
@@ -15,6 +17,7 @@ gnome_extensions:
       address: "user-theme@gnome-shell-extensions.gcampax.github.com"
       package: "gnome-shell-extensions"
   - name: "appindicator"
+    link: "https://extensions.gnome.org/extension/615/appindicator-support/"
     "RedHat":
       address: "appindicatorsupport@rgcjonas.gmail.com"
       package: "gnome-shell-extension-appindicator"
@@ -22,14 +25,17 @@ gnome_extensions:
       address: "ubuntu-appindicators@ubuntu.com"
       package: "gnome-shell-extension-appindicator"
   - name: "sound-output-device-chooser"
+    link: "https://extensions.gnome.org/extension/906/sound-output-device-chooser/"
     "RedHat":
       address: "sound-output-device-chooser@kgshank.net"
       package: "gnome-shell-extension-sound-output-device-chooser"
   - name: "no-overview"
+    link: "https://extensions.gnome.org/extension/4099/no-overview/"
     "RedHat":
       address: "no-overview@fthx"
       package: "gnome-shell-extension-no-overview"
   - name: "tiling-assistant"
+    link: "https://extensions.gnome.org/extension/3733/tiling-assistant/"
     "RedHat":
       address: "tiling-assistant@leleat-on-github"
       package: "git"
@@ -54,6 +60,7 @@ gnome_extensions:
       "/org/gnome/shell/extensions/tiling-assistant/tile-bottomleft-quarter": "['<Super>KP_1']"
       "/org/gnome/shell/extensions/tiling-assistant/tile-bottomright-quarter": "['<Super>KP_3']"
   - name: "dash-to-panel"
+    link: "https://extensions.gnome.org/extension/1160/dash-to-panel/"  
     # INFO [CentOSStream9] dash-to-panel from git instead of repo package for consistency
     "RedHat":
       address: "dash-to-panel@jderose9.github.com"
@@ -98,6 +105,7 @@ gnome_extensions:
       "/org/gnome/shell/extensions/dash-to-panel/tray-size": "16"
       "/org/gnome/shell/extensions/dash-to-panel/window-preview-title-position": "'TOP'"
   - name: "system-monitor"
+    link: "https://extensions.gnome.org/extension/120/system-monitor/"
     "RedHat":
       address: "system-monitor@paradoxxx.zero.gmail.com"
       package: "gnome-shell-extension-system-monitor-applet"
@@ -121,6 +129,7 @@ gnome_extensions:
       "/org/gnome/shell/extensions/system-monitor/thermal-display": "false"
       "/org/gnome/shell/extensions/system-monitor/thermal-style": "'graph'"
   - name: "clipboard-indicator"
+    link: "https://extensions.gnome.org/extension/779/clipboard-indicator/"
     "RedHat":
       address: "clipboard-indicator@tudmotu.com"
       package: "git"

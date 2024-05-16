@@ -6,15 +6,15 @@ This Roles builds a customized gnome desktop environment.
 It includes a bunch of [dconf](https://wiki.gnome.org/Projects/dconf) settings as well as extensions and themes beeing installed all in one go.
 
 Extensions (not available on every distro):
-- drive-menu
-- user-theme
-- appindicator
-- sound-output-device-chooser
-- no-overview
-- tiling-assistant
-- dash-to-panel
-- system-monitor
-- clipboard-indicator
+- [drive-menu](https://extensions.gnome.org/extension/7/removable-drive-menu/)
+- [user-theme](https://extensions.gnome.org/extension/19/user-themes/)
+- [appindicator](https://extensions.gnome.org/extension/615/appindicator-support/)
+- [sound-output-device-chooser](https://extensions.gnome.org/extension/906/sound-output-device-chooser/)
+- [no-overview](https://extensions.gnome.org/extension/4099/no-overview/)
+- [tiling-assistant](https://extensions.gnome.org/extension/3733/tiling-assistant/)
+- [dash-to-panel](https://extensions.gnome.org/extension/1160/dash-to-panel/)
+- [system-monitor](https://extensions.gnome.org/extension/120/system-monitor/)
+- [clipboard-indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/)
 
 Themes:
 - shell_theme: 
@@ -23,7 +23,7 @@ Themes:
 - wallpaper: 
 
 
-Additionally this role includes a full vagrant based molecule testing setup for CentosStream9, Alma9, Rocky9, Ubuntu2210, Debian12, VMs at `extensions/molecule/gnome_setup_test`
+Additionally this role includes a full vagrant based molecule testing setup for CentosStream9, Alma9, Rocky9, Ubuntu2210, Debian12 VMs at `extensions/molecule/gnome_setup_test`
 
 Structure
 ---------
