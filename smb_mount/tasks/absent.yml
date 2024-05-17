@@ -1,5 +1,5 @@
 ---
-
+# INFO ubuntu tends to not reboot correctly first time after removing role
 - name: Remove INI-formatted mount file
   become: true
   loop: "{{ mount_targets }}"
