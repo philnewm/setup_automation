@@ -11,21 +11,19 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: CentosStream9
-    box: centos/stream9
-    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
-      # https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-libvirt.box
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.10"
-    provider_raw_config_args:
-    - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
-    groups:
-      - client
+  # - name: CentosStream9
+  #   box: centos/stream9
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.10"
+  #   provider_raw_config_args:
+  #   - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+  #   groups:
+  #     - client
   - name: Alma9
     box: almalinux/9
     memory: 2048
@@ -39,8 +37,8 @@ platforms:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
     groups:
       - client
-  - name: debian12
-    box: generic/debian12
+  - name: Rocky9
+    box: rockylinux/9
     memory: 2048
     cpus: 2
     interfaces:
@@ -49,11 +47,37 @@ platforms:
         type: "static"
         ip: "192.168.56.30"
     provider_raw_config_args:
-      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+    groups:
+      - client
+  # - name: Debian12
+  #   box: debian/bookworm64
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.30"
+  #   provider_raw_config_args:
+  #     - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+  #   groups:
+  #     - client
+  - name: Ubuntu2210
+    box: ubuntu/jammy64
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.40"
+    provider_raw_config_args:
+      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
     groups:
       - client
   - name: smbserver
-    box: generic/debian12
+    box: ubuntu/jammy64
     memory: 2048
     cpus: 2
     interfaces:

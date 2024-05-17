@@ -8,6 +8,6 @@ smb_mount_install_apt_packages:
   # - linux-generic only needed for ubuntu
 
 smb_mount_ubuntu_packages:
-  - linux-generic only needed for ubuntu
+  - linux-generic
 
 ...
