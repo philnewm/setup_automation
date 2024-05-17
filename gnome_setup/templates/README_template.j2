@@ -31,7 +31,7 @@ In case not they loop over the tasks to setup and run their install routine impl
 Requirements
 ------------
 
-Currently the role expects vagrant users profile pictures to be located at `~/Documents/vagrant` by default, but this will change in future development.
+Currently the role expects vagrant users profile pictures to be located at {{ profile_picture_path }} by default, but this will change in future development.
 The following packages are required but will also be installed by the role automatically.
 
 {% for os_family, dependencies in global_dependencies.items() -%}

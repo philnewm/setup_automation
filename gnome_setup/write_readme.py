@@ -7,38 +7,59 @@ try:
 except ImportError:
     from yaml import SafeLoader
 
-# hardcoded values
+# static values
 dconf = "[dconf](https://wiki.gnome.org/Projects/dconf)"
 test_env_path = "`extensions/molecule/gnome_setup_test`"
+profile_picture_path = "`~/Documents/vagrant`"
 
 # dynamic values
-# TODO loop through data files
-with open("../extensions/molecule/gnome_setup_test/molecule.yml", "r") as file:
-    molecule_config = yaml.load(file, yaml.CSafeLoader)
+data_files = [
+    {
+        "path": "../extensions/molecule/gnome_setup_test/molecule.yml",
+        "key": "platforms",
+    },
+    {
+        "path": "./defaults/main/extensions.yml",
+        "key": "gnome_extensions",
+    },
+    {
+        "path": "./defaults/main/themes.yml",
+        "key": "gnome_themes",
+    },
+    {
+        "path": "../extensions/molecule/gnome_setup_test/converge.yml",
+        "key": 0,
+    },
+    {
+        "path": "./vars/main.yml",
+        "key": "dependencies",
+    }
+]
 
-vm_list = [distro["name"] for distro in molecule_config["platforms"]]
+def get_yaml_data(yaml_files: dict) -> list:
+    yaml_content_list = []
+    for path in data_files:
+        with open(path["path"], "r") as file:
+            yaml_content = yaml.load(file, yaml.CSafeLoader)
+            yaml_content_list.append(yaml_content[path["key"]])
 
-with open("./defaults/main/extensions.yml", "r") as file:
-    extensions = yaml.load(file, SafeLoader)
+    return yaml_content_list
 
-extension_list = extensions["gnome_extensions"]
+yaml_output = get_yaml_data(data_files)
 
-with open("./defaults/main/themes.yml", "r") as file:
-    themes = yaml.load(file, yaml.CSafeLoader)
+vm_list = [distro["name"] for distro in yaml_output[0]]
+extension_list = yaml_output[1]
+theme_list = yaml_output[2]
+role_present = f"---\n\n{yaml.dump(yaml_output[3], Dumper=yaml.CSafeDumper, indent=2, sort_keys=False)}\n..."
+global_dependencies = yaml_output[4]
 
-theme_list = themes["gnome_themes"]
-
-with open("../extensions/molecule/gnome_setup_test/converge.yml", "rt") as file:
-    yaml_content = yaml.load(file, yaml.CSafeLoader)
-
-role_present = f"---\n\n{yaml.dump(yaml_content[0], Dumper=yaml.CSafeDumper, indent=2, sort_keys=False)}\n..."
-
-with open("./vars/main.yml", "rt") as file:
-    vars_content = yaml.load(file, yaml.CSafeLoader)
-
-global_dependencies = vars_content["dependencies"]
+print(vm_list)
+print(extension_list)
 print(theme_list)
+print(role_present)
+print(global_dependencies)
 
+# file tree
 def generate_tree_visualization(base_path, prefix=""):
     tree_visualization = []
     items = sorted(os.listdir(base_path))
@@ -68,6 +89,7 @@ context = {
     "dconf": dconf,
     "vm_list": vm_list,
     "dir_structure": dir_structure,
+    "profile_picture_path": profile_picture_path,
     "test_env_path": test_env_path,
     "extension_list": extension_list,
     "theme_list": theme_list,
