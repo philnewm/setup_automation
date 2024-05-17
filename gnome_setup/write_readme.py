@@ -36,11 +36,11 @@ data_files = [
     }
 ]
 
-def get_yaml_data(yaml_files: dict) -> list:
+def get_yaml_data(data_files: dict) -> list:
     yaml_content_list = []
     for path in data_files:
         with open(path["path"], "r") as file:
-            yaml_content = yaml.load(file, yaml.CSafeLoader)
+            yaml_content = yaml.load(file, SafeLoader)
             yaml_content_list.append(yaml_content[path["key"]])
 
     return yaml_content_list
