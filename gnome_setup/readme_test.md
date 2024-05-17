@@ -1,7 +1,6 @@
 Gnome Setup
 =========
 
-# TODO add links to tools
 This Roles builds a customized gnome desktop environment.
 It includes a bunch of [dconf](https://wiki.gnome.org/Projects/dconf) settings as well as extensions and themes beeing installed all in one go.
 
@@ -17,10 +16,10 @@ Extensions (not available on every distro):
 - [clipboard-indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/)
 
 Themes:
-- shell_theme: 
-- icon_theme: 
-- cursor_theme: 
-- wallpaper: 
+- shell_theme: [Lavanda-Dark](https://github.com/vinceliuice/Lavanda-gtk-theme)
+- icon_theme: [Tela-circle-purple-dark](https://github.com/vinceliuice/Tela-circle-icon-theme)
+- cursor_theme: [Qogir-cursors](https://github.com/vinceliuice/Qogir-icon-theme)
+- wallpaper: [Dynamic_Wallpapers](https://github.com/saint-13/Linux_Dynamic_Wallpapers)
 
 
 Additionally this role includes a full vagrant based molecule testing setup for CentosStream9, Alma9, Rocky9, Ubuntu2210, Debian12 VMs at `extensions/molecule/gnome_setup_test`
@@ -28,33 +27,41 @@ Additionally this role includes a full vagrant based molecule testing setup for 
 Structure
 ---------
 ```
-📦gnome_setup
- ┣ 📂defaults
- ┃ ┗ 📂main
- ┃ ┃ ┣ 📜common.yml
- ┃ ┃ ┣ 📜extensions.yml
- ┃ ┃ ┗ 📜themes.yml
- ┣ 📂handlers
- ┃ ┗ 📜main.yml
- ┣ 📂meta
- ┃ ┗ 📜main.yml
- ┣ 📂tasks
- ┃ ┣ 📜absent.yml
- ┃ ┣ 📜main.yml
- ┃ ┣ 📜present.yml
- ┃ ┣ 📜present_base_config.yml
- ┃ ┣ 📜present_base_setup.yml
- ┃ ┣ 📜present_extension_handling.yml
- ┃ ┣ 📜present_extensions.yml
- ┃ ┣ 📜present_profile_picture.yml
- ┃ ┣ 📜present_requirements.yml
- ┃ ┣ 📜present_theme_handling.yml
- ┃ ┗ 📜present_themes.yml
- ┣ 📂templates
- ┃ ┗ 📜gnome_profile.j2
- ┣ 📂vars
- ┃ ┗ 📜main.yml
- ┗ 📜README.md
+📦 gnome_setup
+ ┣ 📜 README.md
+ ┣ 📂 defaults
+ ┃ ┗ 📂 main
+ ┃   ┣ 📜 common.yml
+ ┃   ┣ 📜 extensions.yml
+ ┃   ┗ 📜 themes.yml
+ ┣ 📂 handlers
+ ┃ ┗ 📜 main.yml
+ ┣ 📂 meta
+ ┃ ┗ 📜 main.yml
+ ┣ 📜 readme_test.md
+ ┣ 📜 students_results.html
+ ┣ 📂 tasks
+ ┃ ┣ 📜 absent.yml
+ ┃ ┣ 📜 main.yml
+ ┃ ┣ 📜 present.yml
+ ┃ ┣ 📜 present_base_config.yml
+ ┃ ┣ 📜 present_base_setup.yml
+ ┃ ┣ 📜 present_extension_handling.yml
+ ┃ ┣ 📜 present_extensions.yml
+ ┃ ┣ 📜 present_profile_picture.yml
+ ┃ ┣ 📜 present_requirements.yml
+ ┃ ┣ 📜 present_theme_handling.yml
+ ┃ ┗ 📜 present_themes.yml
+ ┣ 📂 templates
+ ┃ ┣ 📜 README_template.j2
+ ┃ ┣ 📜 gnome_profile.j2
+ ┃ ┣ 📜 message.txt
+ ┃ ┗ 📜 results.html
+ ┣ 📂 vars
+ ┃ ┗ 📜 main.yml
+ ┣ 📜 write_messages.py
+ ┗ 📜 write_readme.py
+
 ```
 
 The variables are split up into three files according to their content (`common.yml`, `extensions.yml`, `themes.yml`).
@@ -82,6 +89,7 @@ The following packages are required but will also be installed by the role autom
 Role Variables
 --------------
 
+# TODO grab from files and include description in structure too
 - defaults/main/common.yml
   - user_install_dir: Custom install directory inside users home directory
   - additional_rhel_repos: Extra repositories for RedHat based distros like CentOSStream9, AlmaLinux, Rocky, ...
@@ -116,14 +124,14 @@ Including an example of how to use your role (for instance, with variables passe
 ```yaml
 ---
 
-- name: Create and configure gnome desktop
-  hosts: client
-  tasks:
-    - name: Include gnome role present
-      ansible.builtin.include_role:
-        name: gnome_setup
-      vars:
-        gnome_setup_state: present
+name: Create and configure gnome desktop
+hosts: client
+tasks:
+- name: Include gnome role present
+  ansible.builtin.include_role:
+    name: gnome_setup
+  vars:
+    gnome_setup_state: present
 
 ...
 ```

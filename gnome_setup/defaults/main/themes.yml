@@ -4,19 +4,23 @@
 gnome_themes:
   shell_theme:
     name: "Lavanda-Dark"
+    link: "https://github.com/vinceliuice/Lavanda-gtk-theme"
     dconf:
       "/org/gnome/desktop/interface/gtk-theme": "'Lavanda-Dark'"
       "/org/gnome/shell/extensions/user-theme/name": "'Lavanda-Dark'"
   icon_theme:
     name: "Tela-circle-purple-dark"
+    link: "https://github.com/vinceliuice/Tela-circle-icon-theme"
     dconf: 
       "/org/gnome/desktop/interface/icon-theme": "'Tela-circle-purple-dark'"
   cursor_theme:
     name: "Qogir-cursors"
+    link: "https://github.com/vinceliuice/Qogir-icon-theme"
     dconf: 
       "/org/gnome/desktop/interface/cursor-theme": "'Qogir-ubuntu-cursors'"
   wallpaper:
     name: "Dynamic_Wallpapers"
+    link: "https://github.com/saint-13/Linux_Dynamic_Wallpapers"
     dconf: 
       "/org/gnome/desktop/background/picture-options": "'zoom'"
       "/org/gnome/desktop/background/picture-uri": "'file:///usr/share/backgrounds/Dynamic_Wallpapers/BigSur.xml'"
