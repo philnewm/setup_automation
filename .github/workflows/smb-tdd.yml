@@ -31,7 +31,7 @@ jobs:
 
     - name: Install VirtualBox
       run: |
-        apt install virtualbox
+        sudo apt install virtualbox
 
     - name: install vagrant
       run: |
