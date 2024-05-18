@@ -43,10 +43,6 @@ jobs:
         python -m pip install "molecule-plugins[vagrant]"
         python -m pip install jmespath
 
-    - name: Lint Ansible configuration
-      run: |
-        molecule lint
-
     - name: Run molecule test
       run: |
         cd extensions

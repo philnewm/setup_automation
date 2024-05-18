@@ -136,6 +136,7 @@ verifier:
   name: ansible
 scenario:
   test_sequence:
+      - lint
       - dependency
       - syntax
       - create
