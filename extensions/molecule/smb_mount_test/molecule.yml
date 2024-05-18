@@ -109,7 +109,7 @@ provisioner:
         ansible_password: vagrant
     group_vars:
       all:
-        ansible_timeout: 180
+        # ansible_timeout: 180
         debian_based_distros: ["Debian", "Ubuntu"]
         rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
         mount_targets:
@@ -128,7 +128,7 @@ provisioner:
       callbacks_enabled: ansible.posix.profile_tasks
       vault_password_file: "$HOME/Documents/vault.pw"
     connection:
-      # WARNING disable "requiretty" in hosts sudoers file on case of errors 
+      # WARNING disable "requiretty" in hosts sudoers file in case of errors 
       pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"
