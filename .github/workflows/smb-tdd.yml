@@ -8,6 +8,8 @@ on:
     branches: [ "smb-tdd" ]
   pull_request:
     branches: [ "smb-tdd" ]
+  workflow_dispatch:
+    branches: [ "smb-tdd" ]
 
 permissions:
   contents: read
