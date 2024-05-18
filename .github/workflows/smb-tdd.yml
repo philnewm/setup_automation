@@ -23,25 +23,33 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
     - name: install vagrant
       run: |
         # Get vagrant gpg key
         wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
         echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
         sudo apt-get update && sudo apt-get install vagrant -y
+
     - name: Install ansible molecule
       run: |
         python -m pip install molecule ansible-core
         python -m pip install molecule ansible-lint
         python -m pip install "molecule-plugins[vagrant]"
         python -m pip install jmespath
+
+    - name: Lint Ansible configuration
+      run: |
+        molecule lint
+
     - name: Run molecule test
       run: |
         cd extensions
-        molecule init -s smb_mount_test
+        molecule init
         molecule test -s smb_mount_test
         
