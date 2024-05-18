@@ -1,8 +1,6 @@
 ---
 # defaults file for smb
 
-smb_login: test1234
-smb_password: test1234
 smb_mount_state: "present"
 smb_mount_hosts_file_path: /etc/hosts
 smb_mount_credentials_file: .smb

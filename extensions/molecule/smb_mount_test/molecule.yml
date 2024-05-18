@@ -38,19 +38,19 @@ platforms:
       - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
     groups:
       - client
-  - name: Rocky9
-    box: rockylinux/9
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.30"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-    groups:
-      - client
+  # - name: Rocky9
+  #   box: rockylinux/9
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.30"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #   groups:
+  #     - client
   # INFO currently disabled since it gets stuck after installing guest additions
   # - name: Debian12
   #   box: debian/bookworm64
@@ -65,23 +65,23 @@ platforms:
   #     - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
   #   groups:
   #     - client
-  - name: Ubuntu2210
-    box: ubuntu/jammy64
-    memory: 2048
-    cpus: 2
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        type: "static"
-        ip: "192.168.56.40"
-    provider_raw_config_args:
-      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
-    groups:
-      - client
+  # - name: Ubuntu2210
+  #   box: ubuntu/jammy64
+  #   memory: 2048
+  #   cpus: 2
+  #   interfaces:
+  #     - auto_config: true
+  #       network_name: private_network
+  #       type: "static"
+  #       ip: "192.168.56.40"
+  #   provider_raw_config_args:
+  #     - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
+  #   groups:
+  #     - client
   - name: smbserver
     box: ubuntu/jammy64
-    memory: 2048
-    cpus: 2
+    memory: 1024
+    cpus: 1
     interfaces:
       - auto_config: true
         network_name: private_network
@@ -110,6 +110,8 @@ provisioner:
     group_vars:
       all:
         # ansible_timeout: 180
+        smb_login: smb_user
+        smb_password: test1234
         debian_based_distros: ["Debian", "Ubuntu"]
         rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
         mount_targets:
