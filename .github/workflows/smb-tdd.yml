@@ -13,12 +13,12 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  setup_smb_mounts_on_almalinux9:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:

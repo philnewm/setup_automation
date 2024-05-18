@@ -1,0 +1,68 @@
+---
+
+# tasks file for smb_server
+
+- name: Install required packages on redhat based distros
+  when: ansible_distribution in rhel_based_distros
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ smb_server_install_dnf_packages }}"
+
+- name: Install required packages on debian based distros
+  when: ansible_distribution in debian_based_distros
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ smb_server_install_apt_packages }}"
+
+- name: Create virtual environment
+  ansible.builtin.command: 
+    cmd: "python3 -m virtualenv ~/.venvs/smb"
+    creates: "~/.venvs/smb"
+
+- name: Install required pip packages
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    virtualenv: "~/.venvs/smb"
+  loop: "{{ smb_server_install_pip_packages }}"
+
+- name: Create user Account
+  ansible.builtin.user:
+    name: "{{ smb_login }}"
+    password: "{{ smb_password | password_hash('sha512') }}"
+    create_home: true
+    update_password: on_create
+    state: present
+
+- name: shell - create samba users
+  become: true
+  ansible.builtin.shell: >
+    set -e -o pipefail
+    && (pdbedit --user={{ smb_login }} 2>&1 > /dev/null)
+    || (echo '{{ smb_password }}'; echo '{{ smb_password }}')
+    | smbpasswd -s -a {{ smb_login }}
+  args:
+    executable: /bin/bash
+  register: samba_create_users
+  changed_when: "'Added user' in samba_create_users.stdout"
+
+- name: Create shares
+  ansible.builtin.file:
+    path: "/home/{{ smb_login }}/sambashares/{{ item.share }}"
+    state: directory
+    owner: "{{ smb_login }}"
+    group: "{{ smb_login }}"
+    mode: "0744"  # TODO research why 0644 doesn't work here
+  loop: "{{ mount_targets }}"
+
+- name: Configure smb.conf
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: "{{ smb_server_config_path }}"
+    mode: "0644"
+  notify: Restart SMB
+
+...
