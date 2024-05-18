@@ -41,5 +41,7 @@ jobs:
         python -m pip install jmespath
     - name: Run molecule test
       run: |
+        pwd
+        cd extensions
         molecule test -s smb_mount_test
         
