@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python application
+name: SMB mount test
 
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
         python -m pip install jmespath
     - name: Run molecule test
       run: |
-        pwd
         cd extensions
+        molecule init -s smb_mount_test
         molecule test -s smb_mount_test
         
