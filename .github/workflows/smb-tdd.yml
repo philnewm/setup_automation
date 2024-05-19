@@ -22,8 +22,8 @@ jobs:
         molecule-scenario: ["smb_mount_test_alma9", "smb_mount_test_rocky9"]
     steps:
     - uses: actions/checkout@v4
-      with:
-        path: extensions
+      # with:
+      #   path: extensions
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -55,6 +55,7 @@ jobs:
 
     - name: Run molecule test
       run: |
+        cd extentensions
         molecule test -s ${{ matrix.molecule-scenario }}
 
   # setup_smb_mounts_on_rocky9:
