@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  setup_smb_mounts_on_almalinux9:
+  setup_smb_mounts:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
