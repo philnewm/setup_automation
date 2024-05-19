@@ -55,7 +55,7 @@ jobs:
 
     - name: Run molecule test
       run: |
-        cd extentensions
+        cd extensions
         molecule test -s ${{ matrix.molecule-scenario }}
 
   # setup_smb_mounts_on_rocky9:
