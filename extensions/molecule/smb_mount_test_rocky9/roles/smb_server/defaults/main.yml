@@ -1,7 +1,0 @@
----
-
-# defaults file for smb_server
-
-smb_server_config_path: /etc/samba/smb.conf
-
-...

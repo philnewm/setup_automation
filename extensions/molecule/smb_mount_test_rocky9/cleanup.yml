@@ -1,9 +1,1 @@
----
-
-- name: Converge
-  hosts: localhost
-
-  tasks:
-    - name: Clean-up test
-      ansible.builtin.debug:
-        msg: "Clean-up successfull"
+../template/cleanup.yml
