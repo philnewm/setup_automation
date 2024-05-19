@@ -37,7 +37,7 @@ jobs:
 
     - name: Install VirtualBox
       run: |
-        sudo apt install virtualbox
+        sudo apt-get install virtualbox
 
     - name: install vagrant
       run: |
@@ -56,6 +56,7 @@ jobs:
     - name: Run molecule test
       run: |
         cd extensions
+        vagrant --version
         molecule test -s ${{ matrix.molecule-scenario }}
 
   # setup_smb_mounts_on_rocky9:
