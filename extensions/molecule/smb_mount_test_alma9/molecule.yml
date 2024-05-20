@@ -25,8 +25,11 @@ platforms:
     groups:
       - client
   - name: smbserver
-    box: ubuntu/jammy64
-    memory: 1024
+    # INFO debian boots way faster then Ubuntu does
+    # INFO debian/bookworm64 is broken at state of writing(20.05.2024)
+    # INFO debian/bookworm64 gets stuck after installing virtual box guest additions 
+    box: generic/debian12
+    memory: 2048
     cpus: 1
     interfaces:
       - auto_config: true
