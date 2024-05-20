@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: smb_mount
+  namespace: philnewm
   author: Phil Newm
   description: Mount smb shares based on systemd mount files on startup
 

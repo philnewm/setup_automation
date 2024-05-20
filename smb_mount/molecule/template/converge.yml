@@ -3,8 +3,6 @@
 - name: Converge smb server
   hosts: smbserver
   gather_facts: true
-  vars_files:
-    - ../../../secrets.yml
   become: true
   tasks:
     - name: Initialize SMB server
@@ -14,8 +12,6 @@
 
 - name: Converge smb mount present
   hosts: client
-  # vars_files:
-  #   - ../../../secrets.yml
   tasks:
     - name: Include smb role present
       ansible.builtin.include_role:
