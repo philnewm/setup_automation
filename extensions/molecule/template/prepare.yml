@@ -27,6 +27,7 @@
 
     # INFO adding post-boot tasks here according to default scenario order: https://ansible.readthedocs.io/projects/molecule/configuration/#scenario
     # TODO disable for automated runs
+    # INFO use one of these ansible facts to check: SSH_CONNECTION, SSH_TTY, USER, HOME with ansible -i <inventory> client -m setup | grep <variable>
     - name: Include post-boot playbook
       ansible.builtin.include_tasks:
         file: ../../../post_boot.yml
