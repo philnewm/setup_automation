@@ -1,9 +1,10 @@
 ---
 
-- name: Converge
+- name: Cleanup
   hosts: localhost
 
   tasks:
-    - name: Clean-up test
-      ansible.builtin.debug:
-        msg: "Clean-up successfull"
+    - name: Remove boot_analysis
+      ansible.builtin.file:
+        path: boot_analysis
+        state: absent
