@@ -19,7 +19,7 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: ["3.10"]
-        molecule-scenario: ["smb_mount_test_rocky9", "smb_mount_test_alma9"]
+        molecule-scenario: ["smb_mount_test_centosstream9", "smb_mount_test_rocky9", "smb_mount_test_alma9"]
     steps:
     - uses: actions/checkout@v4
 

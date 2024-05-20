@@ -11,9 +11,9 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: Alma9
-    box: almalinux/9
-    box_version: "9.4.20240509"
+  - name: Ubuntu2210
+    box: ubuntu/jammy64
+    box_version: "20240426.0.0"
     memory: 2048
     cpus: 2
     interfaces:

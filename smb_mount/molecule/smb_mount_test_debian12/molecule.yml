@@ -11,9 +11,9 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: Alma9
-    box: almalinux/9
-    box_version: "9.4.20240509"
+  - name: Debian12
+    box: generic/debian12
+    box_version: "4.3.12"
     memory: 2048
     cpus: 2
     interfaces:

@@ -5,7 +5,6 @@ smb_mount_install_dnf_packages:
 
 smb_mount_install_apt_packages:
   - cifs-utils
-  # - linux-generic only needed for ubuntu
 
 smb_mount_ubuntu_packages:
   - linux-generic

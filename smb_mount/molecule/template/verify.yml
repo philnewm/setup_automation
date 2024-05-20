@@ -7,36 +7,14 @@
     dummy_file_name: "hello_world.sh"
 
   tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
 
-    - name: Get cifs package status
-      when: ansible_distribution in rhel_based_distros
-      become: true
-      ansible.builtin.dnf:
-        name: "cifs-utils"
-        state: present
-      check_mode: true
-      register: dnf_status
-
-    - name: Test cifs package is installed via dnf
-      when: ansible_distribution in rhel_based_distros
+    - name: Test cifs package is installed
       ansible.builtin.assert:
         that:
-          - not dnf_status.changed
-
-    - name: Get cifs package status
-      when: ansible_distribution in debian_based_distros
-      become: true
-      ansible.builtin.apt:
-        name: "cifs-utils"
-        state: present
-      check_mode: true
-      register: apt_status
-
-    - name: Test cifs package is installed via apt
-      when: ansible_distribution in debian_based_distros
-      ansible.builtin.assert:
-        that:
-          - not apt_status.changed
+          - "'cifs-utils' in ansible_facts.packages"
+        fail_msg: "Requiered package 'cifs-utils' is not installed"
 
     - name: Get credentials file stats
       ansible.builtin.stat:

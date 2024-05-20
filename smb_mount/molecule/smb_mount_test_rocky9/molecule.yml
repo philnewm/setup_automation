@@ -12,7 +12,8 @@ lint: |
   ansible-lint
 platforms:
   - name: Rocky9
-    box: rockylinux/9
+    box: generic/rocky9
+    box_version: "4.3.12"
     memory: 2048
     cpus: 2
     interfaces:
@@ -25,7 +26,8 @@ platforms:
     groups:
       - client
   - name: smbserver
-    box: ubuntu/jammy64
+    box: generic/debian12
+    box_version: "4.3.12"
     memory: 1024
     cpus: 1
     interfaces:
@@ -45,7 +47,7 @@ provisioner:
         smb_login: smb_user
         smb_password: test1234
         debian_based_distros: ["Debian", "Ubuntu"]
-        rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
+        rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux", "Rocky"]
         mount_targets:
           - { share: "documents", mount: "documents" }
           - { share: "learning", mount: "learning" }
