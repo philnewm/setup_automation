@@ -58,7 +58,7 @@ provisioner:
       fact_caching_timeout: 3600
       fact_caching: jsonfile
       fact_caching_connection: /tmp/ansible_fact_cache
-      stdout_callback: debug
+      stdout_callback: ansible.posix.debug
       callbacks_enabled: ansible.posix.profile_tasks
       # vault_password_file: "$HOME/Documents/vault.pw"
     connection:
