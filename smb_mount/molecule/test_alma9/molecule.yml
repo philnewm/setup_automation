@@ -1,8 +1,9 @@
 ---
+
 dependency:
   name: galaxy
   options:
-    requirements-file: ../template/requirements.yml
+    requirements-file: requirements.yml
 driver:
   name: vagrant
   provider:
@@ -94,3 +95,5 @@ scenario:
       - verify
       - cleanup
       - destroy
+
+...
