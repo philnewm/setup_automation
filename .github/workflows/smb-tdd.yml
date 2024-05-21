@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  smb_mounts:
+  smb_mount:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
