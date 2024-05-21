@@ -6,6 +6,7 @@
 # jmespath==1.0.1
 molecule==24.2.1
 molecule-plugins[vagrant]
+passlib==1.7.4
 # molecule-plugins==23.5.3
 # python-vagrant==1.0.0
 # PyYAML==6.0.1
