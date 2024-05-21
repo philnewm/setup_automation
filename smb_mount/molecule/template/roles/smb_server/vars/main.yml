@@ -2,12 +2,10 @@
 
 # vars file for smb_server
 
-#TODO change to smb_install_dnf_packages
 smb_server_install_dnf_packages:
   - samba
   - pip
 
-#TODO change to smb_install_apt_packages
 smb_server_install_apt_packages:
   - samba
   - python3-pip

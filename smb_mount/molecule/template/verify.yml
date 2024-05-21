@@ -37,7 +37,6 @@
         path: "/mnt/{{ item.mount }}"
       register: mnt_point_stats
 
-    # TODO reduce output verbosity
     - name: Test mount point stats
       loop: "{{ mnt_point_stats.results }}"
       loop_control:
@@ -50,6 +49,7 @@
           - item.stat.mode == "0755"
         success_msg: "Successfully tested mount point {{ item.stat.path }}"
         fail_msg: "Failed testing mount point {{ item.stat.path }}"
+        quiet: true
 
     - name: Get mount file stats
       loop: "{{ mount_targets }}"
@@ -63,7 +63,6 @@
         path: "/etc/systemd/system/mnt-{{ item.mount }}.mount"
       register: mnt_file_stats
 
-    # TODO reduce output verbosity
     - name: Test mount file stats
       loop: "{{ mnt_file_stats.results }}"
       loop_control:
@@ -76,6 +75,7 @@
           - item.stat.mode == "0644"
         success_msg: "Successfully tested mount file {{ item.stat.path }}"
         fail_msg: "Failed testing mount file {{ item.stat.path }}"
+        quiet: true
 
     - name: Reboot the host and continue playbook
       ansible.builtin.reboot:
@@ -137,6 +137,7 @@
           - item.stat.exists
         fail_msg: "File '{{ item.stat.path }}' does not exist!"
         success_msg: "File '{{ item.stat.path }}' got copied from server successfully!"
+        quiet: true
 
     - name: Remove test file
       loop: "{{ dummy_file_stats.results }}"
