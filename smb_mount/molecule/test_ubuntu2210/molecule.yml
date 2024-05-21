@@ -11,10 +11,9 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: CentOSStream9
-  # INFO using generic since centos/9stream returns kernel-devel not found error
-    box: generic/centos9s
-    box_version: "4.3.12"
+  - name: Ubuntu2210
+    box: ubuntu/jammy64
+    box_version: "20240426.0.0"
     memory: 2048
     cpus: 2
     interfaces:
@@ -45,6 +44,13 @@ platforms:
       - server
 provisioner:
   name: ansible
+  playbooks:
+    create: ../template/create.yml
+    prepare: ../template/prepare.yml
+    converge: ../template/converge.yml
+    side_effect: ../template/side_effect.yml
+    verify: ../template/verify.yml
+    cleanup: ../template/cleanup.yml
   inventory:
     group_vars:
       all:

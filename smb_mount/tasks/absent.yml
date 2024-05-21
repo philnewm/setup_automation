@@ -39,14 +39,7 @@
     path: "{{ ansible_env.HOME }}/{{ smb_mount_credentials_file }}"
     state: "absent"
 
-- name: Remove required packages on debian based distros
-  when: ansible_distribution in debian_based_distros
-  become: true
-  ansible.builtin.apt:
-    name: "{{ smb_mount_install_apt_packages }}"
-    state: absent
-
-- name: Remove required packages on debian based distros
+- name: Remove required packages from debian based distros
   when: ansible_distribution in debian_based_distros
   become: true
   ansible.builtin.apt:
@@ -54,7 +47,7 @@
     state: absent
   notify: Reboot Host
 
-- name: Remove required packages on redhat based distros
+- name: Remove required packages from redhat based distros
   when: ansible_distribution in rhel_based_distros
   become: true
   ansible.builtin.dnf:

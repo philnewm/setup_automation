@@ -11,24 +11,21 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: Alma9
-    box: almalinux/9
-    box_version: "9.4.20240509"
+  - name: Rocky9
+    box: generic/rocky9
+    box_version: "4.3.12"
     memory: 2048
     cpus: 2
     interfaces:
       - auto_config: true
         network_name: private_network
         type: "static"
-        ip: "192.168.56.20"
+        ip: "192.168.56.30"
     provider_raw_config_args:
-      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+      - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
     groups:
       - client
   - name: smbserver
-    # INFO debian boots way faster then Ubuntu does
-    # INFO debian/bookworm64 is broken at state of writing(20.05.2024)
-    # INFO debian/bookworm64 gets stuck after installing virtual box guest additions 
     box: generic/debian12
     box_version: "4.3.12"
     memory: 1024
@@ -44,6 +41,13 @@ platforms:
       - server
 provisioner:
   name: ansible
+  playbooks:
+    create: ../template/create.yml
+    prepare: ../template/prepare.yml
+    converge: ../template/converge.yml
+    side_effect: ../template/side_effect.yml
+    verify: ../template/verify.yml
+    cleanup: ../template/cleanup.yml
   inventory:
     group_vars:
       all:

@@ -80,8 +80,6 @@
     - name: Reboot the host and continue playbook
       ansible.builtin.reboot:
         msg: Reboot initiated by Ansible
-        # INFO increased from 60 due to windows env rebooting ubuntu too slow
-        # reboot_timeout: 180
       become: true
 
     - name: Write bash script to server
@@ -147,12 +145,3 @@
       ansible.builtin.file:
         path: "{{ item.stat.path }}"
         state: absent
-
-    - name: Roll back changes
-      ansible.builtin.include_role:
-        name: smb_mount
-        tasks_from: main.yml
-      vars:
-        smb_mount_state: absent
-        smb_mount_server_host_name: "fileserver"
-        smb_mount_server_ip: "192.168.100.200"

@@ -11,9 +11,9 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: Ubuntu2210
-    box: ubuntu/jammy64
-    box_version: "20240426.0.0"
+  - name: Alma9
+    box: almalinux/9
+    box_version: "9.4.20240509"
     memory: 2048
     cpus: 2
     interfaces:
@@ -44,6 +44,13 @@ platforms:
       - server
 provisioner:
   name: ansible
+  playbooks:
+    create: ../template/create.yml
+    prepare: ../template/prepare.yml
+    converge: ../template/converge.yml
+    side_effect: ../template/side_effect.yml
+    verify: ../template/verify.yml
+    cleanup: ../template/cleanup.yml
   inventory:
     group_vars:
       all:

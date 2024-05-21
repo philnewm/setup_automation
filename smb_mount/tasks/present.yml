@@ -53,7 +53,6 @@
     state: directory
     # INFO on mount username changes until timeout triggers
     # INFO mode needs to be 775 to pass idepotency check
-    # TODO check what changes permissions on mount
     owner: "root"
     group: "root"
     mode: "0755"

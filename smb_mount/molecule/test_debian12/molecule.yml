@@ -44,6 +44,13 @@ platforms:
       - server
 provisioner:
   name: ansible
+  playbooks:
+    create: ../template/create.yml
+    prepare: ../template/prepare.yml
+    converge: ../template/converge.yml
+    side_effect: ../template/side_effect.yml
+    verify: ../template/verify.yml
+    cleanup: ../template/cleanup.yml
   inventory:
     group_vars:
       all:

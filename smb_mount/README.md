@@ -29,8 +29,8 @@ Role Variables
 
 - vars.yml
   - smb_server_install_dnf_packages: install necessary packages for rhel based distros using the dnf package manager
-  - #TODO change to smb_install_apt_packages
-  - smb_server_install_deb_packages: install necessary packages for debian based distros using the apt package manager
+  - smb_mount_install_apt_packages: install necessary packages for debian based distros using the apt package manager
+  - smb_mount_ubuntu_packages: Ubuntu specific kernel package to support UTF-8 encoding for mounts
 
 Dependencies
 ------------

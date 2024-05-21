@@ -1,5 +1,18 @@
 ---
 
+- name: Remove smb setup
+  hosts: client
+
+  tasks:
+    - name: Roll back changes
+      ansible.builtin.include_role:
+        name: smb_mount
+        tasks_from: main.yml
+      vars:
+        smb_mount_state: absent
+        smb_mount_server_host_name: "fileserver"
+        smb_mount_server_ip: "192.168.100.200"
+
 - name: Cleanup
   hosts: localhost
 
@@ -8,3 +21,5 @@
       ansible.builtin.file:
         path: boot_analysis
         state: absent
+
+...
