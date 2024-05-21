@@ -1,6 +1,8 @@
 ---
 dependency:
-  name: galaxy    
+  name: galaxy
+  options:
+    requirements-file: ../template/requirements.yml
 driver:
   name: vagrant
   provider:
