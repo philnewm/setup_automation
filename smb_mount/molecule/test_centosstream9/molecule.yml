@@ -46,6 +46,7 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
+    requirements: ../template/requirements.yml
     create: ../template/create.yml
     prepare: ../template/prepare.yml
     converge: ../template/converge.yml
