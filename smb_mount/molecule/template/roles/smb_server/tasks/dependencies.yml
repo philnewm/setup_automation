@@ -1,0 +1,23 @@
+---
+
+# Dependencies for smb_server role
+
+- name: Update apt cache if needed
+  when: ansible_os_family in debian_based_distros
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install required packages on redhat based distros
+  when: ansible_distribution in rhel_based_distros
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ smb_server_install_dnf_packages }}"
+
+- name: Install required packages on debian based distros
+  when: ansible_distribution in debian_based_distros
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ smb_server_install_apt_packages }}"

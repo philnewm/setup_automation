@@ -42,16 +42,8 @@ provisioner:
   inventory:
     group_vars:
       all:
-        smb_login: smb_user
-        smb_password: test1234
         debian_based_distros: ["Debian", "Ubuntu"]
         rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
-        mount_targets:
-          - { share: "documents", mount: "documents" }
-          - { share: "learning", mount: "learning" }
-          - { share: "library", mount: "library" }
-          - { share: "ressources", mount: "ressources" }
-          - { share: "usb_backup", mount: "archive" }
   config_options:
     defaults:
       gathering: smart
@@ -60,12 +52,12 @@ provisioner:
       fact_caching_connection: /tmp/ansible_fact_cache
       stdout_callback: ansible.posix.debug
       callbacks_enabled: ansible.posix.profile_tasks
-      # vault_password_file: "$HOME/Documents/vault.pw"
     connection:
       # WARNING disable "requiretty" in hosts sudoers file in case of errors 
       pipelining: true
     env:
-      ANSIBLE_FORCE_COLOR: "true"
+      PY_COLORS: "1"
+      ANSIBLE_FORCE:COLOR: "1"
 verifier:
   name: ansible
 scenario:

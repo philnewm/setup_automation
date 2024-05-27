@@ -1,9 +1,16 @@
+[![SMB mount test](https://github.com/philnewm/setup_automation/actions/workflows/smb-tdd.yml/badge.svg?branch=smb-tdd&event=push)](https://github.com/philnewm/setup_automation/actions/workflows/smb-tdd.yml)
+
 SMB mount setup based on systemd mount files
 =========
 
 This creates the required systemd mount files to mount smb shares on boot.
 The role only creates a single smb user based on the provided secrets.yml file.
 This role has a state variable called `smb_mount_state`. It controlls if the features of this role should be setup or removed.
+
+
+Additionally this role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.10 VMs at `smb_mount/molecule`
+
+[![SMB mount test](https://github.com/philnewm/setup_automation/actions/workflows/smb-tdd.yml/badge.svg?branch=smb-tdd&event=push)](https://github.com/philnewm/setup_automation/actions/workflows/smb-tdd.yml)
 
 Requirements
 ------------

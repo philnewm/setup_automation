@@ -2,24 +2,8 @@
 
 # tasks file for smb_server
 
-- name: Install required packages on redhat based distros
-  when: ansible_distribution in rhel_based_distros
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    state: present
-    update_cache: true
-  loop: "{{ smb_server_install_dnf_packages }}"
-
-- name: Install required packages on debian based distros
-  when: ansible_distribution in debian_based_distros
-  ansible.builtin.apt:
-    name: "{{ item }}"
-    state: present
-    update_cache: true
-  loop: "{{ smb_server_install_apt_packages }}"
-
 - name: Create virtual environment
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: "python3 -m virtualenv ~/.venvs/smb"
     creates: "~/.venvs/smb"
 
@@ -37,7 +21,7 @@
     update_password: on_create
     state: present
 
-- name: shell - create samba users
+- name: Create samba users
   become: true
   ansible.builtin.shell: >
     set -e -o pipefail

@@ -1,0 +1,15 @@
+---
+
+# variables for smb_mount and smb_server roles
+
+mount_targets:
+  - { share: "documents", mount: "documents" }
+  - { share: "learning", mount: "learning" }
+  - { share: "library", mount: "library" }
+  - { share: "ressources", mount: "ressources" }
+  - { share: "usb_backup", mount: "archive" }
+
+smb_login: smb_user
+smb_password: test1234
+
+# vault_password_file: "$HOME/Documents/vault.pw"
