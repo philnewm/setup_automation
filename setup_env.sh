@@ -75,4 +75,6 @@ code --install-extension github.vscode-github-actions
 code --install-extension github.vscode-pull-request-github
 code --install-extension gruntfuggly.todo-tree
 code --install-extension shinotatwu-ds.file-tree-generator
+code --install-extension mhutchie.git-graph
+code --install-extension eamodio.gitlens
 code
