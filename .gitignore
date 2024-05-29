@@ -11,4 +11,3 @@ user.js
 thunderbird_role/defaults/main.yml
 server002_fedora_vm_setup.yaml
 secrets.yml
-boot_analysis*.svg
