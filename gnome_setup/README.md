@@ -1,7 +1,6 @@
 Gnome Setup
 =========
 
-# TODO add links to tools
 This Roles builds a customized gnome desktop environment.
 It includes a bunch of [dconf](https://wiki.gnome.org/Projects/dconf) settings as well as extensions and themes beeing installed all in one go.
 
@@ -10,52 +9,59 @@ Extensions (not available on every distro):
 - [user-theme](https://extensions.gnome.org/extension/19/user-themes/)
 - [appindicator](https://extensions.gnome.org/extension/615/appindicator-support/)
 - [sound-output-device-chooser](https://extensions.gnome.org/extension/906/sound-output-device-chooser/)
-- no-overview
-- tiling-assistant
-- dash-to-panel
-- system-monitor
-- clipboard-indicator
+- [no-overview](https://extensions.gnome.org/extension/4099/no-overview/)
+- [tiling-assistant](https://extensions.gnome.org/extension/3733/tiling-assistant/)
+- [dash-to-panel](https://extensions.gnome.org/extension/1160/dash-to-panel/)
+- [system-monitor](https://extensions.gnome.org/extension/120/system-monitor/)
+- [clipboard-indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/)
 
 Themes:
-- Shell Theme: Lavanda-Dark
-- Icon Theme: Tela-circle-purple-dark
-- Cursor Theme: Qogir-cursors
-- Wallpaper: Dynamic_Wallpapers
+- shell_theme: [Lavanda-Dark](https://github.com/vinceliuice/Lavanda-gtk-theme)
+- icon_theme: [Tela-circle-purple-dark](https://github.com/vinceliuice/Tela-circle-icon-theme)
+- cursor_theme: [Qogir-cursors](https://github.com/vinceliuice/Qogir-icon-theme)
+- wallpaper: [Dynamic_Wallpapers](https://github.com/saint-13/Linux_Dynamic_Wallpapers)
 
-The rolse is 
 
-Additionally this role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.10 VMs at `extensions/molecule/gnome_setup_test`
+Additionally this role includes a full vagrant based molecule testing setup for CentosStream9, Alma9, Rocky9, Ubuntu2210, Debian12 VMs at `extensions/molecule/gnome_setup_test`
 
 Structure
 ---------
 ```
-📦gnome_setup
- ┣ 📂defaults
- ┃ ┗ 📂main
- ┃ ┃ ┣ 📜common.yml
- ┃ ┃ ┣ 📜extensions.yml
- ┃ ┃ ┗ 📜themes.yml
- ┣ 📂handlers
- ┃ ┗ 📜main.yml
- ┣ 📂meta
- ┃ ┗ 📜main.yml
- ┣ 📂tasks
- ┃ ┣ 📜absent.yml
- ┃ ┣ 📜main.yml
- ┃ ┣ 📜present.yml
- ┃ ┣ 📜present_base_config.yml
- ┃ ┣ 📜present_base_setup.yml
- ┃ ┣ 📜present_extension_handling.yml
- ┃ ┣ 📜present_extensions.yml
- ┃ ┣ 📜present_profile_picture.yml
- ┃ ┣ 📜present_requirements.yml
- ┃ ┣ 📜present_theme_handling.yml
- ┃ ┗ 📜present_themes.yml
- ┣ 📂templates
- ┃ ┗ 📜gnome_profile.j2
- ┣ 📂vars
- ┃ ┗ 📜main.yml
- ┗ 📜README.md
+📦 gnome_setup
+ ┣ 📜 README.md
+ ┣ 📂 defaults
+ ┃ ┗ 📂 main
+ ┃   ┣ 📜 common.yml
+ ┃   ┣ 📜 extensions.yml
+ ┃   ┗ 📜 themes.yml
+ ┣ 📂 handlers
+ ┃ ┗ 📜 main.yml
+ ┣ 📂 meta
+ ┃ ┗ 📜 main.yml
+ ┣ 📜 readme_test.md
+ ┣ 📜 students_results.html
+ ┣ 📂 tasks
+ ┃ ┣ 📜 absent.yml
+ ┃ ┣ 📜 main.yml
+ ┃ ┣ 📜 present.yml
+ ┃ ┣ 📜 present_base_config.yml
+ ┃ ┣ 📜 present_base_setup.yml
+ ┃ ┣ 📜 present_extension_handling.yml
+ ┃ ┣ 📜 present_extensions.yml
+ ┃ ┣ 📜 present_profile_picture.yml
+ ┃ ┣ 📜 present_requirements.yml
+ ┃ ┣ 📜 present_theme_handling.yml
+ ┃ ┗ 📜 present_themes.yml
+ ┣ 📂 templates
+ ┃ ┣ 📜 README_template.j2
+ ┃ ┣ 📜 gnome_profile.j2
+ ┃ ┣ 📜 message.txt
+ ┃ ┗ 📜 results.html
+ ┣ 📂 vars
+ ┃ ┗ 📜 main.yml
+ ┣ 📜 write_messages.py
+ ┗ 📜 write_readme.py
+
 ```
 
 The variables are split up into three files according to their content (`common.yml`, `extensions.yml`, `themes.yml`).
@@ -117,14 +123,14 @@ Including an example of how to use your role (for instance, with variables passe
 ```yaml
 ---
 
-- name: Create and configure gnome desktop
-  hosts: client
-  tasks:
-    - name: Include gnome role present
-      ansible.builtin.include_role:
-        name: gnome_setup
-      vars:
-        gnome_setup_state: present
+name: Create and configure gnome desktop
+hosts: client
+tasks:
+- name: Include gnome role present
+  ansible.builtin.include_role:
+    name: gnome_setup
+  vars:
+    gnome_setup_state: present
 
 ...
 ```
