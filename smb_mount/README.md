@@ -7,10 +7,12 @@ This role has a state variable called `smb_mount_state`. It controlls if the fea
 
 Testing
 -------
-
-This role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.10 VMs at `smb_mount/molecule`. Each scenario uses the the `smb_server` role to enable testable mounts. Additionally the scenarios use symlinks for their `requirements.yml` and the roles directory. The `molecule.yml` file on the other hand is individual for each scenario. 
-
 [![SMB mount test](https://github.com/philnewm/setup_automation/actions/workflows/smb-tdd.yml/badge.svg?branch=smb-tdd&event=push)](https://github.com/philnewm/setup_automation/actions/workflows/smb-tdd.yml)
+
+This role includes a full vagrant based molecule testing setup for CentOSStream9, Almalinux9, Rocky9, Debian12 and Ubuntu22.10 VMs at `smb_mount/molecule`. Each scenario uses the the `smb_server` role to enable testable mounts. Additionally the scenarios use symlinks for their `requirements.yml` and the roles directory. The `molecule.yml` file on the other hand is individual for each scenario.
+
+The file `/molecule/template/converge.yml` as supposed to be used as a playbook template.<br>
+The tasks are split into `present.yml`, `absent.yml` - both get included in `main.yml`. Any external dependencies are included in dependencies.yml, which is supposed to run in a pre_task.
 
 Structure
 ---------
@@ -26,14 +28,7 @@ Structure
  ┣ 📂meta
  ┃ ┗ 📜main.yml
  ┣ 📂molecule
- ┃ ┣ 📂template
- ┃ ┃ ┣ 📂roles
- ┃ ┃ ┃ ┗ 📂smb_server
- ┃ ┣ 📂test_alma9
- ┃ ┣ 📂test_centosstream9
- ┃ ┣ 📂test_debian12
- ┃ ┣ 📂test_rocky9
- ┃ ┗ 📂test_ubuntu2210
+ ┃ ┗ 📜...
  ┣ 📂tasks
  ┃ ┣ 📜absent.yml
  ┃ ┣ 📜dependencies.yml
@@ -43,8 +38,6 @@ Structure
  ┃ ┗ 📜main.yml
  ┗ 📜README.md
 ```
-
-The file `/molecule/template/converge.yml` as supposed to be used as playbook template. The tasks are split into `present.yml`, `absent.yml` - which both get included in the `main.yml`. Any external dependencies are included in dependencies.yml, which is supposed to run in a pre_task.
 
 Requirements
 ------------
@@ -70,8 +63,7 @@ Role Variables
   - Defines the systemd automount file as yaml formatted dictionary based on the variables defined in `defaults/main/common.yml`, adjust according to your needs based on the [systemd automount file docs](https://www.freedesktop.org/software/systemd/man/latest/systemd.automount.html)
 
 - vars.yml
-  - smb_server_install_dnf_packages: install necessary packages for rhel based distros using the dnf package manager
-  - smb_mount_install_apt_packages: install necessary packages for debian based distros using the apt package manager
+  - smb_packages: install required packages
   - smb_mount_ubuntu_packages: Ubuntu specific kernel package to support UTF-8 encoding for mounts
 
 Dependencies

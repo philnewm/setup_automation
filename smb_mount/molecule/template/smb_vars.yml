@@ -11,5 +11,3 @@ mount_targets:
 
 smb_login: smb_user
 smb_password: test1234
-
-# vault_password_file: "$HOME/Documents/vault.pw"
