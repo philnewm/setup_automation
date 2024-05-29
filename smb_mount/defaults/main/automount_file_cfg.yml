@@ -1,0 +1,8 @@
+smb_automount_file:
+  Unit:
+    Description: "mount {{ item.mount }} share"
+  Automount:
+    Where: "/{{ smb_mount_mnt_point }}/{{ item.mount }}"
+    TimeoutIdleSec: 60
+  Install:
+    WantedBy: multi-user.target

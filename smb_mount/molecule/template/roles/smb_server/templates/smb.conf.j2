@@ -1,0 +1,15 @@
+[global]
+    workgroup = SAMBA
+    security = user
+    map to guest = Bad User
+    guest account = nobody
+    public = yes
+    writable = yes
+    create mask = 0664
+    directory mask = 0775
+
+{% for share in ['usb_backup', 'documents', 'learning', 'library', 'ressources'] %}
+[{{ share }}]
+    path = "/home/{{ smb_login }}/sambashares/{{ share }}"
+    valid users = "{{ smb_login }}"
+{% endfor %}

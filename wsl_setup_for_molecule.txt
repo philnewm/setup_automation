@@ -1,0 +1,24 @@
+WSL is not VLAN capable
+
+Windows needs virtual network adapter setup to allow tagged and untagged traffic at the same time
+enabled through hyper-V features
+https://taeffner.net/2022/04/multiple-vlans-windows-10-11-onboard-tools-hyper-v/
+
+In Powershell:
+Get-NetAdapter
+New-VMSwitch -name VLAN-vSwitch -NetAdapterName Ethernet -AllowManagementOS $true
+
+Remove-VMNetworkAdapter -ManagementOS -Name VLAN-vSwitch
+
+# create as many tagged switches as needed:
+Add-VMNetworkAdapter -ManagementOS -Name "VLAN123" -SwitchName "VLAN-vSwitch" -Passthru | Set-VMNetworkAdapterVlan -Access -VlanId 123
+Get-NetAdapter
+
+Install Virtual Box on Windows
+Install vagrant in WSL
+Install vagrant plugin install virtualbox_WSL2
+
+on first vagrant up firewall rule pop-up enable both, public and private networks
+-> WSL counts as public network
+
+Vagrant should now have full access

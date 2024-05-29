@@ -1,0 +1,97 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: ../template/requirements.yml
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+    type: virtualbox
+lint: |
+  set -e
+  yamllint
+  ansible-lint
+platforms:
+  - name: Debian12
+    box: generic/debian12
+    box_version: "4.3.12"
+    memory: 2048
+    cpus: 2
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.20"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"  
+    groups:
+      - client
+  - name: smbserver
+    # INFO debian boots way faster then Ubuntu does
+    # INFO debian/bookworm64 is broken at state of writing(20.05.2024)
+    # INFO debian/bookworm64 gets stuck after installing virtual box guest additions 
+    box: generic/debian12
+    box_version: "4.3.12"
+    memory: 1024
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: "static"
+        ip: "192.168.56.200"
+    provider_raw_config_args:
+      - "customize [ 'modifyvm', :id, '--uartmode1', 'disconnected']"
+    groups:
+      - server
+provisioner:
+  name: ansible
+  playbooks:
+    requirements: ../template/requirements.yml
+    create: ../template/create.yml
+    prepare: ../template/prepare.yml
+    converge: ../template/converge.yml
+    side_effect: ../template/side_effect.yml
+    verify: ../template/verify.yml
+    cleanup: ../template/cleanup.yml
+  inventory:
+    group_vars:
+      all:
+        smb_login: smb_user
+        smb_password: test1234
+        debian_based_distros: ["Debian", "Ubuntu"]
+        rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux", "Rocky"]
+        mount_targets:
+          - { share: "documents", mount: "documents" }
+          - { share: "learning", mount: "learning" }
+          - { share: "library", mount: "library" }
+          - { share: "ressources", mount: "ressources" }
+          - { share: "usb_backup", mount: "archive" }
+  config_options:
+    defaults:
+      gathering: smart
+      fact_caching_timeout: 3600
+      fact_caching: jsonfile
+      fact_caching_connection: /tmp/ansible_fact_cache
+      stdout_callback: ansible.posix.debug
+      callbacks_enabled: ansible.posix.profile_tasks
+      # vault_password_file: "$HOME/Documents/vault.pw"
+    connection:
+      # WARNING disable "requiretty" in hosts sudoers file in case of errors 
+      pipelining: true
+    env:
+      ANSIBLE_FORCE_COLOR: "true"
+verifier:
+  name: ansible
+scenario:
+  test_sequence:
+      - dependency
+      - syntax
+      - create
+      - prepare
+      - converge
+      - idempotence
+      - side_effect
+      - verify
+      - cleanup
+      - destroy

@@ -1,0 +1,18 @@
+---
+
+# Dependencies tasks for smb_mount
+
+- name: Update apt cache if needed
+  when: ansible_os_family in debian_based_distros
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install required packages on ubuntu
+  when: ansible_distribution == "Ubuntu"
+  become: true
+  ansible.builtin.apt:
+    name: "{{ smb_mount_ubuntu_packages }}"
+    state: present
+  notify: Reboot Host

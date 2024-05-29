@@ -1,0 +1,48 @@
+---
+
+# Playbook blueprint for smb_server and smb_mount role
+
+- name: Converge smb server
+  hosts: smbserver
+  gather_facts: true
+  become: true
+
+  vars_files:
+    - smb_vars.yml
+
+  pre_tasks:
+    - name: Include dependencies
+      ansible.builtin.include_role:
+        name: smb_server
+        tasks_from: dependencies.yml
+
+  tasks:
+    - name: Initialize SMB server
+      ansible.builtin.import_role:
+        name: smb_server
+        tasks_from: main.yml
+
+
+- name: Converge smb mount present
+  hosts: client
+
+  vars_files:
+    - smb_vars.yml
+
+  pre_tasks:
+    - name: Include dependencies
+      ansible.builtin.include_role:
+        name: smb_mount
+        tasks_from: dependencies.yml
+
+  tasks:
+    - name: Include smb role present
+      ansible.builtin.include_role:
+        name: smb_mount
+        tasks_from: main.yml
+      vars:
+        smb_mount_state: present
+        smb_mount_server_host_name: "fileserver"
+        smb_mount_server_ip: "192.168.56.200"
+
+...

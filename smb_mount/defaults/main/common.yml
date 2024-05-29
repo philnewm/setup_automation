@@ -1,0 +1,11 @@
+---
+# defaults file for smb
+
+smb_mount_state: "present"
+smb_mount_hosts_file_path: /etc/hosts
+smb_mount_credentials_file: .smb
+smb_mount_file_path: /etc/systemd/system
+smb_mount_server_host_name: "placeholder"
+smb_mount_server_ip: "placeholder"
+smb_mount_hosts_entry: "{{ smb_mount_server_ip }} {{ smb_mount_server_host_name }}"
+smb_mount_mnt_point: mnt

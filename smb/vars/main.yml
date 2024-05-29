@@ -1,6 +1,0 @@
----
-
-install_packages:
-  - cifs-utils
-
-...

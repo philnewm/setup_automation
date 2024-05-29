@@ -1,0 +1,22 @@
+galaxy_info:
+  role_name: smb_mount
+  namespace: philnewm
+  author: Phil Newm
+  description: Mount smb shares based on systemd mount files on startup
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: CentOS
+      versions:
+        - Stream9
+    - name: AlmaLinux
+      versions:
+        - 9
+    - name: Ubuntu
+      versions:
+        - 20.04
+
+dependencies: []

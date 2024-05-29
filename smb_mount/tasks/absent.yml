@@ -1,0 +1,56 @@
+---
+# INFO ubuntu tends to not reboot correctly first time after removing role
+- name: Remove INI-formatted mount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "{{ smb_mount_file_path }}/{{ smb_mount_mnt_point }}-{{ item.mount }}.mount"
+    state: "absent"
+
+- name: Remove INI-formatted automount file
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "{{ smb_mount_file_path }}/{{ smb_mount_mnt_point }}-{{ item.mount }}.automount"
+    state: "absent"
+
+- name: Reload systemd service
+  become: true
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Unmount a mounted volume
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.posix.mount:
+    path: "/mnt/{{ item.mount}}"
+    state: unmounted
+
+- name: Remove mount targets
+  become: true
+  loop: "{{ mount_targets }}"
+  ansible.builtin.file:
+    path: "/mnt/{{ item.mount}}"
+    state: "absent"
+
+- name: Remove credentials file
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/{{ smb_mount_credentials_file }}"
+    state: "absent"
+
+- name: Uninstall package from Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  become: true
+  ansible.builtin.apt:
+    name: "{{ smb_packages[ansible_os_family] }}"
+    state: absent
+  notify: Reboot Host
+
+- name: Remove required packages from debian based distros
+  become: true
+  ansible.builtin.package:
+    name: "{{ smb_packages[ansible_os_family] }}"
+    state: absent
+
+...
