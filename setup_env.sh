@@ -71,4 +71,8 @@ code --version
 code --install-extension redhat.ansible
 code --install-extension ms-python.python
 code --install-extension njpwerner.autodocstring
+code --install-extension github.vscode-github-actions
+code --install-extension github.vscode-pull-request-github
+code --install-extension gruntfuggly.todo-tree
+code --install-extension shinotatwu-ds.file-tree-generator
 code
