@@ -47,5 +47,5 @@ jobs:
 
     - name: Run molecule test
       run: |
-        cd smb_mount
+        cd gnome_setup
         molecule test -s ${{ matrix.molecule-scenario }}    
