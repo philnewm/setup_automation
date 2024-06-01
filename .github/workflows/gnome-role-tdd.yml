@@ -1,13 +1,13 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: SMB mount test
+name: Gnome test
 
 on:
   push:
-    branches: [ "smb-tdd" ]
+    branches: [ "gnome-role-tdd" ]
   pull_request:
-    branches: [ "smb-tdd" ]
+    branches: [ "gnome-role-tdd" ]
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ jobs:
   smb_mount:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 5
       matrix:
         python-version: ["3.10"]
         molecule-scenario: ["test_centosstream9", "test_rocky9", "test_alma9", "test_ubuntu2210", "test_debian12"]
@@ -47,4 +47,4 @@ jobs:
     - name: Run molecule test
       run: |
         cd smb_mount
-        molecule test -s ${{ matrix.molecule-scenario }}      
+        molecule test -s ${{ matrix.molecule-scenario }}    
