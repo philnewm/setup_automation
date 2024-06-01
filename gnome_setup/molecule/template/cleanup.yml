@@ -1,12 +1,7 @@
 ---
 
-- name: Reset
+- name: Clean Up
   hosts: client
-  # vars_files:
-  #   - /defaults/main/common.yml
-  #   - gnome_setup/defaults/main/extensions.yml
-  #   - gnome_setup/defaults/main/themes.yml
-  #   - gnome_setup/vars/main.yml
 
   pre_tasks:
     - name: Gather package facts

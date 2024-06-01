@@ -123,14 +123,23 @@ Including an example of how to use your role (for instance, with variables passe
 ```yaml
 ---
 
-name: Create and configure gnome desktop
-hosts: client
-tasks:
-- name: Include gnome role present
-  ansible.builtin.include_role:
-    name: gnome_setup
+- name: Create and configure gnome desktop
+  hosts: client
   vars:
-    gnome_setup_state: present
+    system_local_lang: "en_US.UTF-8"
+
+  pre_tasks:
+    - name: Include dependencies
+      ansible.builtin.include_role:
+        name: gnome_setup
+        tasks_from: dependencies.yml
+
+  tasks:
+    - name: Include gnome role present
+      ansible.builtin.include_role:
+        name: gnome_setup
+      vars:
+        gnome_setup_state: present
 
 ...
 ```
