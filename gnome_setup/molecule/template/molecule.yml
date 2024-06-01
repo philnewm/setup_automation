@@ -136,7 +136,6 @@ provisioner:
       fact_caching_connection: /tmp/ansible_fact_cache
       stdout_callback: debug
       callbacks_enabled: ansible.posix.profile_tasks
-      vault_password_file: "$HOME/Documents/vault.pw"
     connection:
       # WARNING disable "requiretty" in hosts sudoers file on case of errors
       pipelining: true

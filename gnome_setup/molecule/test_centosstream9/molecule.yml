@@ -14,7 +14,8 @@ lint: |
 platforms:
   - name: CentosStream9
     box: centos/stream9
-    # box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230501.0.x86_64.vagrant-virtualbox.box
+    # box_version: "20230727.1"
+    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230727.1.x86_64.vagrant-virtualbox.box
     memory: 2048
     cpus: 2
     interfaces:
@@ -51,9 +52,7 @@ provisioner:
       fact_caching_connection: /tmp/ansible_fact_cache
       stdout_callback: debug
       callbacks_enabled: ansible.posix.profile_tasks
-      vault_password_file: "$HOME/Documents/vault.pw"
     connection:
-      # WARNING disable "requiretty" in hosts sudoers file on case of errors
       pipelining: true
     env:
       ANSIBLE_FORCE_COLOR: "true"

@@ -15,6 +15,7 @@ lint: |
 platforms:
   - name: Debian12
     box: debian/bookworm64
+    box_version: "12.20240212.1"
     memory: 2048
     cpus: 2
     interfaces:
@@ -51,7 +52,6 @@ provisioner:
       fact_caching_connection: /tmp/ansible_fact_cache
       stdout_callback: debug
       callbacks_enabled: ansible.posix.profile_tasks
-      vault_password_file: "$HOME/Documents/vault.pw"
     connection:
       pipelining: true
     env:
