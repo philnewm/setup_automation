@@ -28,7 +28,7 @@ platforms:
       - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
       - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
       - "customize ['modifyvm', :id, '--vram', '256']"
-      - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+      # - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
       - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
     groups:
       - client
