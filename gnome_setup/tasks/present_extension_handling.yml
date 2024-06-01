@@ -1,5 +1,9 @@
 ---
 # handle gnome extension tasks
+# TODO move gnom extension handling to it's own role
+# TODO create gnome extensions module in the long run
+# add "install from source" option to define repo url by default None or similar"
+# check https://github.com/ctorgalson/ansible-role-gnome-extensions
 
 - name: Get installed GNOME extensions
   ansible.builtin.shell:

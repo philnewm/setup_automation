@@ -5,10 +5,6 @@
 - name: Gather package facts
   ansible.builtin.package_facts:
 
-- name: Include requirements
-  ansible.builtin.include_tasks:
-    file: present_requirements.yml
-
 - name: Setup gnome base installation
   ansible.builtin.include_tasks:
     file: present_base_setup.yml
@@ -29,10 +25,9 @@
   ansible.builtin.include_tasks:
     file: present_profile_picture.yml
 
-- name: Remove unused dependencies
-  become: true
-  ansible.builtin.package:
-    autoremove: true
+- name: Finalize system for gnome desktop
+  ansible.builtin.include_tasks:
+    file: present_finalize.yml
 
 ...
 

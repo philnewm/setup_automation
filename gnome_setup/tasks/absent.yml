@@ -79,22 +79,25 @@
     name: "{{ item }}"
     state: absent
 
-- name: Remove Flatpaks
-  community.general.flatpak:
-    name: "*"
-    state: absent
+- name: Clear flatpak content
+  when: "'flatpak' in ansible_facts.packages"
+  block:
+    - name: Remove Flatpaks
+      community.general.flatpak:
+        name: "*"
+        state: absent
 
-- name: Remove Flatpak
-  become: true
-  ansible.builtin.package:
-    name: flatpak
-    state: absent
+    - name: Remove flathub flatpak repository remote
+      become: true
+      community.general.flatpak_remote:
+        name: flathub
+        state: absent
 
-- name: Remove flathub flatpak repository remote
-  become: true
-  community.general.flatpak_remote:
-    name: flathub
-    state: absent
+    - name: Remove Flatpak
+      become: true
+      ansible.builtin.package:
+        name: flatpak
+        state: absent
 
 - name: Remove unused dependencies
   become: true

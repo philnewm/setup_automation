@@ -1,20 +1,22 @@
 ---
 # requirements file
 
+- name: Gather package facts
+  ansible.builtin.package_facts:
+
 - name: Upgrade packages
   become: true
-  when: ansible_os_family == debian
+  when: ansible_os_family == "Debian"
   ansible.builtin.apt:
     name: "*"
     state: latest
-    # upgrade: yes
     autoclean: yes
     update_cache: true
     cache_valid_time: 3600
 
-- name: Redhat based systems requirements
+- name: RedHat based systems requirements
   become: true
-  when: ansible_os_family == redhat
+  when: ansible_os_family == "RedHat"
   block:
     - name: Enable CRB (CentOS Extras) repository
       community.general.dnf_config_manager:

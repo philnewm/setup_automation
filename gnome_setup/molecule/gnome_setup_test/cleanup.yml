@@ -8,6 +8,10 @@
   #   - gnome_setup/defaults/main/themes.yml
   #   - gnome_setup/vars/main.yml
 
+  pre_tasks:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+
   tasks:
     - name: Roll back changes
       ansible.builtin.include_role:
