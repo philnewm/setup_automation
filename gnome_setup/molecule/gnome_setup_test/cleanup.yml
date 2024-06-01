@@ -1,0 +1,19 @@
+---
+
+- name: Reset
+  hosts: client
+  # vars_files:
+  #   - /defaults/main/common.yml
+  #   - gnome_setup/defaults/main/extensions.yml
+  #   - gnome_setup/defaults/main/themes.yml
+  #   - gnome_setup/vars/main.yml
+
+  tasks:
+    - name: Roll back changes
+      ansible.builtin.include_role:
+        name: gnome_setup
+        tasks_from: main.yml
+      vars:
+        gnome_setup_state: absent
+
+...

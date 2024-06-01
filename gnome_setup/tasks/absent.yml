@@ -73,7 +73,7 @@
   notify: Reboot Host
 
 - name: Remove Gnome packages
-  loop: "{{ gnome_packages[ansible_distribution] }}"
+  loop: "{{ gnome_packages[ansible_os_family] }}"
   become: true
   ansible.builtin.package:
     name: "{{ item }}"
@@ -85,6 +85,7 @@
     state: absent
 
 - name: Remove Flatpak
+  become: true
   ansible.builtin.package:
     name: flatpak
     state: absent

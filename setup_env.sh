@@ -37,11 +37,13 @@ pip install -r requirements.txt
 echo 'export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"' >> ~/.bashrc
 echo 'export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"' >> ~/.bashrc
 
-# TODO add wsl config options to /etc/wsl-conf
-# [boot]
-# systemd=true
-# [automount]
-# options = "metadata"
+wsl_config_file="/etc/wsl.conf"
+config_content="[boot]
+systemd=true
+
+[automount]
+options = \"metadata\""
+printf "%s\n" "$config_content" > "$wsl_config_file"
 
 vagrant plugin install virtualbox_WSL2
 # vagrant plugin install vagrant-vbguest  # disabled for now since it caused rhel VMs to crach on create
@@ -63,9 +65,7 @@ jq -n \
 
 # vault pass word file
 mkdir ~/Documents
-nano ~/Documents/vault.pw
-
-ansible-vault create ~/setup_automation/secrets.yml
+cp /mnt/c/Users/helios/Pictures/molecule/vagrant ~/Documents/vagrant
 
 code --version
 code --install-extension redhat.ansible

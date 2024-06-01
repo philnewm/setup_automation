@@ -2,6 +2,15 @@
 
 - name: Create and configure gnome desktop
   hosts: client
+  vars:
+    redhat: "RedHat"
+    debian: "Debian"
+    debian_based_distros: ["Debian", "Ubuntu"]
+    rhel_based_distros: ["RedHat", "CentOS", "AlmaLinux"]
+    system_local_lang: "en_US.UTF-8"
+
+  debugger: on_failed
+
   tasks:
     - name: Include gnome role present
       ansible.builtin.include_role:
