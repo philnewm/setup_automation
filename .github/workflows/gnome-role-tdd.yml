@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  smb_mount:
+  gnome:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5

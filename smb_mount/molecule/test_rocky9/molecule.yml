@@ -14,8 +14,8 @@ lint: |
   ansible-lint
 platforms:
   - name: Rocky9
-    box: generic/rocky9
-    box_version: "4.3.12"
+    box: rockylinux/9
+    box_version: "4.0.0"
     memory: 2048
     cpus: 2
     interfaces:

@@ -15,8 +15,9 @@ lint: |
 platforms:
   - name: CentOSStream9
   # INFO using generic since centos/9stream returns kernel-devel not found error
-    box: generic/centos9s
-    box_version: "4.3.12"
+    box: centos/stream9
+    # box_version: "20230727.1"
+    box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230727.1.x86_64.vagrant-virtualbox.box
     memory: 2048
     cpus: 2
     interfaces:
