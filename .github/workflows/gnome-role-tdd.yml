@@ -55,24 +55,6 @@ jobs:
     - name: Verify Vagrant installation
       run: vagrant --version
 
-    - name: Set Vagrant default provider to VirtualBox
-      run: echo "VAGRANT_DEFAULT_PROVIDER=virtualbox" >> $GITHUB_ENV
-
-    - name: Add VirtualBox and Vagrant to PATH
-      run: |
-        echo "/usr/local/bin" >> $GITHUB_PATH
-        echo "/usr/bin" >> $GITHUB_PATH
-        echo "/opt/vagrant/bin" >> $GITHUB_PATH
-
-    - name: Install Vagrant VirtualBox plugin
-      run: vagrant plugin install vagrant-vbguest
-
-    - name: Check installed providers
-      run: vagrant plugin list
-
-    - name: Check VirtualBox status
-      run: VBoxManage list runningvms
-
     - name: Run molecule test
       run: |
         cd gnome_setup
