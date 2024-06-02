@@ -106,7 +106,7 @@ Role Variables
   - gnome_themes: Dictionary of theme types having the names as their values and dconf dictionary
   - theme_repo: Dictionary of theme names including their git specific information
   - theme_paths: directories gnome themes should be installed in
-  - picture_src_path: profile picture source path
+  - picture_src_dir: custom profile picture source path, undefined by default
   - picture_dest_path: profile picture destination path
   - profile_config_path: Gnome user profile config path
   - profile_pictures: Dictionary of usernames mapped to theit according profile pictures
