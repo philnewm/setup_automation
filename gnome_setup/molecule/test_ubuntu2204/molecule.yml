@@ -13,7 +13,7 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: Ubuntu2210
+  - name: Ubuntu2204
     box: ubuntu/jammy64
     box_version: "20240426.0.0"
     memory: 2048
