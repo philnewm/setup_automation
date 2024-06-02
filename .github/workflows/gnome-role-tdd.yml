@@ -64,6 +64,9 @@ jobs:
         echo "/usr/bin" >> $GITHUB_PATH
         echo "/opt/vagrant/bin" >> $GITHUB_PATH
 
+    - name: Install Vagrant VirtualBox plugin
+      run: vagrant plugin install vagrant-vbguest
+
     - name: Check installed providers
       run: vagrant plugin list
 
