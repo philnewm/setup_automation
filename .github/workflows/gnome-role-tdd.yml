@@ -40,7 +40,7 @@ jobs:
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
         sudo apt-get update
         sudo apt-get install -y linux-headers-$(uname -r) dkms
-        sudo apt-get install gcc-12 virtualbox-7.0 -y
+        sudo apt-get install gcc-12 virtualbox-7.0.14 -y
 
     - name: Verify VirtualBox installation
       run: VBoxManage --version
