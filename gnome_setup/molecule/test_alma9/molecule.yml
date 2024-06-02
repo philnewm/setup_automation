@@ -26,8 +26,8 @@ platforms:
       - "customize ['modifyvm', :id, '--uartmode1', 'disconnected']"
       - "customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']"
       - "customize ['modifyvm', :id, '--vram', '256']"
-      # - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
-      # - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
+      - "customize ['modifyvm', :id, '--accelerate-3d', 'off']"
+      - "customize ['modifyvm', :id, '--accelerate-2d-video', 'on']"
     groups:
       - client
 provisioner:
@@ -59,13 +59,16 @@ verifier:
   name: ansible
 scenario:
   test_sequence:
-      - dependency
-      - syntax
-      - create
-      - prepare
-      - converge
-      - idempotence
-      - side_effect
-      - verify
-      - cleanup
-      - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
+  destroy_sequence:
+    - dependency
+    - destroy
