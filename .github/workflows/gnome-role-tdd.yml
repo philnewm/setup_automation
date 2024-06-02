@@ -68,6 +68,12 @@ jobs:
         echo "/usr/bin" >> $GITHUB_PATH
         echo "/opt/vagrant/bin" >> $GITHUB_PATH
 
+    - name: Check installed providers
+      run: vagrant plugin list
+
+    - name: Check VirtualBox status
+      run: VBoxManage list runningvms
+
     - name: Run molecule test
       run: |
         cd gnome_setup
