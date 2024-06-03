@@ -14,8 +14,8 @@ lint: |
   ansible-lint
 platforms:
   - name: Debian12
-    box: generic/debian12
-    box_version: "4.3.12"
+    box: debian/bookworm64
+    box_version: "12.20240212.1"
     memory: 2048
     cpus: 2
     interfaces:
@@ -28,9 +28,6 @@ platforms:
     groups:
       - client
   - name: smbserver
-    # INFO debian boots way faster then Ubuntu does
-    # INFO debian/bookworm64 is broken at state of writing(20.05.2024)
-    # INFO debian/bookworm64 gets stuck after installing virtual box guest additions 
     box: debian/bookworm64
     box_version: "12.20240212.1"
     memory: 1024

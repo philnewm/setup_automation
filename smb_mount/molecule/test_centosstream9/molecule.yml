@@ -13,8 +13,9 @@ lint: |
   yamllint
   ansible-lint
 platforms:
-  - name: CentOSStream9
+  - name: CentosStream9
     box: centos/stream9
+    # INFO version values from vagrant box site are not available on repo host site
     # box_version: "20230501.0"
     box_url: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Vagrant-9-20230501.0.x86_64.vagrant-virtualbox.box
     memory: 2048
@@ -29,11 +30,8 @@ platforms:
     groups:
       - client
   - name: smbserver
-    # INFO debian boots way faster then Ubuntu does
-    # INFO debian/bookworm64 is broken at state of writing(20.05.2024)
-    # INFO debian/bookworm64 gets stuck after installing virtual box guest additions 
-    box: generic/debian12
-    box_version: "4.3.12"
+    box: debian/bookworm64
+    box_version: "12.20240212.1"
     memory: 1024
     cpus: 1
     interfaces:

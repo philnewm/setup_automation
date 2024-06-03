@@ -28,8 +28,8 @@ platforms:
     groups:
       - client
   - name: smbserver
-    box: generic/debian12
-    box_version: "4.3.12"
+    box: debian/bookworm64
+    box_version: "12.20240212.1"
     memory: 1024
     cpus: 1
     interfaces:
