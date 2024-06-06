@@ -20,7 +20,12 @@ jobs:
       max-parallel: 5
       matrix:
         python-version: ["3.10"]
-        molecule-scenario: ["test_centosstream9", "test_rocky9", "test_alma9", "test_ubuntu2204", "test_debian12"]
+        molecule-scenario:
+          - "test_centosstream9"
+          - "test_rocky9"
+          - "test_alma9"
+          - "test_ubuntu2204"
+          - "test_debian12"
     steps:
     - uses: actions/checkout@v4
 
