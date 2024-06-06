@@ -76,10 +76,9 @@ theme_paths:
   - ".local/share/icons/"
   - "/usr/share/backgrounds/"
 
-# picture_src_dir: ~/Documents
 picture_dest_path: /var/lib/AccountsService/icons
 profile_config_path: /var/lib/AccountsService/users
-profile_pictures:
+profile_picture:
   "vagrant": "vagrant"
 
 valid_shells:

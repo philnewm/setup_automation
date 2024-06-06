@@ -6,7 +6,7 @@ hosts
 *.code-workspace
 remote_control.png
 local_files/
-debug_playbook.yaml
+debug_playbook.yml
 user.js
 thunderbird_role/defaults/main.yml
 server002_fedora_vm_setup.yaml

@@ -1,6 +1,6 @@
 ---
 
-# Assign profile picture
+# Assing profile picture
 
 - name: Get users list
   ansible.builtin.getent:
@@ -15,43 +15,30 @@
   ansible.builtin.set_fact:
     shell_users: "{{ shell_users | default([]) + [item.key] }}"
 
-# TODO needs a refactor since the assignment of profile picture is uneccessary complicated right now
-- name: Configure profile pictures
-  when: shell_users[1] in profile_pictures.keys()
-  block:
-    - name: Use default profile picture
-      when: picture_src_dir is undefined
-      become: true
-      ansible.builtin.copy:
-        src: "vagrant"
-        dest: "{{ picture_dest_path }}/vargant"
-        owner: root
-        group: root
-        mode: '0344'
+- name: Copy profile pictures
+  when: shell_user in profile_picture.keys()
+  become: true
+  loop: "{{ shell_users }}"
+  loop_control:
+    loop_var: shell_user
+  ansible.builtin.copy:
+    src: "{{ profile_picture[shell_user] }}"
+    dest: "{{ picture_dest_path }}/{{ shell_user }}"
+    owner: root
+    group: root
+    mode: '0344'
 
-    - name: Copy profile pictures
-      when: picture_src_dir is defined 
-      become: true
-      loop: "{{ shell_users }}"
-      loop_control:
-        loop_var: shell_user
-      ansible.builtin.copy:
-        src: "{{ picture_src_dir }}/{{ shell_user }}"
-        dest: "{{ picture_dest_path }}/{{ shell_user }}"
-        owner: root
-        group: root
-        mode: '0344'
-
-    - name: Create the shell_user configuration file
-      become: true
-      loop: "{{ shell_users }}"
-      loop_control:
-        loop_var: shell_user
-      ansible.builtin.template:
-        src: gnome_profile.j2
-        dest: "{{ profile_config_path }}/{{ shell_user }}"
-        owner: root
-        group: root
-        mode: 0600  # 0600 by default and changes to 0644 after first login
+- name: Create the shell_user configuration file
+  when: shell_user in profile_picture.keys()
+  become: true
+  loop: "{{ shell_users }}"
+  loop_control:
+    loop_var: shell_user
+  ansible.builtin.template:
+    src: gnome_profile.j2
+    dest: "{{ profile_config_path }}/{{ shell_user }}"
+    owner: root
+    group: root
+    mode: "0600"  # 0600 by default and changes to 0644 after first login
 
 ...

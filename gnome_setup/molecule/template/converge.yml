@@ -5,7 +5,8 @@
   vars:
     system_local_lang: "en_US.UTF-8"
 
-  debugger: on_failed
+  # TODO local testing only
+  # debugger: on_failed
 
   pre_tasks:
     - name: Include dependencies
