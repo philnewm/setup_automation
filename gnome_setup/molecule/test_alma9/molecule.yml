@@ -69,6 +69,3 @@ scenario:
     - verify
     - cleanup
     - destroy
-  destroy_sequence:
-    - dependency
-    - destroy
