@@ -4,7 +4,7 @@
 
 - name: Install Gnome packages
   when: item not in ansible_facts.packages
-  loop: "{{ gnome_packages[ansible_os_family] }}"
+  loop: "{{ gnome_packages[ansible_os_family] | flatten(1) }}"
   become: true
   ansible.builtin.package:
     name: "{{ item }}"
@@ -12,7 +12,7 @@
 
 - name: Remove obsolete Gnome packages
   become: true
-  loop: "{{ obsolete_packages[ansible_os_family] }}"
+  loop: "{{ obsolete_packages[ansible_os_family] | flatten(1) }}"
   ansible.builtin.package:
     name: "{{ item }}"
     state: absent

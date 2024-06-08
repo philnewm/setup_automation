@@ -2,9 +2,6 @@
 
 # variables for basic gnome config
 
-# INFO some dictionary splits for each distro may seem redundant
-# INFO this is intentional to enable deactivation on a per distro basis if neccessary to not break the whole testing setup
-
 user_install_dir: "{{ (ansible_env.HOME, 'install') | ansible.builtin.path_join }}"
 
 additional_rhel_repos:
@@ -16,7 +13,7 @@ additional_rhel_repos:
     src: "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
 
 gnome_packages:
-  "RedHat":
+  "default": &gnome_pkgs_default
     - gnome-shell
     - gnome-themes-extra # includes Adwaita-dark
     - gnome-terminal
@@ -27,41 +24,31 @@ gnome_packages:
     - gnome-photos
     - gnome-font-viewer
     - gnome-extensions-app
-    - gnome-control-center-filesystem
     - gnome-characters
     - gnome-devel-docs
     - gnome-disk-utility
     - baobab
+  "RedHat":
+    - *gnome_pkgs_default
+    - gnome-extensions-app
+    - gnome-control-center-filesystem
   "Debian":
-    - gnome-shell
-    - gnome-themes-extra # includes Adwaita-dark
-    - gnome-terminal
-    - gnome-system-monitor
-    - gnome-software
-    - gnome-tweaks
-    - gnome-user-docs
-    - gnome-photos
-    - gnome-font-viewer
+    - *gnome_pkgs_default
     - gnome-shell-extension-prefs
     - gnome-control-center
-    - gnome-characters
-    - gnome-devel-docs
-    - gnome-disk-utility
-    - baobab
 
 obsolete_packages:
+  "default": &osbolete_pkgs_default
+    - gnome-tour
+    - gnome-shell-extension-background-logo
+    - gnome-software-plugin-snap
+    - gnome-startup-applications
   "RedHat":
-    - gnome-tour
-    - gnome-shell-extension-background-logo
+    - *osbolete_pkgs_default
     - gnome-remote-desktop
-    - gnome-software-plugin-snap
-    - gnome-startup-applications
   "Debian":
-    - gnome-tour
-    - gnome-shell-extension-background-logo
     # INFO gnome-remote-desktop is a part of gnome-control-center package
-    - gnome-software-plugin-snap
-    - gnome-startup-applications
+    - *osbolete_pkgs_default
 
 gdm_config_file:
   "CentOS": "/etc/gdm/custom.conf"
@@ -71,13 +58,10 @@ gdm_config_file:
   "Debian": "/etc/gdm3/daemon.conf"
 
 gnome_base_settings:
-  "40":
-    # update gnome formats to United Kingdom
-    # obsolete if user theme gets added
+  "dconf_default": &dconf_default
+    # INFO obsolete if user theme gets added
     # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
     "/system/locale/region": "'en_GB.UTF-8'"
-    # TODO test if this works
-    "/org/gnome/shell/extensions/dash-to-dock/disable-overview-on-startup": "true"
     "/org/gnome/desktop/interface/enable-hot-corners": "false"
     "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
     "/org/gnome/desktop/input-sources/sources/per-window": "false"
@@ -95,49 +79,16 @@ gnome_base_settings:
     "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
     "/org/gnome/software/download-updates": "false"
     "/org/gnome/software/first-run": "false"
+  "40":
+    <<: *dconf_default
   "42":
-    # obsolete if user theme gets added
-    # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
+    # INFO obsolete if user theme gets added
     # "/org/gnome/shell/extensions/user-theme/name": "'Yaru-magenta-dark'"
+    <<: *dconf_default
     "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
-    "/org/gnome/desktop/interface/enable-hot-corners": "false"
-    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
-    "/org/gnome/desktop/input-sources/sources/per-window": "false"
-    "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
-    "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
-    "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
-    "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
-    "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
-    "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
-    "/org/gnome/mutter/attach-modal-dialogs": "false"
-    "/org/gnome/shell/overrides/attach-modal-dialogs": "false"
-    "/org/gnome/mutter/center-new-windows": "false"
-    "/org/gnome/desktop/interface/clock-show-weekday": "true"
-    "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
-    "/org/gnome/tweaks/show-extensions-notice": "false"
-    "/org/gnome/software/download-updates": "false"
-    "/org/gnome/software/first-run": "false"
   "43":
+    <<: *dconf_default
     "/org/gnome/desktop/interface/color-scheme": "'prefer-dark'"
-    # obsolete if user theme gets added
-    # "/org/gnome/desktop/interface/gtk-theme": "'Adwaita-dark'"
-    "/org/gnome/desktop/interface/enable-hot-corners": "false"
-    "/org/gnome/desktop/input-sources/sources": "[('xkb', 'de'), ('xkb', 'us')]"
-    "/org/gnome/desktop/input-sources/sources/per-window": "false"
-    "/org/gnome/desktop/input-sources/mru-sources": "[['xkb', 'de'], ['xkb', 'us']]"
-    "/org/gnome/desktop/input-sources/xkb-options": "['caps:none']"
-    "/org/gnome/desktop/wm/keybindings/activate-window-menu": "@as []"
-    "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar": "'minimize'"
-    "/org/gnome/desktop/wm/preferences/button-layout": "'close,maximize,minimize:appmenu'"
-    "/org/gnome/desktop/wm/preferences/titlebar-font": "'Carlito Bold Italic 11'"
-    "/org/gnome/mutter/attach-modal-dialogs": "false"
-    "/org/gnome/shell/overrides/attach-modal-dialogs": "false"
-    "/org/gnome/mutter/center-new-windows": "false"
-    "/org/gnome/desktop/interface/clock-show-weekday": "true"
-    "/org/gnome/desktop/interface/font-name": "'Cantarell Bold 11'"
-    "/org/gnome/tweaks/show-extensions-notice": "false"
-    "/org/gnome/software/download-updates": "false"
-    "/org/gnome/software/first-run": "false"
     "/org/gnome/desktop/privacy/old-files-age": "30"
     "/org/gnome/desktop/privacy/recent-files-max-age": "30"
     "/org/gnome/desktop/privacy/remove-old-temp-files": "true"

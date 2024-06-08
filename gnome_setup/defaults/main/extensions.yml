@@ -58,7 +58,7 @@ gnome_extensions:
     "Debian":
       address: "dash-to-panel@jderose9.github.com"
       package: "git"
-    # INFO integrating path requires custom filter to grab dconf_path in internal loop
+    # INFO integrating path requires custom filter to grab `dconf_path` in internal loop
     dconf_path: "/org/gnome/shell/extensions/dash-to-panel/"
     dconf_settings:
       "/org/gnome/shell/extensions/dash-to-panel/animate-appicon-hover": "false"

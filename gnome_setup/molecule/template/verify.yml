@@ -4,10 +4,10 @@
   hosts: client
 
   vars_files:
-    - ../../../gnome_setup/defaults/main/common.yml
-    - ../../../gnome_setup/defaults/main/extensions.yml
-    - ../../../gnome_setup/defaults/main/themes.yml
-    - ../../../gnome_setup/vars/main.yml
+    - ../../defaults/main/common.yml
+    - ../../defaults/main/extensions.yml
+    - ../../defaults/main/themes.yml
+    - ../../vars/main.yml
 
   tasks:
     - name: Gather package facts
@@ -38,15 +38,15 @@
             - rpmfusion-nonfree-updates
 
     - name: Test installed requirements
+      loop: "{{ dependencies[ansible_os_family] }}"
       ansible.builtin.assert:
         that:
           - item in ansible_facts.packages
         fail_msg: "Required package '{{ item }}' is missing."
         quiet: true
-      loop: "{{ dependencies[ansible_os_family] }}"
 
     - name: Test installed gnome packages
-      loop: "{{ gnome_packages[ansible_os_family] }}"
+      loop: "{{ gnome_packages[ansible_os_family] | flatten(1) }}"
       ansible.builtin.assert:
         that:
           - item in ansible_facts.packages
@@ -54,12 +54,12 @@
         quiet: true
 
     - name: Test removed gnome packages
+      loop: "{{ obsolete_packages[ansible_os_family] | flatten(1) }}"
       ansible.builtin.assert:
         that:
           - item not in ansible_facts.packages
         fail_msg: "Obsolete Gnome package {{ item }} is still rpesent"
         quiet: true
-      loop: "{{ obsolete_packages[ansible_os_family] }}"
 
     - name: Get current target
       ansible.builtin.stat:
@@ -165,8 +165,8 @@
     - name: Test disabled extensions
       ansible.builtin.assert:
         that:
-          disabled_extensions_list.value ==  none
-        fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none."
+          disabled_extensions_list.value in ['none', '@as []']
+        fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none or '@as []'."
         quiet: true
 
     - name: Collect gnome extensions dconf config
