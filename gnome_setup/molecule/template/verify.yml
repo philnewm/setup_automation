@@ -162,11 +162,16 @@
         state: read
       register: disabled_extensions_list
 
+    - name: Show disabled extensions
+      ansible.builtin.debug:
+        var: disabled_extensions_list
+
     - name: Test disabled extensions
       ansible.builtin.assert:
+        # INFO none is default - changes to '@as []' as soon as an extension was diabled ones
         that:
-          disabled_extensions_list.value in ['none', '@as []']
-        fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected none or '@as []'."
+          - disabled_extensions_list.value in [none, '@as []']
+        fail_msg: "Found disabled extension '{{ disabled_extensions_list.value }}' expected one of [none, '@as []']."
         quiet: true
 
     - name: Collect gnome extensions dconf config
