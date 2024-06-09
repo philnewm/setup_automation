@@ -23,7 +23,6 @@ gnome_packages:
     - gnome-user-docs
     - gnome-photos
     - gnome-font-viewer
-    - gnome-extensions-app
     - gnome-characters
     - gnome-devel-docs
     - gnome-disk-utility
