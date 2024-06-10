@@ -5,14 +5,14 @@ name: SMB mount test
 
 on:
   push:
-    branches: [ "gnome-role-tdd" ]
+    branches: [ "main" ]
     paths-ignore:
       - 'README.md'
       - '**/*.md'
       - .gitignore
 
   pull_request:
-    branches: [ "gnome-role-tdd" ]
+    branches: [ "main" ]
     paths-ignore:
       - 'README.md'
       - '**/*.md'
