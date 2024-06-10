@@ -19,7 +19,7 @@ Currently the smb_mount and gnome_setup role a pretty far developed even tho the
 
 Long-Term
 =========
-To use these roles effectivly with Ansible Galaxy they will be moved into their own repos at some later point in time to accelerate the setup automation through AWX
+To use these roles effectivly with [Ansible Galaxy](https://galaxy.ansible.com) they will be moved into their own repos at some later point in time to accelerate the setup automation through [AWX](https://github.com/ansible/awx).
 
 License
 -------
