@@ -5,11 +5,20 @@ name: Gnome test
 
 on:
   push:
+
     branches: [ "gnome-role-tdd" ]
     paths-ignore:
       - 'README.md'
+      - '**/*.md'
+      - .gitignore
+
   pull_request:
     branches: [ "gnome-role-tdd" ]
+    paths-ignore:
+      - 'README.md'
+      - '**/*.md'
+      - .gitignore
+
 permissions:
   contents: read
 

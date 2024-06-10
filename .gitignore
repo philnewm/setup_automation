@@ -14,3 +14,4 @@ server002_fedora_vm_setup.yaml
 secrets.yml
 some_box
 boot_analysis
+debug_vars*.yml
