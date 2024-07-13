@@ -1,6 +1,6 @@
 ## Enbale fractional scaling on wayland
 * `gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"`
-* fractional scaling on XOrg tricky - ubuntu provides a patch - RnD required
+* fractional scaling on Xorg tricky - ubuntu provides a patch - RnD required
 
 ## AMD GPU computing driver
 * using radeon software for linux
@@ -9,6 +9,7 @@
 * reasearch if proprietary vulkan has any benefits over opensource version
 
 ## System Monitor through flatpak instalaltion
+* mission center as system monitor
 * enforce dark theme for flatpaks
 * `sudo flatpak override --env=GTK_THEME=Adwaita-dark`
 
@@ -43,3 +44,6 @@
  * xcb-util-wm
 * python3 install recognized from inzternal console right away
 * checks differences between alma default setup and fedora
+
+## Houdini dependencies
+* `sudo yum install libXScrnSaver`
