@@ -4,7 +4,7 @@
 
 ## AMD GPU computing driver
 * using radeon software for linux
-* might be available from distro repo rith away - RnD required
+* might be available from distro repo right away - RnD required
 * `amdgpu-install --opencl=rocr --vulkan=amdvlk`
 * reasearch if proprietary vulkan has any benefits over opensource version
 
@@ -16,6 +16,10 @@
 ## 4k Display using fractional scaling
 * works only on wayland for now
 * will keep desktop on wayland until issues arise
+
+## Default back to Xorg
+* maya's licensing manager is not yet fully able to run on wayland
+* see: https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/3t2VQSfCGLLvGEwb2lPn44.html
 
 ## Dynamic Wallpapers
 * custom curl commands allow for content selection
