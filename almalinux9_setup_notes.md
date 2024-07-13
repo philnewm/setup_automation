@@ -42,6 +42,7 @@
  * xcb-util-keysyms
  * xcb-util-renderutil
  * xcb-util-wm
+ * libglvnd-opengl
 * python3 install recognized from inzternal console right away
 * checks differences between alma default setup and fedora
 
