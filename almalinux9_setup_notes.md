@@ -6,7 +6,7 @@
 * using radeon software for linux
 * might be available from distro repo right away - RnD required
 * `amdgpu-install --opencl=rocr --vulkan=amdvlk`
-* potential alternative: `sudo amdgpu-install --usecase=workstation  --opencl=rocr --vulkan=pro --accept-eula`
+* potential alternative: `sudo amdgpu-install --opencl=rocr --vulkan=pro --accept-eula`
 * reasearch if proprietary vulkan has any benefits over opensource version
 
 ## System Monitor through flatpak instalaltion
