@@ -54,6 +54,15 @@
 ## Houdini dependencies
 * `sudo yum install libXScrnSaver`
 * Vulkan Viewport renderer doesn#t seem to work out-of-the-box
+* vulkan error:
+  > Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+ERROR: failed to import VK semaphore in GL
+Spawn Error: : No such file or directory
+Error running xmessage
+Argument list:
+   0: xmessage
+   1: Vulkan could not be initialized. Falling back to OpenGL.
+* might be casued by SELinux - pops up denial messages
 
 # Maya2025 Dependencies
 * https://help.autodesk.com/view/MAYAUL/2024/ENU/?guid=GUID-D2B5433C-E0D2-421B-9BD8-24FED217FD7F&v=2025
@@ -64,3 +73,5 @@
 * `systemctl restart libvirtd`
 * `systemctl enable libvirtd`
 
+## Blender dependency
+* `sudo dnf install libdecor`
