@@ -5,8 +5,7 @@
 ## AMD GPU computing driver
 * using radeon software for linux
 * might be available from distro repo right away - RnD required
-* `amdgpu-install --opencl=rocr --vulkan=amdvlk`
-* potential alternative: `sudo amdgpu-install --opencl=rocr --vulkan=pro --accept-eula`
+* `sudo amdgpu-install --opencl=rocr --vulkan=pro --accept-eula` (needs crb repo enabled `dnf config-manager --set-enabled crb`) 
 * reasearch if proprietary vulkan has any benefits over opensource version
 
 ## System Monitor through flatpak instalaltion
@@ -18,7 +17,7 @@
 * works only on wayland for now
 * will keep desktop on wayland until issues arise
 
-## Default back to Xorg
+## Default back to Xorg (Can be ignored as it seems to work)
 * maya's licensing manager is not yet fully able to run on wayland
 * see: https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/3t2VQSfCGLLvGEwb2lPn44.html
 
