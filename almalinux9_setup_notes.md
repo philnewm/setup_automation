@@ -67,6 +67,7 @@ Argument list:
 * https://help.autodesk.com/view/MAYAUL/2024/ENU/?guid=GUID-D2B5433C-E0D2-421B-9BD8-24FED217FD7F&v=2025
 * setup guide: https://help.autodesk.com/view/MAYAUL/2024/ENU/?guid=GUID-E7E054E1-0E32-4B3C-88F9-BF820EB45BE5&v=2025
 * wayland not supported: https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/3t2VQSfCGLLvGEwb2lPn44.html
+  initla logging in license manager needs to happen on Xorg afterwards wayland works just fine
 
 ## KVM
 * `systemctl restart libvirtd`
