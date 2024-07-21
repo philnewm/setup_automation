@@ -62,6 +62,7 @@ Argument list:
    0: xmessage
    1: Vulkan could not be initialized. Falling back to OpenGL.
 * might be casued by SELinux - pops up denial messages
+* sesinetd SE linux guide: https://www.sidefx.com/faq/question/how-do-i-add-the-license-server-sesinetd-to-selinux/
 
 ## Maya2025 Dependencies
 * https://help.autodesk.com/view/MAYAUL/2024/ENU/?guid=GUID-D2B5433C-E0D2-421B-9BD8-24FED217FD7F&v=2025
