@@ -81,3 +81,6 @@ Argument list:
 * https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux
 * in case of gpg check error, try `sudo update-crypto-policies --set LEGACY` - check for more secure solution
 * https://discussions.unity.com/t/unity-hub-on-linux/867802/64?page=4
+
+## Additional setup research
+* https://github.com/mikeroyal/AlmaLinux-Guide/blob/main/README.md#setting-up-a-macos-workspace
