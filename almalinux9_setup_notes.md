@@ -76,3 +76,8 @@ Argument list:
 
 ## Blender dependency
 * `sudo dnf install libdecor`
+
+## Unity Hub
+* https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux
+* in case of gpg check error, try `sudo update-crypto-policies --set LEGACY` - check for more secure solution
+* https://discussions.unity.com/t/unity-hub-on-linux/867802/64?page=4
