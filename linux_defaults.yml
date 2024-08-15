@@ -1,0 +1,16 @@
+---
+
+# linux defaults
+
+ulauncher_gdm_config_file:
+  "CentOS": "/etc/gdm/custom.conf"
+  "AlmaLinux": "/etc/gdm/custom.conf"
+  "Rocky": "/etc/gdm/custom.conf"
+  "Ubuntu": "/etc/gdm3/custom.conf"
+  "Debian": "/etc/gdm3/daemon.conf"
+
+package_search:
+  "RedHat": "dnf list available"
+  "Debian": "apt-cache show"
+
+...
