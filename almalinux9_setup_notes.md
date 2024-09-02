@@ -84,3 +84,9 @@ Argument list:
 
 ## Additional setup research
 * https://github.com/mikeroyal/AlmaLinux-Guide/blob/main/README.md#setting-up-a-macos-workspace
+
+## Wayland issues
+* No desktop sharing on discord
+* HPZ crashing frequently
+* Running multiple monitor add different resolutions caused dash panel to jump around
+* Gnome online accounts integration not opening login link
