@@ -90,3 +90,8 @@ Argument list:
 * HPZ crashing frequently
 * Running multiple monitor add different resolutions caused dash panel to jump around
 * Gnome online accounts integration not opening login link
+* Clicking urls in rambox doesn't open browser
+
+## Update login screen keymap to us layout
+* sudo localectl set-x11-keymap no
+* probably different command for wayland
