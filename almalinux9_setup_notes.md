@@ -8,8 +8,11 @@
 * Get base installer from [official repo](https://repo.radeon.com/amdgpu-install/)
 * In case of 'not found errors' check [rocm](https://repo.radeon.com/rocm) and/or [amdgpu](https://repo.radeon.com/amdgpu/) repos if all required installers are available
 * Check for correct paths in repo files (e.g. /etc/yum.repos.d)
-* might be available from distro repo right away - RnD required
-* `sudo amdgpu-install --opencl=rocr --vulkan=pro --accept-eula` (needs crb repo enabled `dnf config-manager --set-enabled crb`) 
+* Might be available from distro repo right away - RnD required
+* `sudo amdgpu-install --usecase=hip --vulkan=pro --opencl=rocr (--accept-eula)` (needs crb repo enabled `dnf config-manager --set-enabled crb`)
+* --usecase=hip might be osbsolete - needs testing
+* Additionally the user needs to be added to the [video and render group](https://amdgpu-install.readthedocs.io/en/latest/install-installing.html#installing-the-workstation-use-case) `sudo usermod -a -G video $USER` and `sudo usermod -a -G render $USER`
+* symlink in dkms module was broken for version 6.1.0, fixed by setting to actually installed version `sudo ln -s /usr/src/amdgpu-6.10.5-2084815.el9/ /var/lib/dkms/amdgpu/6.7.0-1787201.el9/source`
 * reasearch if proprietary vulkan has any benefits over opensource version
 
 ## System Monitor through flatpak instalaltion
