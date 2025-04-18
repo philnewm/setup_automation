@@ -7,6 +7,7 @@
 * [Official AMD driver download page for Linux](https://www.amd.com/en/support/download/linux-drivers.html) seems to not be updated regulary
 * Get base installer from [official repo](https://repo.radeon.com/amdgpu-install/)
 * In case of 'not found errors' check [rocm](https://repo.radeon.com/rocm) and/or [amdgpu](https://repo.radeon.com/amdgpu/) repos if all required installers are available
+* HIP missing was fixed bz installing `hip-runtime-amd` like mentioned in [archwiki](https://wiki.archlinux.org/title/Blender)
 * Check for correct paths in repo files (e.g. /etc/yum.repos.d)
 * Might be available from distro repo right away - RnD required
 * `sudo amdgpu-install --usecase=hip --vulkan=pro --opencl=rocr (--accept-eula)` (needs crb repo enabled `dnf config-manager --set-enabled crb`)
