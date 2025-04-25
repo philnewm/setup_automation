@@ -2,7 +2,7 @@
 * `gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"`
 * fractional scaling on Xorg tricky - ubuntu provides a patch - RnD required
 
-## AMD GPU computing driver
+## AMD GPU computing driver first approach
 * using radeon software for linux
 * [Official AMD driver download page for Linux](https://www.amd.com/en/support/download/linux-drivers.html) seems to not be updated regulary
 * Get base installer from [official repo](https://repo.radeon.com/amdgpu-install/)
@@ -15,6 +15,14 @@
 * Additionally the user needs to be added to the [video and render group](https://amdgpu-install.readthedocs.io/en/latest/install-installing.html#installing-the-workstation-use-case) `sudo usermod -a -G video $USER` and `sudo usermod -a -G render $USER`
 * symlink in dkms module was broken for version 6.1.0, fixed by setting to actually installed version `sudo ln -s /usr/src/amdgpu-6.10.5-2084815.el9/ /var/lib/dkms/amdgpu/6.7.0-1787201.el9/source`
 * reasearch if proprietary vulkan has any benefits over opensource version
+
+## AMD GPU computing driver second approach
+
+- Driver from [this docs](https://rocm.docs.amd.com/projects/install-on-linux/en/develop/install/quick-start.html)
+- Or just go to the [radeon repo](https://repo.radeon.com/amdgpu-install/) directly
+- Provides amdgpu-install which sets up amd repo files
+- For Blender GPU computing install `hip-runtime-amd` - source [arch wiki](https://wiki.archlinux.org/title/Blender#HIP_on_AMD_open_source_drivers)
+- For Davinci Resolve install `rocm-opencl-runtime` - source [arch wiki](https://wiki.archlinux.org/title/DaVinci_Resolve)
 
 ## System Monitor through flatpak instalaltion
 * mission center as system monitor
