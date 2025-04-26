@@ -67,7 +67,8 @@
 * checks differences between alma default setup and fedora
 
 ## Houdini dependencies
-* `sudo yum install libXScrnSaver`
+* `sudo dnf install libXScrnSaver`
+* `sudo dnf install xcb-util-wm` - dependency for houdini launcher
 * Vulkan Viewport renderer doesn#t seem to work out-of-the-box
 * vulkan error:
   > Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
