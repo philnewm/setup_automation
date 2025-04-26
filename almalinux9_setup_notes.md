@@ -21,6 +21,7 @@
 - Driver from [this docs](https://rocm.docs.amd.com/projects/install-on-linux/en/develop/install/quick-start.html)
 - Or just go to the [radeon repo](https://repo.radeon.com/amdgpu-install/) directly
 - Provides amdgpu-install which sets up amd repo files
+- **Do not actually run amdgpu-install only install the .rpm all we need here are the repository files which the .rpm sets up during install at `ls /etc/yum.repos.d/ | grep "amdgpu\|rocm"`**
 - For Blender GPU computing install `hip-runtime-amd` - source [arch wiki](https://wiki.archlinux.org/title/Blender#HIP_on_AMD_open_source_drivers)
 - For Davinci Resolve install `rocm-opencl-runtime` - source [arch wiki](https://wiki.archlinux.org/title/DaVinci_Resolve)
 
